@@ -1,0 +1,697 @@
+import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+class CrispyChickenReportingSystem:
+    def __init__(self):
+        # Initialize database tables
+        self.restaurants = pd.DataFrame(columns=[
+            'restaurant_id', 'name', 'location', 'manager', 'opening_date'
+        ])
+        
+        self.payment_methods = pd.DataFrame(columns=[
+            'method_id', 'method_name', 'category'
+        ])
+        
+        self.monthly_sales = pd.DataFrame(columns=[
+            'sales_id', 'restaurant_id', 'month', 'year', 
+            'total_sales', 'total_transactions', 'average_sale'
+        ])
+        
+        self.payment_method_sales = pd.DataFrame(columns=[
+            'payment_id', 'sales_id', 'payment_method_id', 
+            'amount', 'percentage_of_total', 'transaction_count', 
+            'average_transaction'
+        ])
+        
+        self.menu_items = pd.DataFrame(columns=[
+            'item_id', 'name', 'category', 'price', 'cost', 'is_active'
+        ])
+        
+        self.monthly_item_sales = pd.DataFrame(columns=[
+            'item_sales_id', 'sales_id', 'item_id', 'quantity_sold', 'revenue'
+        ])
+        
+        self.monthly_expenses = pd.DataFrame(columns=[
+            'expense_id', 'sales_id', 'category', 'amount', 'notes'
+        ])
+        
+        # Initialize with sample data
+        self._initialize_sample_data()
+        
+    def _initialize_sample_data(self):
+        """Initialize the system with sample data"""
+        # Restaurants
+        self.restaurants.loc[0] = [1, 'Downtown', 'Downtown District', 'John Smith', '2020-01-15']
+        self.restaurants.loc[1] = [2, 'Mall', 'Central Mall', 'Sarah Johnson', '2021-03-22']
+        self.restaurants.loc[2] = [3, 'Airport', 'Airport Terminal', 'Mike Brown', '2022-07-10']
+        
+        # Payment methods
+        self.payment_methods.loc[0] = [1, 'Cash', 'Traditional']
+        self.payment_methods.loc[1] = [2, 'Careem CARD', 'Digital']
+        self.payment_methods.loc[2] = [3, 'NOON CARD', 'Digital']
+        self.payment_methods.loc[3] = [4, 'Master card', 'Card']
+        self.payment_methods.loc[4] = [5, 'Visa Card', 'Card']
+        self.payment_methods.loc[5] = [6, 'TALABAT CARD', 'Digital']
+        self.payment_methods.loc[6] = [7, 'Delivery CARD', 'Digital']
+        self.payment_methods.loc[7] = [8, 'Delivery Cash', 'Traditional']
+        self.payment_methods.loc[8] = [9, 'SMILES CARD', 'Digital']
+        self.payment_methods.loc[9] = [10, 'ONLINE CASH', 'Digital']
+        self.payment_methods.loc[10] = [11, 'ONLINE CARD', 'Digital']
+        self.payment_methods.loc[11] = [12, 'DELIVERO CARD', 'Digital']
+        
+        # Menu items
+        self.menu_items.loc[0] = [1, 'Crispy Chicken Meal', 'Main', 25.99, 8.50, True]
+        self.menu_items.loc[1] = [2, 'Spicy Wings', 'Appetizer', 15.99, 5.50, True]
+        self.menu_items.loc[2] = [3, 'Combo Deal', 'Combo', 32.99, 12.50, True]
+        self.menu_items.loc[3] = [4, 'Crispy Burger', 'Main', 18.99, 7.00, True]
+        self.menu_items.loc[4] = [5, 'Garlic Fries', 'Side', 6.99, 2.50, True]
+        self.menu_items.loc[5] = [6, 'Chocolate Shake', 'Dessert', 7.99, 3.00, True]
+        
+        # Generate sample monthly sales data
+        self._generate_sample_sales_data()
+        
+    def _generate_sample_sales_data(self):
+        """Generate sample sales data for demonstration"""
+        # Generate 12 months of data for each restaurant
+        for restaurant_id in range(1, 4):
+            for month in range(1, 13):
+                # Create sales record
+                sales_id = len(self.monthly_sales) + 1
+                year = 2023
+                date = datetime(year, month, 1)
+                
+                # Generate random sales data with trends
+                base_sales = 50000 + restaurant_id * 10000
+                seasonal_factor = 1.0 + 0.1 * np.sin(2 * np.pi * month / 12)
+                growth_factor = 1.0 + (month - 1) * 0.01
+                
+                total_sales = base_sales * seasonal_factor * growth_factor
+                total_transactions = int(total_sales / 28)
+                average_sale = total_sales / total_transactions
+                
+                self.monthly_sales.loc[len(self.monthly_sales)] = [
+                    sales_id, restaurant_id, month, year, 
+                    total_sales, total_transactions, average_sale
+                ]
+                
+                # Generate payment method sales
+                payment_methods = self.payment_methods.copy()
+                for i, (_, payment) in enumerate(payment_methods.iterrows()):
+                    # Random amounts with some structure
+                    amount = total_sales * (0.2 + 0.8 * np.random.random())
+                    percentage_of_total = (amount / total_sales) * 100
+                    transaction_count = int(total_transactions * (0.1 + 0.9 * np.random.random()))
+                    average_transaction = amount / transaction_count
+                    
+                    self.payment_method_sales.loc[len(self.payment_method_sales)] = [
+                        len(self.payment_method_sales) + 1, sales_id, 
+                        payment['method_id'], amount, percentage_of_total,
+                        transaction_count, average_transaction
+                    ]
+                
+                # Generate item sales
+                menu_items = self.menu_items.copy()
+                for i, (_, item) in enumerate(menu_items.iterrows()):
+                    quantity_sold = int(total_transactions * (0.2 + 0.8 * np.random.random()))
+                    revenue = quantity_sold * item['price']
+                    
+                    self.monthly_item_sales.loc[len(self.monthly_item_sales)] = [
+                        len(self.monthly_item_sales) + 1, sales_id,
+                        item['item_id'], quantity_sold, revenue
+                    ]
+                
+                # Generate expenses
+                expense_categories = ['Rent', 'Utilities', 'Labor', 'Ingredients', 'Marketing']
+                for category in expense_categories:
+                    amount = total_sales * (0.3 + 0.2 * np.random.random())
+                    notes = f"Monthly {category} expenses"
+                    
+                    self.monthly_expenses.loc[len(self.monthly_expenses)] = [
+                        len(self.monthly_expenses) + 1, sales_id,
+                        category, amount, notes
+                    ]
+    
+    def add_restaurant(self, name, location, manager, opening_date):
+        """Add a new restaurant to the system"""
+        new_id = len(self.restaurants) + 1
+        self.restaurants.loc[len(self.restaurants)] = [
+            new_id, name, location, manager, opening_date
+        ]
+        return new_id
+    
+    def add_payment_method(self, method_name, category):
+        """Add a new payment method to the system"""
+        new_id = len(self.payment_methods) + 1
+        self.payment_methods.loc[len(self.payment_methods)] = [
+            new_id, method_name, category
+        ]
+        return new_id
+    
+    def add_menu_item(self, name, category, price, cost):
+        """Add a new menu item to the system"""
+        new_id = len(self.menu_items) + 1
+        self.menu_items.loc[len(self.menu_items)] = [
+            new_id, name, category, price, cost, True
+        ]
+        return new_id
+    
+    def enter_monthly_sales(self, restaurant_id, month, year, total_sales, total_transactions, payment_data, item_data, expense_data):
+        """Enter monthly sales data for a restaurant"""
+        # Create sales record
+        sales_id = len(self.monthly_sales) + 1
+        average_sale = total_sales / total_transactions
+        
+        self.monthly_sales.loc[len(self.monthly_sales)] = [
+            sales_id, restaurant_id, month, year, 
+            total_sales, total_transactions, average_sale
+        ]
+        
+        # Add payment method sales
+        for payment in payment_data:
+            self.payment_method_sales.loc[len(self.payment_method_sales)] = [
+                len(self.payment_method_sales) + 1, sales_id,
+                payment['method_id'], payment['amount'], payment['percentage'],
+                payment['transaction_count'], payment['average_transaction']
+            ]
+        
+        # Add item sales
+        for item in item_data:
+            self.monthly_item_sales.loc[len(self.monthly_item_sales)] = [
+                len(self.monthly_item_sales) + 1, sales_id,
+                item['item_id'], item['quantity_sold'], item['revenue']
+            ]
+        
+        # Add expenses
+        for expense in expense_data:
+            self.monthly_expenses.loc[len(self.monthly_expenses)] = [
+                len(self.monthly_expenses) + 1, sales_id,
+                expense['category'], expense['amount'], expense['notes']
+            ]
+        
+        return sales_id
+    
+    def generate_monthly_comparison_report(self, restaurant_id, month, year):
+        """Generate a monthly comparison report for a restaurant"""
+        # Get current month data
+        current_data = self.monthly_sales[
+            (self.monthly_sales['restaurant_id'] == restaurant_id) & 
+            (self.monthly_sales['month'] == month) & 
+            (self.monthly_sales['year'] == year)
+        ]
+        
+        if current_data.empty:
+            return None, "No data found for the specified month and restaurant"
+        
+        current_data = current_data.iloc[0]
+        current_sales_id = current_data['sales_id']
+        
+        # Get previous month data
+        prev_month = month - 1 if month > 1 else 12
+        prev_year = year if month > 1 else year - 1
+        
+        prev_data = self.monthly_sales[
+            (self.monthly_sales['restaurant_id'] == restaurant_id) & 
+            (self.monthly_sales['month'] == prev_month) & 
+            (self.monthly_sales['year'] == prev_year)
+        ]
+        
+        if prev_data.empty:
+            return None, "No data found for the previous month"
+        
+        prev_data = prev_data.iloc[0]
+        prev_sales_id = prev_data['sales_id']
+        
+        # Calculate key metrics
+        sales_growth = ((current_data['total_sales'] - prev_data['total_sales']) / prev_data['total_sales']) * 100
+        transaction_growth = ((current_data['total_transactions'] - prev_data['total_transactions']) / prev_data['total_transactions']) * 100
+        avg_sale_change = current_data['average_sale'] - prev_data['average_sale']
+        
+        # Get payment method data
+        current_payments = self.payment_method_sales[
+            self.payment_method_sales['sales_id'] == current_sales_id
+        ]
+        prev_payments = self.payment_method_sales[
+            self.payment_method_sales['sales_id'] == prev_sales_id
+        ]
+        
+        payment_changes = []
+        for _, payment in current_payments.iterrows():
+            prev_payment = prev_payments[
+                prev_payments['payment_method_id'] == payment['payment_method_id']
+            ]
+            
+            if not prev_payment.empty:
+                prev_payment = prev_payment.iloc[0]
+                change = ((payment['amount'] - prev_payment['amount']) / prev_payment['amount']) * 100
+            else:
+                change = 100  # New payment method
+            
+            payment_method = self.payment_methods[
+                self.payment_methods['method_id'] == payment['payment_method_id']
+            ].iloc[0]
+            
+            payment_changes.append({
+                'method_name': payment_method['method_name'],
+                'current_amount': payment['amount'],
+                'previous_amount': prev_payment['amount'] if not prev_payment.empty else 0,
+                'change': change,
+                'current_percentage': payment['percentage_of_total'],
+                'current_transactions': payment['transaction_count'],
+                'current_average': payment['average_transaction']
+            })
+        
+        # Get item sales data
+        current_items = self.monthly_item_sales[
+            self.monthly_item_sales['sales_id'] == current_sales_id
+        ]
+        prev_items = self.monthly_item_sales[
+            self.monthly_item_sales['sales_id'] == prev_sales_id
+        ]
+        
+        item_changes = []
+        for _, item in current_items.iterrows():
+            prev_item = prev_items[
+                prev_items['item_id'] == item['item_id']
+            ]
+            
+            if not prev_item.empty:
+                prev_item = prev_item.iloc[0]
+                quantity_change = ((item['quantity_sold'] - prev_item['quantity_sold']) / prev_item['quantity_sold']) * 100
+                revenue_change = ((item['revenue'] - prev_item['revenue']) / prev_item['revenue']) * 100
+            else:
+                quantity_change = 100
+                revenue_change = 100
+            
+            menu_item = self.menu_items[
+                self.menu_items['item_id'] == item['item_id']
+            ].iloc[0]
+            
+            item_changes.append({
+                'item_name': menu_item['name'],
+                'category': menu_item['category'],
+                'current_quantity': item['quantity_sold'],
+                'previous_quantity': prev_item['quantity_sold'] if not prev_item.empty else 0,
+                'quantity_change': quantity_change,
+                'current_revenue': item['revenue'],
+                'previous_revenue': prev_item['revenue'] if not prev_item.empty else 0,
+                'revenue_change': revenue_change,
+                'price': menu_item['price'],
+                'cost': menu_item['cost'],
+                'profit_margin': ((menu_item['price'] - menu_item['cost']) / menu_item['price']) * 100
+            })
+        
+        # Get expense data
+        current_expenses = self.monthly_expenses[
+            self.monthly_expenses['sales_id'] == current_sales_id
+        ]
+        prev_expenses = self.monthly_expenses[
+            self.monthly_expenses['sales_id'] == prev_sales_id
+        ]
+        
+        expense_changes = []
+        for _, expense in current_expenses.iterrows():
+            prev_expense = prev_expenses[
+                prev_expenses['category'] == expense['category']
+            ]
+            
+            if not prev_expense.empty:
+                prev_expense = prev_expense.iloc[0]
+                change = ((expense['amount'] - prev_expense['amount']) / prev_expense['amount']) * 100
+            else:
+                change = 100  # New expense category
+            
+            expense_changes.append({
+                'category': expense['category'],
+                'current_amount': expense['amount'],
+                'previous_amount': prev_expense['amount'] if not prev_expense.empty else 0,
+                'change': change,
+                'notes': expense['notes']
+            })
+        
+        # Calculate profit margin
+        total_expenses = current_expenses['amount'].sum()
+        profit_margin = ((current_data['total_sales'] - total_expenses) / current_data['total_sales']) * 100
+        
+        # Compile report
+        report = {
+            'restaurant_id': restaurant_id,
+            'restaurant_name': self.restaurants[self.restaurants['restaurant_id'] == restaurant_id]['name'].iloc[0],
+            'current_period': f"{year}-{month:02d}",
+            'previous_period': f"{prev_year}-{prev_month:02d}",
+            'sales_growth': sales_growth,
+            'transaction_growth': transaction_growth,
+            'avg_sale_change': avg_sale_change,
+            'payment_method_changes': payment_changes,
+            'item_changes': item_changes,
+            'expense_changes': expense_changes,
+            'profit_margin': profit_margin,
+            'total_sales': current_data['total_sales'],
+            'total_transactions': current_data['total_transactions'],
+            'average_sale': current_data['average_sale'],
+            'total_expenses': total_expenses
+        }
+        
+        return report, None
+    
+    def identify_strengths_weaknesses(self, report):
+        """Identify strengths and weaknesses from a comparison report"""
+        strengths = []
+        weaknesses = []
+        
+        # Sales performance
+        if report['sales_growth'] > 5:
+            strengths.append(f"Strong sales growth of {report['sales_growth']:.1f}%")
+        elif report['sales_growth'] < 0:
+            weaknesses.append(f"Sales decline of {abs(report['sales_growth']):.1f}%")
+        
+        # Transaction growth
+        if report['transaction_growth'] > 5:
+            strengths.append(f"Strong transaction growth of {report['transaction_growth']:.1f}%")
+        elif report['transaction_growth'] < 0:
+            weaknesses.append(f"Transaction decline of {abs(report['transaction_growth']):.1f}%")
+        
+        # Average sale value
+        if report['avg_sale_change'] > 2:
+            strengths.append(f"Increasing average sale value by ${report['avg_sale_change']:.2f}")
+        elif report['avg_sale_change'] < -2:
+            weaknesses.append(f"Decreasing average sale value by ${abs(report['avg_sale_change']):.2f}")
+        
+        # Payment methods
+        for payment in report['payment_method_changes']:
+            if payment['change'] > 10:
+                strengths.append(f"Strong growth in {payment['method_name']} payments ({payment['change']:.1f}%)")
+            elif payment['change'] < -10:
+                weaknesses.append(f"Decline in {payment['method_name']} payments ({abs(payment['change']):.1f}%)")
+        
+        # Menu items
+        top_items = sorted(report['item_changes'], key=lambda x: x['revenue_change'], reverse=True)[:3]
+        bottom_items = sorted(report['item_changes'], key=lambda x: x['revenue_change'])[:3]
+        
+        strengths.append(f"Top performing items: {', '.join([item['item_name'] for item in top_items])}")
+        weaknesses.append(f"Underperforming items: {', '.join([item['item_name'] for item in bottom_items])}")
+        
+        # Profit margin
+        if report['profit_margin'] > 20:
+            strengths.append(f"Healthy profit margin of {report['profit_margin']:.1f}%")
+        elif report['profit_margin'] < 10:
+            weaknesses.append(f"Low profit margin of {report['profit_margin']:.1f}%")
+        
+        # Expenses
+        for expense in report['expense_changes']:
+            if expense['change'] > 10:
+                weaknesses.append(f"Significant increase in {expense['category']} expenses ({expense['change']:.1f}%)")
+        
+        return strengths, weaknesses
+    
+    def generate_sales_growth_plan(self, report, strengths, weaknesses):
+        """Generate a sales growth plan based on the report analysis"""
+        plan = {
+            'immediate_actions': [],
+            'short_term_strategies': [],
+            'long_term_initiatives': [],
+            'monitoring_metrics': []
+        }
+        
+        # Immediate actions (0-30 days)
+        if any("sales decline" in weakness for weakness in weaknesses):
+            plan['immediate_actions'].append("Implement promotional campaigns to boost sales")
+        
+        if any("transaction decline" in weakness for weakness in weaknesses):
+            plan['immediate_actions'].append("Launch customer loyalty program to increase repeat visits")
+        
+        if any("decline in" in weakness for weakness in weaknesses):
+            plan['immediate_actions'].append("Review pricing strategy for underperforming payment methods")
+        
+        # Short-term strategies (1-3 months)
+        if any("underperforming items" in weakness for weakness in weaknesses):
+            plan['short_term_strategies'].append("Revise menu to remove or reposition underperforming items")
+        
+        if any("low profit margin" in weakness for weakness in weaknesses):
+            plan['short_term_strategies'].append("Optimize ingredient sourcing to reduce costs")
+        
+        if any("increase in" in weakness for weakness in weaknesses):
+            plan['short_term_strategies'].append("Review expense categories with significant increases")
+        
+        # Long-term initiatives (3-12 months)
+        if any("strong growth" in strength for strength in strengths):
+            plan['long_term_initiatives'].append("Expand successful payment methods to other locations")
+        
+        if any("top performing items" in strength for strength in strengths):
+            plan['long_term_initiatives'].append("Develop new menu items based on top performers")
+        
+        # Monitoring metrics
+        plan['monitoring_metrics'] = [
+            "Monthly sales growth",
+            "Transaction count",
+            "Average sale value",
+            "Payment method adoption rates",
+            "Menu item profitability",
+            "Profit margin",
+            "Customer satisfaction scores"
+        ]
+        
+        return plan
+    
+    def visualize_report(self, report):
+        """Create visualizations for the report"""
+        # Set style
+        sns.set(style="whitegrid")
+        
+        # Create figure
+        fig = plt.figure(figsize=(16, 12))
+        
+        # Sales and Transactions comparison
+        ax1 = fig.add_subplot(2, 3, 1)
+        periods = [report['previous_period'], report['current_period']]
+        sales = [report['total_sales'] * (1 - report['sales_growth']/100), report['total_sales']]
+        ax1.bar(periods, sales, color=['#1f77b4', '#ff7f0e'])
+        ax1.set_title('Sales Comparison')
+        ax1.set_ylabel('Sales Amount')
+        
+        # Transaction comparison
+        ax2 = fig.add_subplot(2, 3, 2)
+        transactions = [report['total_transactions'] * (1 - report['transaction_growth']/100), report['total_transactions']]
+        ax2.bar(periods, transactions, color=['#1f77b4', '#ff7f0e'])
+        ax2.set_title('Transaction Comparison')
+        ax2.set_ylabel('Number of Transactions')
+        
+        # Payment method changes
+        ax3 = fig.add_subplot(2, 3, 3)
+        payment_changes = [p['change'] for p in report['payment_method_changes']]
+        payment_names = [p['method_name'] for p in report['payment_method_changes']]
+        ax3.barh(payment_names, payment_changes, color=['#2ca02c' if c > 0 else '#d62728' for c in payment_changes])
+        ax3.set_title('Payment Method Changes (%)')
+        ax3.set_xlabel('Change Percentage')
+        
+        # Menu item performance
+        ax4 = fig.add_subplot(2, 3, 4)
+        item_revenues = [i['current_revenue'] for i in report['item_changes']]
+        item_names = [i['item_name'] for i in report['item_changes']]
+        ax4.barh(item_names, item_revenues, color='#1f77b4')
+        ax4.set_title('Menu Item Revenue')
+        ax4.set_xlabel('Revenue Amount')
+        
+        # Expense changes
+        ax5 = fig.add_subplot(2, 3, 5)
+        expense_changes = [e['change'] for e in report['expense_changes']]
+        expense_names = [e['category'] for e in report['expense_changes']]
+        ax5.barh(expense_names, expense_changes, color=['#2ca02c' if c < 0 else '#d62728' for c in expense_changes])
+        ax5.set_title('Expense Changes (%)')
+        ax5.set_xlabel('Change Percentage')
+        
+        # Profit margin
+        ax6 = fig.add_subplot(2, 3, 6)
+        categories = ['Sales', 'Expenses', 'Profit']
+        values = [report['total_sales'], report['total_expenses'], 
+                 report['total_sales'] - report['total_expenses']]
+        colors = ['#1f77b4', '#d62728', '#2ca02c']
+        ax6.pie(values, labels=categories, colors=colors, autopct='%1.1f%%')
+        ax6.set_title('Profit Margin')
+        
+        plt.tight_layout()
+        plt.show()
+    
+    def save_report(self, report, filename):
+        """Save the report to a file"""
+        # Convert report to DataFrame for easy export
+        report_df = pd.DataFrame([report])
+        
+        # Save to CSV
+        report_df.to_csv(filename, index=False)
+        print(f"Report saved to {filename}")
+        
+        # Save visualizations
+        self.visualize_report(report)
+    
+    def interactive_data_entry(self):
+        """Interactive interface for entering data"""
+        print("\n=== Crispy Chicken Sales Reporting System ===")
+        print("1. Add Restaurant")
+        print("2. Add Payment Method")
+        print("3. Add Menu Item")
+        print("4. Enter Monthly Sales")
+        print("5. Generate Monthly Comparison Report")
+        print("6. Exit")
+        
+        while True:
+            choice = input("\nEnter your choice: ")
+            
+            if choice == '1':
+                name = input("Restaurant name: ")
+                location = input("Location: ")
+                manager = input("Manager name: ")
+                opening_date = input("Opening date (YYYY-MM-DD): ")
+                self.add_restaurant(name, location, manager, opening_date)
+                print(f"Restaurant '{name}' added successfully!")
+                
+            elif choice == '2':
+                method_name = input("Payment method name: ")
+                category = input("Category: ")
+                self.add_payment_method(method_name, category)
+                print(f"Payment method '{method_name}' added successfully!")
+                
+            elif choice == '3':
+                name = input("Menu item name: ")
+                category = input("Category: ")
+                price = float(input("Price: "))
+                cost = float(input("Cost: "))
+                self.add_menu_item(name, category, price, cost)
+                print(f"Menu item '{name}' added successfully!")
+                
+            elif choice == '4':
+                print("\nSelect Restaurant:")
+                for i, (_, restaurant) in enumerate(self.restaurants.iterrows()):
+                    print(f"{i+1}. {restaurant['name']} (ID: {restaurant['restaurant_id']})")
+                
+                restaurant_choice = int(input("Enter restaurant number: ")) - 1
+                restaurant_id = self.restaurants.iloc[restaurant_choice]['restaurant_id']
+                
+                month = int(input("Month (1-12): "))
+                year = int(input("Year: "))
+                total_sales = float(input("Total sales: "))
+                total_transactions = int(input("Total transactions: "))
+                
+                print("\nEnter Payment Method Data:")
+                payment_data = []
+                for _, payment in self.payment_methods.iterrows():
+                    print(f"\n{payment['method_name']}:")
+                    amount = float(input("Amount: "))
+                    percentage = float(input("Percentage of total: "))
+                    transaction_count = int(input("Transaction count: "))
+                    average_transaction = float(input("Average transaction: "))
+                    
+                    payment_data.append({
+                        'method_id': payment['method_id'],
+                        'amount': amount,
+                        'percentage': percentage,
+                        'transaction_count': transaction_count,
+                        'average_transaction': average_transaction
+                    })
+                
+                print("\nEnter Menu Item Data:")
+                item_data = []
+                for _, item in self.menu_items.iterrows():
+                    print(f"\n{item['name']}:")
+                    quantity_sold = int(input("Quantity sold: "))
+                    revenue = float(input("Revenue: "))
+                    
+                    item_data.append({
+                        'item_id': item['item_id'],
+                        'quantity_sold': quantity_sold,
+                        'revenue': revenue
+                    })
+                
+                print("\nEnter Expense Data:")
+                expense_data = []
+                categories = ['Rent', 'Utilities', 'Labor', 'Ingredients', 'Marketing']
+                for category in categories:
+                    print(f"\n{category}:")
+                    amount = float(input("Amount: "))
+                    notes = input("Notes: ")
+                    
+                    expense_data.append({
+                        'category': category,
+                        'amount': amount,
+                        'notes': notes
+                    })
+                
+                self.enter_monthly_sales(
+                    restaurant_id, month, year, total_sales, total_transactions,
+                    payment_data, item_data, expense_data
+                )
+                print("Monthly sales data entered successfully!")
+                
+            elif choice == '5':
+                print("\nSelect Restaurant:")
+                for i, (_, restaurant) in enumerate(self.restaurants.iterrows()):
+                    print(f"{i+1}. {restaurant['name']} (ID: {restaurant['restaurant_id']})")
+                
+                restaurant_choice = int(input("Enter restaurant number: ")) - 1
+                restaurant_id = self.restaurants.iloc[restaurant_choice]['restaurant_id']
+                
+                month = int(input("Month (1-12): "))
+                year = int(input("Year: "))
+                
+                report, error = self.generate_monthly_comparison_report(restaurant_id, month, year)
+                
+                if error:
+                    print(f"Error: {error}")
+                else:
+                    print("\n=== Monthly Comparison Report ===")
+                    print(f"Restaurant: {report['restaurant_name']}")
+                    print(f"Period: {report['current_period']} vs {report['previous_period']}")
+                    print(f"Sales Growth: {report['sales_growth']:.2f}%")
+                    print(f"Transaction Growth: {report['transaction_growth']:.2f}%")
+                    print(f"Average Sale Change: ${report['avg_sale_change']:.2f}")
+                    print(f"Profit Margin: {report['profit_margin']:.2f}%")
+                    
+                    strengths, weaknesses = self.identify_strengths_weaknesses(report)
+                    print("\nStrengths:")
+                    for strength in strengths:
+                        print(f"- {strength}")
+                    
+                    print("\nWeaknesses:")
+                    for weakness in weaknesses:
+                        print(f"- {weakness}")
+                    
+                    plan = self.generate_sales_growth_plan(report, strengths, weaknesses)
+                    print("\nSales Growth Plan:")
+                    print("\nImmediate Actions:")
+                    for action in plan['immediate_actions']:
+                        print(f"- {action}")
+                    
+                    print("\nShort-term Strategies:")
+                    for strategy in plan['short_term_strategies']:
+                        print(f"- {strategy}")
+                    
+                    print("\nLong-term Initiatives:")
+                    for initiative in plan['long_term_initiatives']:
+                        print(f"- {initiative}")
+                    
+                    print("\nMonitoring Metrics:")
+                    for metric in plan['monitoring_metrics']:
+                        print(f"- {metric}")
+                    
+                    save = input("\nSave report? (y/n): ")
+                    if save.lower() == 'y':
+                        filename = input("Enter filename (e.g., report.csv): ")
+                        self.save_report(report, filename)
+                
+            elif choice == '6':
+                print("Exiting system...")
+                break
+                
+            else:
+                print("Invalid choice. Please try again.")
+
+
+# Example usage
+if __name__ == "__main__":
+    # Create reporting system
+    system = CrispyChickenReportingSystem()
+    
+    # Run interactive interface
+    system.interactive_data_entry()
