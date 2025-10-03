@@ -994,6 +994,7 @@
                         <option value="Crispy Chicken Al Electra">Al Electra</option>
                         <option value="Crispy Chicken Al Barsha">Al Barsha</option>
                         <option value="Crispy Chicken Al Satwa">Al Satwa</option>
+                        <option value="Crispy Chicken Al Rgga">Al Rgga</option>
                     </select>
                 </div>
             </div>
@@ -1205,6 +1206,7 @@
                         <option value="4">Al Electra</option>
                         <option value="5">Al Barsha</option>
                         <option value="6">Al Satwa</option>
+                        <option value="7">Al Rgga</option>
                     </select>
                 </div>
                 <div class="flex items-end">
@@ -1296,6 +1298,7 @@
                                 <option value="Al_Electra">Al Electra</option>
                                 <option value="Al_Barsha">Al Barsha</option>
                                 <option value="Al_Satwa">Al Satwa</option>
+                                <option value="Al_Rgga">Al Rgga</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -1391,6 +1394,7 @@
                             <option value="Al_Electra">Al Electra</option>
                             <option value="Al_Barsha">Al Barsha</option>
                             <option value="Al_Satwa">Al Satwa</option>
+                            <option value="Al_Rgga">Al Rgga</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -1449,7 +1453,7 @@
         Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
         Chart.defaults.color = '#2c3e50';
 
-        // Sample data for 2024 and 2025
+        // Updated data for 2024 and 2025 with new branch "Crispy Chicken Al Rgga"
         const salesData = {
             2024: {
                 "Crispy Chicken-Hamdan St": { sales: 2505169, orders: 88936, platforms: { Noon: 130332, Talabat: 55628, Careem: 38266, Smile: 5483, Deliveroo: 411426 } },
@@ -1458,7 +1462,8 @@
                 "Crispy Chicken Muroor": { sales: 1335279, orders: 40728, platforms: { Noon: 56696, Talabat: 59499, Careem: 32060, Smile: 3548, Deliveroo: 270757 } },
                 "Crispy Chicken Al Electra": { sales: 0, orders: 0, platforms: { Noon: 0, Talabat: 0, Careem: 0, Smile: 0, Deliveroo: 0 } },
                 "Crispy Chicken Al Barsha": { sales: 1640935, orders: 58598, platforms: { Noon: 40737, Talabat: 69636, Careem: 49245, Smile: 35818, Deliveroo: 330661 } },
-                "Crispy Chicken Al Satwa": { sales: 0, orders: 0, platforms: { Noon: 0, Talabat: 0, Careem: 0, Smile: 0, Deliveroo: 0 } }
+                "Crispy Chicken Al Satwa": { sales: 0, orders: 0, platforms: { Noon: 0, Talabat: 0, Careem: 0, Smile: 0, Deliveroo: 0 } },
+                "Crispy Chicken Al Rgga": { sales: 0, orders: 0, platforms: { Noon: 0, Talabat: 0, Careem: 0, Smile: 0, Deliveroo: 0 } }
             },
             2025: {
                 "Crispy Chicken-Hamdan St": { sales: 2249733, orders: 77143, platforms: { Noon: 119300, Talabat: 55628, Careem: 38266, Smile: 5483, Deliveroo: 414426 } },
@@ -1467,11 +1472,12 @@
                 "Crispy Chicken Muroor": { sales: 1523141, orders: 51652, platforms: { Noon: 59749, Talabat: 59499, Careem: 32060, Smile: 3548, Deliveroo: 270757 } },
                 "Crispy Chicken Al Electra": { sales: 2178491, orders: 87240, platforms: { Noon: 0, Talabat: 0, Careem: 0, Smile: 0, Deliveroo: 479584 } },
                 "Crispy Chicken Al Barsha": { sales: 1851824, orders: 71558, platforms: { Noon: 55752, Talabat: 69636, Careem: 49245, Smile: 35818, Deliveroo: 330661 } },
-                "Crispy Chicken Al Satwa": { sales: 1369609, orders: 49038, platforms: { Noon: 26849, Talabat: 71303, Careem: 25926, Smile: 20813, Deliveroo: 252008 } }
+                "Crispy Chicken Al Satwa": { sales: 1369609, orders: 49038, platforms: { Noon: 26849, Talabat: 71303, Careem: 25926, Smile: 20813, Deliveroo: 252008 } },
+                "Crispy Chicken Al Rgga": { sales: 1993, orders: 45, platforms: { Noon: 0, Talabat: 0, Careem: 0, Smile: 45, Deliveroo: 0 } }
             }
         };
 
-        // Delivery data for 2025 and 2024
+        // Delivery data for 2025 and 2024 with new branch
         const deliveryCounts2025 = {
             'Crispy Chicken-Hamdan St': [2757, 2460, 1877, 2363, 2515, 2318, 2557, 2247, 0, 0, 0, 0],
             'Crispy Chicken Khaldia': [1241, 1054, 891, 1156, 1083, 1078, 1097, 1032, 0, 0, 0, 0],
@@ -1480,18 +1486,20 @@
             'Crispy Chicken Al Electra': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             'Crispy Chicken Al Barsha': [1726, 1527, 1427, 1816, 881, 891, 1007, 901, 0, 0, 0, 0],
             'Crispy Chicken Al Satwa': [818, 719, 645, 881, 506, 463, 528, 492, 0, 0, 0, 0],
-            'Sum': [8998, 8095, 6563, 8673, 7266, 6940, 7480, 6746, 0, 0, 0, 0]
+            'Crispy Chicken Al Rgga': [0, 0, 0, 0, 0, 0, 0, 0, 45, 0, 0, 0],
+            'Sum': [8998, 8095, 6563, 8673, 7266, 6940, 7480, 6746, 45, 0, 0, 0]
         };
 
         const deliveryAmounts2025 = {
             'Crispy Chicken-Hamdan St': [119300, 111546, 87783, 106625, 117066, 106229, 109205, 103184, 0, 0, 0, 0],
-            'Crispy Chicken Khaldia': [60360, 51718, 58862, 54785, 54610, 56860, 51618, 51039, 0, 0, 0, 0],
+            'Crispy Chicken Khaldia': [60360, 51718, 44621, 54785, 54610, 56860, 51618, 51039, 0, 0, 0, 0],
             'Crispy Chicken Shabiya 11': [52778, 51105, 40273, 56981, 56703, 54611, 55160, 55336, 0, 0, 0, 0],
             'Crispy Chicken Muroor': [59749, 58438, 41808, 56795, 54302, 56046, 53001, 44361, 0, 0, 0, 0],
             'Crispy Chicken Al Electra': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             'Crispy Chicken Al Barsha': [55752, 51699, 42075, 61422, 36988, 41436, 44627, 49296, 0, 0, 0, 0],
-            'Crispy Chicken Al Satwa': [26849, 24348, 21934, 29154, 20631, 21005, 24685, 22476, 0, 0, 0, 0],
-            'Sum': [374788, 348854, 292735, 365762, 340300, 336187, 338296, 325692, 0, 0, 0, 0]
+            'Crispy Chicken Al Satwa': [26849, 24349, 21934, 29154, 20631, 21005, 24685, 22476, 0, 0, 0, 0],
+            'Crispy Chicken Al Rgga': [0, 0, 0, 0, 0, 0, 0, 0, 1993, 0, 0, 0],
+            'Sum': [374788, 348855, 278494, 365762, 340300, 336187, 338296, 325692, 1993, 0, 0, 0]
         };
 
         const deliveryCounts2024 = {
@@ -1502,6 +1510,7 @@
             'Crispy Chicken Al Electra': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             'Crispy Chicken Al Barsha': [802, 928, 928, 1173, 1487, 1488, 1740, 1813, 1749, 1894, 1595, 1424],
             'Crispy Chicken Al Satwa': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            'Crispy Chicken Al Rgga': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             'Sum': [7367, 7333, 6582, 7899, 9205, 9637, 9935, 10324, 8900, 9447, 9064, 8540]
         };
 
@@ -1513,12 +1522,13 @@
             'Crispy Chicken Al Electra': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             'Crispy Chicken Al Barsha': [30120, 33556, 30722, 40737, 50460, 48778, 56252, 54008, 54921, 55783, 44274, 48203],
             'Crispy Chicken Al Satwa': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            'Crispy Chicken Al Rgga': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             'Sum': [343951, 328557, 295555, 362229, 411150, 443729, 420377, 429206, 379805, 391449, 374094, 416828]
         };
 
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        const branches = ['Crispy Chicken-Hamdan St', 'Crispy Chicken Khaldia', 'Crispy Chicken Shabiya 11', 'Crispy Chicken Muroor', 'Crispy Chicken Al Electra', 'Crispy Chicken Al Barsha', 'Crispy Chicken Al Satwa'];
-        const branchNames = ['Hamdan St', 'Khaldia', 'Shabiya 11', 'Muroor', 'Al Electra', 'Al Barsha', 'Al Satwa'];
+        const branches = ['Crispy Chicken-Hamdan St', 'Crispy Chicken Khaldia', 'Crispy Chicken Shabiya 11', 'Crispy Chicken Muroor', 'Crispy Chicken Al Electra', 'Crispy Chicken Al Barsha', 'Crispy Chicken Al Satwa', 'Crispy Chicken Al Rgga'];
+        const branchNames = ['Hamdan St', 'Khaldia', 'Shabiya 11', 'Muroor', 'Al Electra', 'Al Barsha', 'Al Satwa', 'Al Rgga'];
 
         // Initialize dashboard
         let currentYear = 2025;
@@ -1850,353 +1860,6 @@
             updateTrendsChart();
         }
 
-        // Update sales chart
-        function updateSalesChart() {
-            const yearData = salesData[currentYear];
-            const prevYearData = salesData[currentYear === 2025 ? 2024 : 2025];
-            
-            const branches = [];
-            const currentSales = [];
-            const prevSales = [];
-            
-            for (const [branch, data] of Object.entries(yearData)) {
-                if (currentBranch === 'all' || branch === currentBranch) {
-                    branches.push(branchNames[branches.indexOf(branch)]);
-                    currentSales.push(data.sales);
-                    prevSales.push(prevYearData[branch]?.sales || 0);
-                }
-            }
-            
-            const ctx = document.getElementById('salesChart');
-            if (!ctx) return;
-            
-            if (window.salesChart) {
-                window.salesChart.destroy();
-            }
-            
-            const datasets = [];
-            
-            if (!comparisonMode) {
-                datasets.push({
-                    label: `${currentYear} Sales`,
-                    data: currentSales,
-                    backgroundColor: 'rgba(78, 115, 223, 0.7)',
-                    borderColor: 'rgba(78, 115, 223, 1)',
-                    borderWidth: 1
-                });
-            } else {
-                datasets.push({
-                    label: `${currentYear} Sales`,
-                    data: currentSales,
-                    backgroundColor: 'rgba(78, 115, 223, 0.7)',
-                    borderColor: 'rgba(78, 115, 223, 1)',
-                    borderWidth: 1
-                });
-                datasets.push({
-                    label: `${currentYear === 2025 ? 2024 : 2025} Sales`,
-                    data: prevSales,
-                    backgroundColor: 'rgba(28, 200, 138, 0.7)',
-                    borderColor: 'rgba(28, 200, 138, 1)',
-                    borderWidth: 1
-                });
-            }
-            
-            window.salesChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: branches,
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Sales (AED)'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // Update orders chart
-        function updateOrdersChart() {
-            const yearData = salesData[currentYear];
-            const prevYearData = salesData[currentYear === 2025 ? 2024 : 2025];
-            
-            const branches = [];
-            const currentOrders = [];
-            const prevOrders = [];
-            
-            for (const [branch, data] of Object.entries(yearData)) {
-                if (currentBranch === 'all' || branch === currentBranch) {
-                    branches.push(branchNames[branches.indexOf(branch)]);
-                    currentOrders.push(data.orders);
-                    prevOrders.push(prevYearData[branch]?.orders || 0);
-                }
-            }
-            
-            const ctx = document.getElementById('ordersChart');
-            if (!ctx) return;
-            
-            if (window.ordersChart) {
-                window.ordersChart.destroy();
-            }
-            
-            const datasets = [];
-            
-            if (!comparisonMode) {
-                datasets.push({
-                    label: `${currentYear} Orders`,
-                    data: currentOrders,
-                    backgroundColor: 'rgba(54, 185, 204, 0.7)',
-                    borderColor: 'rgba(54, 185, 204, 1)',
-                    borderWidth: 1
-                });
-            } else {
-                datasets.push({
-                    label: `${currentYear} Orders`,
-                    data: currentOrders,
-                    backgroundColor: 'rgba(54, 185, 204, 0.7)',
-                    borderColor: 'rgba(54, 185, 204, 1)',
-                    borderWidth: 1
-                });
-                datasets.push({
-                    label: `${currentYear === 2025 ? 2024 : 2025} Orders`,
-                    data: prevOrders,
-                    backgroundColor: 'rgba(246, 194, 62, 0.7)',
-                    borderColor: 'rgba(246, 194, 62, 1)',
-                    borderWidth: 1
-                });
-            }
-            
-            window.ordersChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: branches,
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Number of Orders'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // Update platform chart
-        function updatePlatformChart() {
-            const yearData = salesData[currentYear];
-            const prevYearData = salesData[currentYear === 2025 ? 2024 : 2025];
-            
-            const platforms = ['Noon', 'Talabat', 'Careem', 'Smile', 'Deliveroo'];
-            const currentPlatformSales = [];
-            const prevPlatformSales = [];
-            
-            for (const platform of platforms) {
-                let currentTotal = 0;
-                let prevTotal = 0;
-                
-                for (const [branch, data] of Object.entries(yearData)) {
-                    if (currentBranch === 'all' || branch === currentBranch) {
-                        currentTotal += data.platforms[platform] || 0;
-                    }
-                }
-                
-                for (const [branch, data] of Object.entries(prevYearData)) {
-                    if (currentBranch === 'all' || branch === currentBranch) {
-                        prevTotal += data.platforms[platform] || 0;
-                    }
-                }
-                
-                currentPlatformSales.push(currentTotal);
-                prevPlatformSales.push(prevTotal);
-            }
-            
-            const ctx = document.getElementById('platformChart');
-            if (!ctx) return;
-            
-            if (window.platformChart) {
-                window.platformChart.destroy();
-            }
-            
-            const datasets = [];
-            
-            if (!comparisonMode) {
-                datasets.push({
-                    data: currentPlatformSales,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.7)',
-                        'rgba(54, 162, 235, 0.7)',
-                        'rgba(255, 206, 86, 0.7)',
-                        'rgba(75, 192, 192, 0.7)',
-                        'rgba(153, 102, 255, 0.7)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)'
-                    ],
-                    borderWidth: 1
-                });
-            } else {
-                datasets.push({
-                    label: `${currentYear}`,
-                    data: currentPlatformSales,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.7)',
-                        'rgba(54, 162, 235, 0.7)',
-                        'rgba(255, 206, 86, 0.7)',
-                        'rgba(75, 192, 192, 0.7)',
-                        'rgba(153, 102, 255, 0.7)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)'
-                    ],
-                    borderWidth: 1
-                });
-                datasets.push({
-                    label: `${currentYear === 2025 ? 2024 : 2025}`,
-                    data: prevPlatformSales,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.4)',
-                        'rgba(54, 162, 235, 0.4)',
-                        'rgba(255, 206, 86, 0.4)',
-                        'rgba(75, 192, 192, 0.4)',
-                        'rgba(153, 102, 255, 0.4)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)'
-                    ],
-                    borderWidth: 1
-                });
-            }
-            
-            window.platformChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: platforms,
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                        }
-                    }
-                }
-            });
-        }
-
-        // Update trends chart
-        function updateTrendsChart() {
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            const currentYearData = [];
-            const prevYearData = [];
-            
-            for (let i = 0; i < 12; i++) {
-                // Sample monthly data - in a real application, this would be actual monthly data
-                const currentMonthSales = Math.floor(Math.random() * 500000) + 100000;
-                const prevMonthSales = Math.floor(Math.random() * 500000) + 100000;
-                
-                currentYearData.push(currentMonthSales);
-                prevYearData.push(prevMonthSales);
-            }
-            
-            const ctx = document.getElementById('trendsChart');
-            if (!ctx) return;
-            
-            if (window.trendsChart) {
-                window.trendsChart.destroy();
-            }
-            
-            const datasets = [];
-            
-            if (!comparisonMode) {
-                datasets.push({
-                    label: `${currentYear} Sales`,
-                    data: currentYearData,
-                    borderColor: 'rgba(78, 115, 223, 1)',
-                    backgroundColor: 'rgba(78, 115, 223, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                });
-            } else {
-                datasets.push({
-                    label: `${currentYear} Sales`,
-                    data: currentYearData,
-                    borderColor: 'rgba(78, 115, 223, 1)',
-                    backgroundColor: 'rgba(78, 115, 223, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                });
-                datasets.push({
-                    label: `${currentYear === 2025 ? 2024 : 2025} Sales`,
-                    data: prevYearData,
-                    borderColor: 'rgba(28, 200, 138, 1)',
-                    backgroundColor: 'rgba(28, 200, 138, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                });
-            }
-            
-            window.trendsChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: months,
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Sales (AED)'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
         // Initialize Year Overview Chart
         function initializeYearOverviewChart() {
             const ctx = document.getElementById('year-overview-chart');
@@ -2365,7 +2028,8 @@
                             'rgba(246, 194, 62, 0.7)',
                             'rgba(155, 89, 182, 0.7)',
                             'rgba(26, 188, 156, 0.7)',
-                            'rgba(230, 126, 34, 0.7)'
+                            'rgba(230, 126, 34, 0.7)',
+                            'rgba(52, 73, 94, 0.7)'
                         ],
                         borderColor: [
                             'rgba(231, 76, 60, 1)',
@@ -2374,7 +2038,8 @@
                             'rgba(246, 194, 62, 1)',
                             'rgba(155, 89, 182, 1)',
                             'rgba(26, 188, 156, 1)',
-                            'rgba(230, 126, 34, 1)'
+                            'rgba(230, 126, 34, 1)',
+                            'rgba(52, 73, 94, 1)'
                         ],
                         borderWidth: 1
                     }]
@@ -2387,57 +2052,6 @@
                         }
                     }
                 }
-            });
-        }
-
-        // Populate Delivery Trends Summary
-        function populateDeliveryTrendsSummary() {
-            const summaryContainer = document.getElementById('delivery-trends-summary');
-            summaryContainer.innerHTML = '';
-            
-            branches.forEach((branch, index) => {
-                let totalCount2024 = 0;
-                let totalCount2025 = 0;
-                let totalAmount2024 = 0;
-                let totalAmount2025 = 0;
-                
-                months.forEach(month => {
-                    const monthIndex = months.indexOf(month);
-                    totalCount2024 += deliveryCounts2024[branch][monthIndex];
-                    totalCount2025 += deliveryCounts2025[branch][monthIndex];
-                    totalAmount2024 += deliveryAmounts2024[branch][monthIndex];
-                    totalAmount2025 += deliveryAmounts2025[branch][monthIndex];
-                });
-                
-                const countChange = totalCount2024 === 0 ? 0 : ((totalCount2025 - totalCount2024) / totalCount2024 * 100).toFixed(1);
-                const amountChange = totalAmount2024 === 0 ? 0 : ((totalAmount2025 - totalAmount2024) / totalAmount2024 * 100).toFixed(1);
-                
-                let trend = 'neutral';
-                let trendClass = 'neutral';
-                let icon = 'bi bi-dash';
-                
-                if (countChange > 5) {
-                    trend = 'positive';
-                    trendClass = 'positive';
-                    icon = 'bi bi-arrow-up';
-                } else if (countChange < -5) {
-                    trend = 'negative';
-                    trendClass = 'negative';
-                    icon = 'bi bi-arrow-down';
-                }
-                
-                const card = document.createElement('div');
-                card.className = `summary-card ${trendClass}`;
-                
-                card.innerHTML = `
-                    <h4><i class="${icon}"></i> ${branchNames[index]}</h4>
-                    <p><strong>Count Change:</strong> ${countChange > 0 ? '+' : ''}${countChange}%</p>
-                    <p><strong>Amount Change:</strong> ${amountChange > 0 ? '+' : ''}${amountChange}%</p>
-                    <p><strong>2024 Total:</strong> ${totalCount2024.toLocaleString()} orders</p>
-                    <p><strong>2025 Total:</strong> ${totalCount2025.toLocaleString()} orders</p>
-                `;
-                
-                summaryContainer.appendChild(card);
             });
         }
 
@@ -3882,6 +3496,16 @@
                     transactions: 950,
                     deliverySales: 130000,
                     deliveryOrders: 800
+                },
+                {
+                    id: dataIdCounter++,
+                    date: '2023-09-05',
+                    branch: 'Al_Rgga',
+                    month: 'September',
+                    totalSales: 1993,
+                    transactions: 45,
+                    deliverySales: 1993,
+                    deliveryOrders: 45
                 }
             ];
             
@@ -3985,7 +3609,8 @@
                 'Muroor': 'Crispy Chicken Muroor',
                 'Al_Electra': 'Crispy Chicken Al Electra',
                 'Al_Barsha': 'Crispy Chicken Al Barsha',
-                'Al_Satwa': 'Crispy Chicken Al Satwa'
+                'Al_Satwa': 'Crispy Chicken Al Satwa',
+                'Al_Rgga': 'Crispy Chicken Al Rgga'
             };
             
             const branchKey = branchMapping[branch];
