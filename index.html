@@ -104,6 +104,26 @@
             border-radius: 4px;
         }
 
+        .year-toggle {
+            display: flex;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .year-toggle button {
+            padding: 0.5rem 1rem;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .year-toggle button.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
         .header-button {
             background-color: rgba(255, 255, 255, 0.2);
             color: white;
@@ -569,6 +589,40 @@
         .notification.info {
             background-color: var(--secondary-color);
         }
+
+        /* YoY Comparison Badge */
+        .yoy-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: 0.5rem;
+        }
+
+        .yoy-badge.positive {
+            background-color: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
+        }
+
+        .yoy-badge.negative {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--accent-color);
+        }
+
+        /* Year Completion Indicator */
+        .year-completion {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: 0.5rem;
+            background-color: rgba(241, 196, 15, 0.1);
+            color: var(--warning-color);
+        }
     </style>
 </head>
 <body>
@@ -594,7 +648,12 @@
                     <option value="electra">Al Electra</option>
                     <option value="barsha">Al Barsha</option>
                     <option value="satwa">Al Satwa</option>
+                    <option value="rgga">Al Rgga</option>
                 </select>
+                <div class="year-toggle">
+                    <button id="year2024" class="active">2024</button>
+                    <button id="year2025">2025</button>
+                </div>
                 <button class="header-button" id="refreshButton">
                     <span class="material-icons">refresh</span>
                     Refresh
@@ -616,7 +675,9 @@
             <div class="kpi-container">
                 <div class="kpi-card">
                     <div class="kpi-header">
-                        <div class="kpi-title">Total Delivery Orders</div>
+                        <div class="kpi-title">Total Delivery Orders
+                            <span id="ordersYoYBadge" class="yoy-badge"></span>
+                        </div>
                         <div class="kpi-icon" style="background-color: rgba(52, 152, 219, 0.1);">
                             <span class="material-icons">local_shipping</span>
                         </div>
@@ -629,7 +690,9 @@
                 </div>
                 <div class="kpi-card">
                     <div class="kpi-header">
-                        <div class="kpi-title">Total Delivery Revenue</div>
+                        <div class="kpi-title">Total Delivery Revenue
+                            <span id="revenueYoYBadge" class="yoy-badge"></span>
+                        </div>
                         <div class="kpi-icon" style="background-color: rgba(46, 204, 113, 0.1);">
                             <span class="material-icons">payments</span>
                         </div>
@@ -642,7 +705,9 @@
                 </div>
                 <div class="kpi-card">
                     <div class="kpi-header">
-                        <div class="kpi-title">Average Delivery Time</div>
+                        <div class="kpi-title">Average Delivery Time
+                            <span id="timeYoYBadge" class="yoy-badge"></span>
+                        </div>
                         <div class="kpi-icon" style="background-color: rgba(241, 196, 15, 0.1);">
                             <span class="material-icons">timer</span>
                         </div>
@@ -655,7 +720,9 @@
                 </div>
                 <div class="kpi-card">
                     <div class="kpi-header">
-                        <div class="kpi-title">Delivery Success Rate</div>
+                        <div class="kpi-title">Delivery Success Rate
+                            <span id="successYoYBadge" class="yoy-badge"></span>
+                        </div>
                         <div class="kpi-icon" style="background-color: rgba(155, 89, 182, 0.1);">
                             <span class="material-icons">check_circle</span>
                         </div>
@@ -668,7 +735,10 @@
                 </div>
                 <div class="kpi-card">
                     <div class="kpi-header">
-                        <div class="kpi-title">Customer Satisfaction</div>
+                        <div class="kpi-title">Customer Satisfaction
+                            <span id="satisfactionYoYBadge" class="yoy-badge"></span>
+                            <span id="yearCompletionBadge" class="year-completion"></span>
+                        </div>
                         <div class="kpi-icon" style="background-color: rgba(231, 76, 60, 0.1);">
                             <span class="material-icons">star</span>
                         </div>
@@ -724,14 +794,15 @@
                 </div>
                 <div class="chart-card">
                     <div class="chart-header">
-                        <div class="chart-title">Branch Revenue Contribution</div>
+                        <div class="chart-title">Year-over-Year Comparison</div>
                         <div class="chart-actions">
-                            <button class="chart-action-button">Current</button>
-                            <button class="chart-action-button">Previous</button>
+                            <button class="chart-action-button">Revenue</button>
+                            <button class="chart-action-button">Orders</button>
+                            <button class="chart-action-button">Success Rate</button>
                         </div>
                     </div>
                     <div class="chart-container">
-                        <canvas id="branchRevenueChart"></canvas>
+                        <canvas id="yoyComparisonChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -817,6 +888,7 @@
                         <option value="electra">Al Electra</option>
                         <option value="barsha">Al Barsha</option>
                         <option value="satwa">Al Satwa</option>
+                        <option value="rgga">Al Rgga</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -852,52 +924,246 @@
 
     <script>
         // Data Management
-        let deliveryData = [
-            { date: '2025-01-01', branch: 'hamdan', orders: 26775, avgTime: 25, successRate: 95, satisfaction: 4.2, revenue: 785538 },
-            { date: '2025-01-01', branch: 'khaldia', orders: 19523, avgTime: 28, successRate: 93, satisfaction: 4.0, revenue: 584685 },
-            { date: '2025-01-01', branch: 'shabiya', orders: 21470, avgTime: 22, successRate: 96, satisfaction: 4.3, revenue: 630956 },
-            { date: '2025-01-01', branch: 'muroor', orders: 17770, avgTime: 30, successRate: 92, satisfaction: 3.9, revenue: 527598 },
-            { date: '2025-01-01', branch: 'electra', orders: 30341, avgTime: 20, successRate: 97, satisfaction: 4.5, revenue: 740084 },
-            { date: '2025-01-01', branch: 'barsha', orders: 24058, avgTime: 26, successRate: 94, satisfaction: 4.1, revenue: 611174 },
-            { date: '2025-01-01', branch: 'satwa', orders: 14065, avgTime: 32, successRate: 91, satisfaction: 3.8, revenue: 385718 },
+        let deliveryData2024 = [
+            { date: '2024-01-01', branch: 'hamdan', orders: 2797, avgTime: 25, successRate: 95, satisfaction: 4.2, revenue: 130332 },
+            { date: '2024-01-01', branch: 'khaldia', orders: 1444, avgTime: 28, successRate: 93, satisfaction: 4.0, revenue: 73203 },
+            { date: '2024-01-01', branch: 'shabiya', orders: 1184, avgTime: 22, successRate: 96, satisfaction: 4.3, revenue: 53600 },
+            { date: '2024-01-01', branch: 'muroor', orders: 1140, avgTime: 30, successRate: 92, satisfaction: 3.9, revenue: 56696 },
+            { date: '2024-01-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2024-01-01', branch: 'barsha', orders: 802, avgTime: 26, successRate: 94, satisfaction: 4.1, revenue: 30120 },
+            { date: '2024-01-01', branch: 'satwa', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2024-01-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
             
-            { date: '2025-02-01', branch: 'hamdan', orders: 25749, avgTime: 24, successRate: 96, satisfaction: 4.3, revenue: 742068 },
-            { date: '2025-02-01', branch: 'khaldia', orders: 18616, avgTime: 27, successRate: 94, satisfaction: 4.1, revenue: 566345 },
-            { date: '2025-02-01', branch: 'shabiya', orders: 21387, avgTime: 21, successRate: 97, satisfaction: 4.4, revenue: 614655 },
-            { date: '2025-02-01', branch: 'muroor', orders: 17373, avgTime: 29, successRate: 93, satisfaction: 4.0, revenue: 501652 },
-            { date: '2025-02-01', branch: 'electra', orders: 28535, avgTime: 19, successRate: 98, satisfaction: 4.6, revenue: 710820 },
-            { date: '2025-02-01', branch: 'barsha', orders: 23744, avgTime: 25, successRate: 95, satisfaction: 4.2, revenue: 610930 },
-            { date: '2025-02-01', branch: 'satwa', orders: 15427, avgTime: 31, successRate: 92, satisfaction: 3.9, revenue: 426647 },
+            { date: '2024-02-01', branch: 'hamdan', orders: 2797, avgTime: 24, successRate: 96, satisfaction: 4.3, revenue: 119033 },
+            { date: '2024-02-01', branch: 'khaldia', orders: 1270, avgTime: 27, successRate: 94, satisfaction: 4.1, revenue: 64910 },
+            { date: '2024-02-01', branch: 'shabiya', orders: 1260, avgTime: 21, successRate: 97, satisfaction: 4.4, revenue: 56902 },
+            { date: '2024-02-01', branch: 'muroor', orders: 1078, avgTime: 29, successRate: 93, satisfaction: 4.0, revenue: 54156 },
+            { date: '2024-02-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2024-02-01', branch: 'barsha', orders: 928, avgTime: 25, successRate: 95, satisfaction: 4.2, revenue: 33556 },
+            { date: '2024-02-01', branch: 'satwa', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2024-02-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
             
-            { date: '2025-03-01', branch: 'hamdan', orders: 24619, avgTime: 23, successRate: 97, satisfaction: 4.4, revenue: 722127 },
-            { date: '2025-03-01', branch: 'khaldia', orders: 19137, avgTime: 26, successRate: 95, satisfaction: 4.2, revenue: 571512 },
-            { date: '2025-03-01', branch: 'shabiya', orders: 21870, avgTime: 20, successRate: 98, satisfaction: 4.5, revenue: 669003 },
-            { date: '2025-03-01', branch: 'muroor', orders: 16509, avgTime: 28, successRate: 94, satisfaction: 4.1, revenue: 493891 },
-            { date: '2025-03-01', branch: 'electra', orders: 28364, avgTime: 18, successRate: 99, satisfaction: 4.7, revenue: 727587 },
-            { date: '2025-03-01', branch: 'barsha', orders: 23756, avgTime: 24, successRate: 96, satisfaction: 4.3, revenue: 629720 },
-            { date: '2025-03-01', branch: 'satwa', orders: 19546, avgTime: 30, successRate: 93, satisfaction: 4.0, revenue: 557244 },
+            { date: '2024-03-01', branch: 'hamdan', orders: 2474, avgTime: 23, successRate: 97, satisfaction: 4.4, revenue: 112730 },
+            { date: '2024-03-01', branch: 'khaldia', orders: 1114, avgTime: 26, successRate: 95, satisfaction: 4.2, revenue: 56006 },
+            { date: '2024-03-01', branch: 'shabiya', orders: 1167, avgTime: 20, successRate: 98, satisfaction: 4.5, revenue: 50445 },
+            { date: '2024-03-01', branch: 'muroor', orders: 899, avgTime: 28, successRate: 94, satisfaction: 4.1, revenue: 45652 },
+            { date: '2024-03-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2024-03-01', branch: 'barsha', orders: 928, avgTime: 24, successRate: 96, satisfaction: 4.3, revenue: 30722 },
+            { date: '2024-03-01', branch: 'satwa', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2024-03-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
             
-            { date: '2025-04-01', branch: 'hamdan', orders: 23797, avgTime: 22, successRate: 98, satisfaction: 4.5, revenue: 713033 },
-            { date: '2025-04-01', branch: 'khaldia', orders: 18743, avgTime: 25, successRate: 96, satisfaction: 4.3, revenue: 568123 },
-            { date: '2025-04-01', branch: 'shabiya', orders: 20572, avgTime: 19, successRate: 99, satisfaction: 4.6, revenue: 638250 },
-            { date: '2025-04-01', branch: 'muroor', orders: 17251, avgTime: 27, successRate: 95, satisfaction: 4.2, revenue: 526701 },
-            { date: '2025-04-01', branch: 'electra', orders: 28496, avgTime: 17, successRate: 100, satisfaction: 4.8, revenue: 725004 },
-            { date: '2025-04-01', branch: 'barsha', orders: 22717, avgTime: 23, successRate: 97, satisfaction: 4.4, revenue: 587672 },
-            { date: '2025-04-01', branch: 'satwa', orders: 14139, avgTime: 29, successRate: 94, satisfaction: 4.1, revenue: 401400 },
+            { date: '2024-04-01', branch: 'hamdan', orders: 2815, avgTime: 22, successRate: 98, satisfaction: 4.5, revenue: 134005 },
+            { date: '2024-04-01', branch: 'khaldia', orders: 1268, avgTime: 25, successRate: 96, satisfaction: 4.3, revenue: 63867 },
+            { date: '2024-04-01', branch: 'shabiya', orders: 1434, avgTime: 19, successRate: 99, satisfaction: 4.6, revenue: 63642 },
+            { date: '2024-04-01', branch: 'muroor', orders: 1209, avgTime: 27, successRate: 95, satisfaction: 4.2, revenue: 59978 },
+            { date: '2024-04-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2024-04-01', branch: 'barsha', orders: 1173, avgTime: 23, successRate: 97, satisfaction: 4.4, revenue: 40737 },
+            { date: '2024-04-01', branch: 'satwa', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2024-04-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            
+            { date: '2024-05-01', branch: 'hamdan', orders: 3066, avgTime: 21, successRate: 99, satisfaction: 4.7, revenue: 142948 },
+            { date: '2024-05-01', branch: 'khaldia', orders: 1423, avgTime: 24, successRate: 97, satisfaction: 4.4, revenue: 71236 },
+            { date: '2024-05-01', branch: 'shabiya', orders: 1380, avgTime: 18, successRate: 100, satisfaction: 4.8, revenue: 62211 },
+            { date: '2024-05-01', branch: 'muroor', orders: 1294, avgTime: 26, successRate: 96, satisfaction: 4.3, revenue: 61958 },
+            { date: '2024-05-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2024-05-01', branch: 'barsha', orders: 1487, avgTime: 22, successRate: 98, satisfaction: 4.5, revenue: 50460 },
+            { date: '2024-05-01', branch: 'satwa', orders: 555, avgTime: 29, successRate: 94, satisfaction: 4.1, revenue: 22337 },
+            { date: '2024-05-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            
+            { date: '2024-06-01', branch: 'hamdan', orders: 3261, avgTime: 20, successRate: 100, satisfaction: 4.8, revenue: 153855 },
+            { date: '2024-06-01', branch: 'khaldia', orders: 1467, avgTime: 23, successRate: 98, satisfaction: 4.5, revenue: 78402 },
+            { date: '2024-06-01', branch: 'shabiya', orders: 1396, avgTime: 17, successRate: 99, satisfaction: 4.7, revenue: 64920 },
+            { date: '2024-06-01', branch: 'muroor', orders: 1341, avgTime: 25, successRate: 97, satisfaction: 4.4, revenue: 71109 },
+            { date: '2024-06-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2024-06-01', branch: 'barsha', orders: 1488, avgTime: 21, successRate: 99, satisfaction: 4.6, revenue: 48778 },
+            { date: '2024-06-01', branch: 'satwa', orders: 684, avgTime: 28, successRate: 95, satisfaction: 4.2, revenue: 26665 },
+            { date: '2024-06-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            
+            { date: '2024-07-01', branch: 'hamdan', orders: 3236, avgTime: 19, successRate: 100, satisfaction: 4.8, revenue: 140646 },
+            { date: '2024-07-01', branch: 'khaldia', orders: 1438, avgTime: 22, successRate: 98, satisfaction: 4.5, revenue: 72570 },
+            { date: '2024-07-01', branch: 'shabiya', orders: 1366, avgTime: 16, successRate: 99, satisfaction: 4.7, revenue: 60095 },
+            { date: '2024-07-01', branch: 'muroor', orders: 1360, avgTime: 24, successRate: 97, satisfaction: 4.4, revenue: 63143 },
+            { date: '2024-07-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2024-07-01', branch: 'barsha', orders: 1740, avgTime: 20, successRate: 99, satisfaction: 4.7, revenue: 56252 },
+            { date: '2024-07-01', branch: 'satwa', orders: 795, avgTime: 27, successRate: 96, satisfaction: 4.3, revenue: 27671 },
+            { date: '2024-07-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            
+            { date: '2024-08-01', branch: 'hamdan', orders: 3267, avgTime: 18, successRate: 100, satisfaction: 4.9, revenue: 146010 },
+            { date: '2024-08-01', branch: 'khaldia', orders: 1505, avgTime: 21, successRate: 99, satisfaction: 4.6, revenue: 70910 },
+            { date: '2024-08-01', branch: 'shabiya', orders: 1388, avgTime: 15, successRate: 100, satisfaction: 4.8, revenue: 58704 },
+            { date: '2024-08-01', branch: 'muroor', orders: 1386, avgTime: 23, successRate: 98, satisfaction: 4.5, revenue: 64842 },
+            { date: '2024-08-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2024-08-01', branch: 'barsha', orders: 1813, avgTime: 19, successRate: 100, satisfaction: 4.8, revenue: 54008 },
+            { date: '2024-08-01', branch: 'satwa', orders: 965, avgTime: 26, successRate: 97, satisfaction: 4.4, revenue: 34732 },
+            { date: '2024-08-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            
+            { date: '2024-09-01', branch: 'hamdan', orders: 2658, avgTime: 17, successRate: 100, satisfaction: 4.9, revenue: 124891 },
+            { date: '2024-09-01', branch: 'khaldia', orders: 1264, avgTime: 20, successRate: 98, satisfaction: 4.5, revenue: 61308 },
+            { date: '2024-09-01', branch: 'shabiya', orders: 1135, avgTime: 14, successRate: 100, satisfaction: 4.9, revenue: 50504 },
+            { date: '2024-09-01', branch: 'muroor', orders: 1295, avgTime: 22, successRate: 97, satisfaction: 4.4, revenue: 61113 },
+            { date: '2024-09-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2024-09-01', branch: 'barsha', orders: 1749, avgTime: 18, successRate: 100, satisfaction: 4.9, revenue: 54921 },
+            { date: '2024-09-01', branch: 'satwa', orders: 799, avgTime: 25, successRate: 96, satisfaction: 4.3, revenue: 27068 },
+            { date: '2024-09-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            
+            { date: '2024-10-01', branch: 'hamdan', orders: 2716, avgTime: 16, successRate: 100, satisfaction: 5.0, revenue: 122430 },
+            { date: '2024-10-01', branch: 'khaldia', orders: 1298, avgTime: 19, successRate: 99, satisfaction: 4.6, revenue: 60725 },
+            { date: '2024-10-01', branch: 'shabiya', orders: 1324, avgTime: 13, successRate: 100, satisfaction: 5.0, revenue: 56993 },
+            { date: '2024-10-01', branch: 'muroor', orders: 1384, avgTime: 21, successRate: 98, satisfaction: 4.5, revenue: 65561 },
+            { date: '2024-10-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2024-10-01', branch: 'barsha', orders: 1894, avgTime: 17, successRate: 100, satisfaction: 5.0, revenue: 55783 },
+            { date: '2024-10-01', branch: 'satwa', orders: 831, avgTime: 24, successRate: 97, satisfaction: 4.4, revenue: 29957 },
+            { date: '2024-10-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            
+            { date: '2024-11-01', branch: 'hamdan', orders: 2835, avgTime: 15, successRate: 100, satisfaction: 5.0, revenue: 122157 },
+            { date: '2024-11-01', branch: 'khaldia', orders: 1217, avgTime: 18, successRate: 99, satisfaction: 4.7, revenue: 60461 },
+            { date: '2024-11-01', branch: 'shabiya', orders: 1272, avgTime: 12, successRate: 100, satisfaction: 5.0, revenue: 59511 },
+            { date: '2024-11-01', branch: 'muroor', orders: 1380, avgTime: 20, successRate: 99, satisfaction: 4.6, revenue: 62004 },
+            { date: '2024-11-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2024-11-01', branch: 'barsha', orders: 1595, avgTime: 16, successRate: 100, satisfaction: 5.0, revenue: 44274 },
+            { date: '2024-11-01', branch: 'satwa', orders: 765, avgTime: 23, successRate: 96, satisfaction: 4.3, revenue: 25687 },
+            { date: '2024-11-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            
+            { date: '2024-12-01', branch: 'hamdan', orders: 2740, avgTime: 14, successRate: 100, satisfaction: 5.0, revenue: 134030 },
+            { date: '2024-12-01', branch: 'khaldia', orders: 1225, avgTime: 17, successRate: 99, satisfaction: 4.7, revenue: 85037 },
+            { date: '2024-12-01', branch: 'shabiya', orders: 1152, avgTime: 11, successRate: 100, satisfaction: 5.0, revenue: 56257 },
+            { date: '2024-12-01', branch: 'muroor', orders: 1231, avgTime: 19, successRate: 99, satisfaction: 4.6, revenue: 63780 },
+            { date: '2024-12-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2024-12-01', branch: 'barsha', orders: 1424, avgTime: 15, successRate: 100, satisfaction: 5.0, revenue: 48203 },
+            { date: '2024-12-01', branch: 'satwa', orders: 768, avgTime: 22, successRate: 97, satisfaction: 4.4, revenue: 29521 },
+            { date: '2024-12-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+        ];
+
+        let deliveryData2025 = [
+            { date: '2025-01-01', branch: 'hamdan', orders: 2757, avgTime: 25, successRate: 95, satisfaction: 4.2, revenue: 119300 },
+            { date: '2025-01-01', branch: 'khaldia', orders: 1241, avgTime: 28, successRate: 93, satisfaction: 4.0, revenue: 60360 },
+            { date: '2025-01-01', branch: 'shabiya', orders: 1201, avgTime: 22, successRate: 96, satisfaction: 4.3, revenue: 52778 },
+            { date: '2025-01-01', branch: 'muroor', orders: 1255, avgTime: 30, successRate: 92, satisfaction: 3.9, revenue: 59749 },
+            { date: '2025-01-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-01-01', branch: 'barsha', orders: 1726, avgTime: 26, successRate: 94, satisfaction: 4.1, revenue: 55752 },
+            { date: '2025-01-01', branch: 'satwa', orders: 818, avgTime: 32, successRate: 91, satisfaction: 3.8, revenue: 26849 },
+            { date: '2025-01-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            
+            { date: '2025-02-01', branch: 'hamdan', orders: 2460, avgTime: 24, successRate: 96, satisfaction: 4.3, revenue: 111546 },
+            { date: '2025-02-01', branch: 'khaldia', orders: 1054, avgTime: 27, successRate: 94, satisfaction: 4.1, revenue: 51718 },
+            { date: '2025-02-01', branch: 'shabiya', orders: 1136, avgTime: 21, successRate: 97, satisfaction: 4.4, revenue: 51105 },
+            { date: '2025-02-01', branch: 'muroor', orders: 1199, avgTime: 29, successRate: 93, satisfaction: 4.0, revenue: 58438 },
+            { date: '2025-02-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-02-01', branch: 'barsha', orders: 1527, avgTime: 25, successRate: 95, satisfaction: 4.2, revenue: 51699 },
+            { date: '2025-02-01', branch: 'satwa', orders: 719, avgTime: 31, successRate: 92, satisfaction: 3.9, revenue: 24349 },
+            { date: '2025-02-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            
+            { date: '2025-03-01', branch: 'hamdan', orders: 1877, avgTime: 23, successRate: 97, satisfaction: 4.4, revenue: 87783 },
+            { date: '2025-03-01', branch: 'khaldia', orders: 891, avgTime: 26, successRate: 95, satisfaction: 4.2, revenue: 44621 },
+            { date: '2025-03-01', branch: 'shabiya', orders: 906, avgTime: 20, successRate: 98, satisfaction: 4.5, revenue: 40273 },
+            { date: '2025-03-01', branch: 'muroor', orders: 817, avgTime: 28, successRate: 94, satisfaction: 4.1, revenue: 41808 },
+            { date: '2025-03-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-03-01', branch: 'barsha', orders: 1427, avgTime: 24, successRate: 96, satisfaction: 4.3, revenue: 42075 },
+            { date: '2025-03-01', branch: 'satwa', orders: 645, avgTime: 30, successRate: 93, satisfaction: 4.0, revenue: 21934 },
+            { date: '2025-03-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            
+            { date: '2025-04-01', branch: 'hamdan', orders: 2363, avgTime: 22, successRate: 98, satisfaction: 4.5, revenue: 106625 },
+            { date: '2025-04-01', branch: 'khaldia', orders: 1156, avgTime: 25, successRate: 96, satisfaction: 4.3, revenue: 54785 },
+            { date: '2025-04-01', branch: 'shabiya', orders: 1246, avgTime: 19, successRate: 99, satisfaction: 4.6, revenue: 56981 },
+            { date: '2025-04-01', branch: 'muroor', orders: 1211, avgTime: 27, successRate: 95, satisfaction: 4.2, revenue: 56795 },
+            { date: '2025-04-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-04-01', branch: 'barsha', orders: 1816, avgTime: 23, successRate: 97, satisfaction: 4.4, revenue: 61422 },
+            { date: '2025-04-01', branch: 'satwa', orders: 881, avgTime: 29, successRate: 94, satisfaction: 4.1, revenue: 29154 },
+            { date: '2025-04-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            
+            { date: '2025-05-01', branch: 'hamdan', orders: 2515, avgTime: 21, successRate: 99, satisfaction: 4.7, revenue: 117066 },
+            { date: '2025-05-01', branch: 'khaldia', orders: 1083, avgTime: 24, successRate: 97, satisfaction: 4.4, revenue: 54610 },
+            { date: '2025-05-01', branch: 'shabiya', orders: 1187, avgTime: 18, successRate: 100, satisfaction: 4.8, revenue: 56703 },
+            { date: '2025-05-01', branch: 'muroor', orders: 1094, avgTime: 26, successRate: 96, satisfaction: 4.3, revenue: 54302 },
+            { date: '2025-05-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-05-01', branch: 'barsha', orders: 881, avgTime: 22, successRate: 98, satisfaction: 4.5, revenue: 36988 },
+            { date: '2025-05-01', branch: 'satwa', orders: 506, avgTime: 28, successRate: 95, satisfaction: 4.2, revenue: 20631 },
+            { date: '2025-05-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            
+            { date: '2025-06-01', branch: 'hamdan', orders: 2318, avgTime: 20, successRate: 100, satisfaction: 4.8, revenue: 106229 },
+            { date: '2025-06-01', branch: 'khaldia', orders: 1078, avgTime: 23, successRate: 98, satisfaction: 4.5, revenue: 56860 },
+            { date: '2025-06-01', branch: 'shabiya', orders: 1114, avgTime: 17, successRate: 99, satisfaction: 4.7, revenue: 54611 },
+            { date: '2025-06-01', branch: 'muroor', orders: 1076, avgTime: 25, successRate: 97, satisfaction: 4.4, revenue: 56046 },
+            { date: '2025-06-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-06-01', branch: 'barsha', orders: 891, avgTime: 21, successRate: 99, satisfaction: 4.6, revenue: 41436 },
+            { date: '2025-06-01', branch: 'satwa', orders: 463, avgTime: 27, successRate: 96, satisfaction: 4.3, revenue: 21005 },
+            { date: '2025-06-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            
+            { date: '2025-07-01', branch: 'hamdan', orders: 2557, avgTime: 19, successRate: 100, satisfaction: 4.9, revenue: 109205 },
+            { date: '2025-07-01', branch: 'khaldia', orders: 1097, avgTime: 22, successRate: 98, satisfaction: 4.6, revenue: 51618 },
+            { date: '2025-07-01', branch: 'shabiya', orders: 1177, avgTime: 16, successRate: 99, satisfaction: 4.7, revenue: 55160 },
+            { date: '2025-07-01', branch: 'muroor', orders: 1114, avgTime: 24, successRate: 97, satisfaction: 4.4, revenue: 53001 },
+            { date: '2025-07-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-07-01', branch: 'barsha', orders: 1007, avgTime: 20, successRate: 99, satisfaction: 4.7, revenue: 44627 },
+            { date: '2025-07-01', branch: 'satwa', orders: 528, avgTime: 26, successRate: 96, satisfaction: 4.3, revenue: 24685 },
+            { date: '2025-07-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            
+            { date: '2025-08-01', branch: 'hamdan', orders: 2247, avgTime: 18, successRate: 100, satisfaction: 5.0, revenue: 103184 },
+            { date: '2025-08-01', branch: 'khaldia', orders: 1032, avgTime: 21, successRate: 99, satisfaction: 4.7, revenue: 51039 },
+            { date: '2025-08-01', branch: 'shabiya', orders: 1162, avgTime: 15, successRate: 100, satisfaction: 4.8, revenue: 55336 },
+            { date: '2025-08-01', branch: 'muroor', orders: 912, avgTime: 23, successRate: 98, satisfaction: 4.5, revenue: 44361 },
+            { date: '2025-08-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-08-01', branch: 'barsha', orders: 901, avgTime: 19, successRate: 100, satisfaction: 4.8, revenue: 49296 },
+            { date: '2025-08-01', branch: 'satwa', orders: 492, avgTime: 25, successRate: 97, satisfaction: 4.4, revenue: 22476 },
+            { date: '2025-08-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            
+            { date: '2025-09-01', branch: 'hamdan', orders: 2345, avgTime: 17, successRate: 100, satisfaction: 5.0, revenue: 106562 },
+            { date: '2025-09-01', branch: 'khaldia', orders: 1144, avgTime: 20, successRate: 98, satisfaction: 4.5, revenue: 57769 },
+            { date: '2025-09-01', branch: 'shabiya', orders: 1269, avgTime: 14, successRate: 100, satisfaction: 5.0, revenue: 61290 },
+            { date: '2025-09-01', branch: 'muroor', orders: 973, avgTime: 22, successRate: 97, satisfaction: 4.4, revenue: 46523 },
+            { date: '2025-09-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-09-01', branch: 'barsha', orders: 879, avgTime: 18, successRate: 100, satisfaction: 4.9, revenue: 43361 },
+            { date: '2025-09-01', branch: 'satwa', orders: 495, avgTime: 24, successRate: 96, satisfaction: 4.3, revenue: 23066 },
+            { date: '2025-09-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            
+            { date: '2025-10-01', branch: 'hamdan', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-10-01', branch: 'khaldia', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-10-01', branch: 'shabiya', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-10-01', branch: 'muroor', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-10-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-10-01', branch: 'barsha', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-10-01', branch: 'satwa', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-10-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            
+            { date: '2025-11-01', branch: 'hamdan', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-11-01', branch: 'khaldia', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-11-01', branch: 'shabiya', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-11-01', branch: 'muroor', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-11-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-11-01', branch: 'barsha', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-11-01', branch: 'satwa', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-11-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            
+            { date: '2025-12-01', branch: 'hamdan', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-12-01', branch: 'khaldia', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-12-01', branch: 'shabiya', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-12-01', branch: 'muroor', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-12-01', branch: 'electra', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-12-01', branch: 'barsha', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-12-01', branch: 'satwa', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
+            { date: '2025-12-01', branch: 'rgga', orders: 0, avgTime: 0, successRate: 0, satisfaction: 0, revenue: 0 },
         ];
 
         let notes = [
+            { date: '2024-06-15', user: 'John Manager', content: 'Implemented new delivery route optimization for Hamdan St branch, reducing average delivery time by 3 minutes.' },
+            { date: '2024-07-10', user: 'Sarah Supervisor', content: 'Khaldia branch experienced higher than usual order volume during weekend. Consider increasing delivery staff for weekends.' },
+            { date: '2024-08-05', user: 'Mike Operations', content: 'Al Electra branch achieved 100% success rate for the first time. Review their procedures for best practices.' },
+            { date: '2024-09-01', user: 'Lisa Manager', content: 'New delivery partner agreement signed with Noon platform. Expected to increase delivery capacity by 20%.' },
             { date: '2025-01-15', user: 'John Manager', content: 'Implemented new delivery route optimization for Hamdan St branch, reducing average delivery time by 3 minutes.' },
             { date: '2025-02-10', user: 'Sarah Supervisor', content: 'Khaldia branch experienced higher than usual order volume during weekend. Consider increasing delivery staff for weekends.' },
             { date: '2025-03-05', user: 'Mike Operations', content: 'Al Electra branch achieved 100% success rate for the first time. Review their procedures for best practices.' },
             { date: '2025-04-01', user: 'Lisa Manager', content: 'New delivery partner agreement signed with Noon platform. Expected to increase delivery capacity by 20%.' },
+            { date: '2025-09-10', user: 'Lisa Manager', content: '2025 year data is incomplete. October, November, and December data not yet available.' },
         ];
 
         // Chart instances
         let performanceTrendsChart;
         let branchComparisonChart;
         let revenueTrendsChart;
-        let branchRevenueChart;
+        let yoyComparisonChart;
+
+        // Current year state
+        let currentYear = 2024;
 
         // Initialize the dashboard
         document.addEventListener('DOMContentLoaded', function() {
@@ -1105,41 +1371,34 @@
                 }
             });
 
-            // Branch Revenue Chart
-            const branchRevenueCtx = document.getElementById('branchRevenueChart').getContext('2d');
-            branchRevenueChart = new Chart(branchRevenueCtx, {
-                type: 'doughnut',
+            // Year-over-Year Comparison Chart
+            const yoyCtx = document.getElementById('yoyComparisonChart').getContext('2d');
+            yoyComparisonChart = new Chart(yoyCtx, {
+                type: 'bar',
                 data: {
-                    labels: [],
-                    datasets: [{
-                        data: [],
-                        backgroundColor: [
-                            'rgba(52, 152, 219, 0.7)',
-                            'rgba(46, 204, 113, 0.7)',
-                            'rgba(155, 89, 182, 0.7)',
-                            'rgba(241, 196, 15, 0.7)',
-                            'rgba(231, 76, 60, 0.7)',
-                            'rgba(26, 188, 156, 0.7)',
-                            'rgba(230, 126, 34, 0.7)'
-                        ]
-                    }]
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [
+                        {
+                            label: '2024',
+                            data: [],
+                            backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                        },
+                        {
+                            label: '2025',
+                            data: [],
+                            backgroundColor: 'rgba(46, 204, 113, 0.7)',
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = Math.round((value / total) * 100);
-                                    return `${label}: $${value.toLocaleString()} (${percentage}%)`;
-                                }
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Revenue ($)'
                             }
                         }
                     }
@@ -1175,11 +1434,11 @@
             revenueTrendsChart.data.datasets[1].data = revenueData.orders;
             revenueTrendsChart.update();
             
-            // Update Branch Revenue Chart
-            const branchRevenueData = getBranchRevenueData();
-            branchRevenueChart.data.labels = branchRevenueData.labels;
-            branchRevenueChart.data.datasets[0].data = branchRevenueData.data;
-            branchRevenueChart.update();
+            // Update Year-over-Year Comparison Chart
+            const yoyData = getYoYComparisonData();
+            yoyComparisonChart.data.datasets[0].data = yoyData.currentYear;
+            yoyComparisonChart.data.datasets[1].data = yoyData.previousYear;
+            yoyComparisonChart.update();
         }
 
         // Aggregate data by date for performance trends
@@ -1260,7 +1519,8 @@
                 'muroor': 'Muroor',
                 'electra': 'Al Electra',
                 'barsha': 'Al Barsha',
-                'satwa': 'Al Satwa'
+                'satwa': 'Al Satwa',
+                'rgga': 'Al Rgga'
             };
             
             const labels = Object.keys(aggregated).map(branch => branchNames[branch]);
@@ -1270,56 +1530,108 @@
             return { labels, orders, satisfaction };
         }
 
-        // Get branch revenue data
-        function getBranchRevenueData() {
-            const branchNames = {
-                'hamdan': 'Hamdan St',
-                'khaldia': 'Khaldia',
-                'shabiya': 'Shabiya 11',
-                'muroor': 'Muroor',
-                'electra': 'Al Electra',
-                'barsha': 'Al Barsha',
-                'satwa': 'Al Satwa'
-            };
+        // Get year-over-year comparison data
+        function getYoYComparisonData() {
+            const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+            const currentYearData = [];
+            const previousYearData = [];
             
-            const branchData = {};
-            
-            deliveryData.forEach(item => {
-                if (!branchData[item.branch]) {
-                    branchData[item.branch] = 0;
-                }
-                branchData[item.branch] += item.revenue;
+            months.forEach(month => {
+                const currentMonthData = currentYear === 2024 ? 
+                    deliveryData2024.filter(item => item.date.endsWith(`-${month}`)) :
+                    deliveryData2025.filter(item => item.date.endsWith(`-${month}`));
+                
+                const previousMonthData = currentYear === 2024 ?
+                    deliveryData2025.filter(item => item.date.endsWith(`-${month}`)) :
+                    deliveryData2024.filter(item => item.date.endsWith(`-${month}`));
+                
+                const currentRevenue = currentMonthData.reduce((sum, item) => sum + item.revenue, 0);
+                const previousRevenue = previousMonthData.reduce((sum, item) => sum + item.revenue, 0);
+                
+                currentYearData.push(currentRevenue);
+                previousYearData.push(previousRevenue);
             });
             
-            const labels = Object.keys(branchData).map(branch => branchNames[branch]);
-            const data = Object.values(branchData);
+            return {
+                currentYear: currentYearData,
+                previousYear: previousYearData
+            };
+        }
+
+        // Calculate year-over-year percentage change
+        function calculateYoYChange(current, previous) {
+            if (previous === 0) return 0;
+            return ((current - previous) / previous * 100).toFixed(1);
+        }
+
+        // Calculate year completion percentage
+        function calculateYearCompletion() {
+            const today = new Date();
+            const currentMonth = today.getMonth() + 1; // 1-12
             
-            return { labels, data };
+            // For 2025, if it's October or later, show completion percentage
+            if (currentYear === 2025 && currentMonth >= 10) {
+                const completion = (currentMonth / 12 * 100).toFixed(0);
+                return `${completion}% Complete`;
+            }
+            
+            return null;
         }
 
         // Update KPI cards
         function updateKPIs() {
             const filteredData = getFilteredData();
+            const previousYearData = currentYear === 2024 ? deliveryData2025 : deliveryData2024;
             
             // Calculate total orders
             const totalOrders = filteredData.reduce((sum, item) => sum + item.orders, 0);
+            const previousYearOrders = previousYearData.reduce((sum, item) => sum + item.orders, 0);
+            const ordersYoYChange = calculateYoYChange(totalOrders, previousYearOrders);
+            
             document.getElementById('totalOrders').textContent = totalOrders.toLocaleString();
+            updateYoYBadge('ordersYoYBadge', ordersYoYChange);
             
             // Calculate total revenue
             const totalRevenue = filteredData.reduce((sum, item) => sum + item.revenue, 0);
+            const previousYearRevenue = previousYearData.reduce((sum, item) => sum + item.revenue, 0);
+            const revenueYoYChange = calculateYoYChange(totalRevenue, previousYearRevenue);
+            
             document.getElementById('totalRevenue').textContent = '$' + totalRevenue.toLocaleString();
+            updateYoYBadge('revenueYoYBadge', revenueYoYChange);
             
             // Calculate average delivery time
             const avgDeliveryTime = filteredData.reduce((sum, item) => sum + item.avgTime, 0) / filteredData.length;
+            const previousYearAvgTime = previousYearData.reduce((sum, item) => sum + item.avgTime, 0) / previousYearData.length;
+            const timeYoYChange = calculateYoYChange(avgDeliveryTime, previousYearAvgTime);
+            
             document.getElementById('avgDeliveryTime').textContent = Math.round(avgDeliveryTime) + ' min';
+            updateYoYBadge('timeYoYBadge', timeYoYChange, true);
             
             // Calculate success rate
             const successRate = filteredData.reduce((sum, item) => sum + item.successRate, 0) / filteredData.length;
+            const previousYearSuccessRate = previousYearData.reduce((sum, item) => sum + item.successRate, 0) / previousYearData.length;
+            const successYoYChange = calculateYoYChange(successRate, previousYearSuccessRate);
+            
             document.getElementById('successRate').textContent = Math.round(successRate) + '%';
+            updateYoYBadge('successYoYBadge', successYoYChange);
             
             // Calculate customer satisfaction
             const customerSatisfaction = filteredData.reduce((sum, item) => sum + item.satisfaction, 0) / filteredData.length;
+            const previousYearSatisfaction = previousYearData.reduce((sum, item) => sum + item.satisfaction, 0) / previousYearData.length;
+            const satisfactionYoYChange = calculateYoYChange(customerSatisfaction, previousYearSatisfaction);
+            
             document.getElementById('customerSatisfaction').textContent = customerSatisfaction.toFixed(1) + '/5';
+            updateYoYBadge('satisfactionYoYBadge', satisfactionYoYChange);
+            
+            // Update year completion badge
+            const yearCompletion = calculateYearCompletion();
+            const yearCompletionBadge = document.getElementById('yearCompletionBadge');
+            if (yearCompletion) {
+                yearCompletionBadge.textContent = yearCompletion;
+                yearCompletionBadge.style.display = 'inline-flex';
+            } else {
+                yearCompletionBadge.style.display = 'none';
+            }
             
             // Calculate month-to-month changes
             const currentMonth = document.getElementById('startDate').value.substring(0, 7);
@@ -1327,27 +1639,27 @@
             previousMonth.setMonth(previousMonth.getMonth() - 1);
             const previousMonthStr = previousMonth.toISOString().substring(0, 7);
             
-            const currentData = deliveryData.filter(item => item.date.startsWith(currentMonth));
-            const previousData = deliveryData.filter(item => item.date.startsWith(previousMonthStr));
+            const currentMonthData = filteredData.filter(item => item.date.startsWith(currentMonth));
+            const previousMonthData = filteredData.filter(item => item.date.startsWith(previousMonthStr));
             
-            const currentOrders = currentData.reduce((sum, item) => sum + item.orders, 0);
-            const previousOrders = previousData.reduce((sum, item) => sum + item.orders, 0);
+            const currentOrders = currentMonthData.reduce((sum, item) => sum + item.orders, 0);
+            const previousOrders = previousMonthData.reduce((sum, item) => sum + item.orders, 0);
             const ordersChange = previousOrders > 0 ? ((currentOrders - previousOrders) / previousOrders * 100).toFixed(1) : 0;
             
-            const currentRevenue = currentData.reduce((sum, item) => sum + item.revenue, 0);
-            const previousRevenue = previousData.reduce((sum, item) => sum + item.revenue, 0);
+            const currentRevenue = currentMonthData.reduce((sum, item) => sum + item.revenue, 0);
+            const previousRevenue = previousMonthData.reduce((sum, item) => sum + item.revenue, 0);
             const revenueChange = previousRevenue > 0 ? ((currentRevenue - previousRevenue) / previousRevenue * 100).toFixed(1) : 0;
             
-            const currentAvgTime = currentData.reduce((sum, item) => sum + item.avgTime, 0) / currentData.length;
-            const previousAvgTime = previousData.reduce((sum, item) => sum + item.avgTime, 0) / previousData.length;
+            const currentAvgTime = currentMonthData.reduce((sum, item) => sum + item.avgTime, 0) / currentMonthData.length;
+            const previousAvgTime = previousMonthData.reduce((sum, item) => sum + item.avgTime, 0) / previousMonthData.length;
             const deliveryTimeChange = previousAvgTime > 0 ? ((previousAvgTime - currentAvgTime) / previousAvgTime * 100).toFixed(1) : 0;
             
-            const currentSuccessRate = currentData.reduce((sum, item) => sum + item.successRate, 0) / currentData.length;
-            const previousSuccessRate = previousData.reduce((sum, item) => sum + item.successRate, 0) / previousData.length;
+            const currentSuccessRate = currentMonthData.reduce((sum, item) => sum + item.successRate, 0) / currentMonthData.length;
+            const previousSuccessRate = previousMonthData.reduce((sum, item) => sum + item.successRate, 0) / previousMonthData.length;
             const successRateChange = previousSuccessRate > 0 ? ((currentSuccessRate - previousSuccessRate) / previousSuccessRate * 100).toFixed(1) : 0;
             
-            const currentSatisfaction = currentData.reduce((sum, item) => sum + item.satisfaction, 0) / currentData.length;
-            const previousSatisfaction = previousData.reduce((sum, item) => sum + item.satisfaction, 0) / previousData.length;
+            const currentSatisfaction = currentMonthData.reduce((sum, item) => sum + item.satisfaction, 0) / currentMonthData.length;
+            const previousSatisfaction = previousMonthData.reduce((sum, item) => sum + item.satisfaction, 0) / previousMonthData.length;
             const satisfactionChange = previousSatisfaction > 0 ? ((currentSatisfaction - previousSatisfaction) / previousSatisfaction * 100).toFixed(1) : 0;
             
             // Update change indicators
@@ -1367,6 +1679,25 @@
             document.getElementById('satisfactionChange').parentElement.className = 'kpi-change ' + (satisfactionChange >= 0 ? 'positive' : 'negative');
         }
 
+        // Update YoY badge
+        function updateYoYBadge(elementId, change, isTime = false) {
+            const badge = document.getElementById(elementId);
+            if (change === 0) {
+                badge.style.display = 'none';
+                return;
+            }
+            
+            badge.style.display = 'inline-flex';
+            badge.className = 'yoy-badge ' + (change >= 0 ? 'positive' : 'negative');
+            
+            let changeText = (change >= 0 ? '+' : '') + change + '%';
+            if (isTime) {
+                changeText = (change >= 0 ? '-' : '+') + Math.abs(change) + '%';
+            }
+            
+            badge.textContent = changeText;
+        }
+
         // Update data table
         function updateDataTable() {
             const filteredData = getFilteredData();
@@ -1380,7 +1711,8 @@
                 'muroor': 'Muroor',
                 'electra': 'Al Electra',
                 'barsha': 'Al Barsha',
-                'satwa': 'Al Satwa'
+                'satwa': 'Al Satwa',
+                'rgga': 'Al Rgga'
             };
             
             filteredData.forEach((item, index) => {
@@ -1428,7 +1760,9 @@
             const endDate = document.getElementById('endDate').value;
             const selectedBranch = document.getElementById('branchSelector').value;
             
-            return deliveryData.filter(item => {
+            const data = currentYear === 2024 ? deliveryData2024 : deliveryData2025;
+            
+            return data.filter(item => {
                 const dateMatch = (!startDate || item.date >= startDate) && (!endDate || item.date <= endDate);
                 const branchMatch = selectedBranch === 'all' || item.branch === selectedBranch;
                 return dateMatch && branchMatch;
@@ -1447,6 +1781,21 @@
             });
             
             document.getElementById('branchSelector').addEventListener('change', function() {
+                updateDashboard();
+            });
+            
+            // Year toggle
+            document.getElementById('year2024').addEventListener('click', function() {
+                currentYear = 2024;
+                document.getElementById('year2024').classList.add('active');
+                document.getElementById('year2025').classList.remove('active');
+                updateDashboard();
+            });
+            
+            document.getElementById('year2025').addEventListener('click', function() {
+                currentYear = 2025;
+                document.getElementById('year2025').classList.add('active');
+                document.getElementById('year2024').classList.remove('active');
                 updateDashboard();
             });
             
@@ -1521,7 +1870,7 @@
             
             if (index >= 0) {
                 // Edit existing data
-                const item = deliveryData[index];
+                const item = getFilteredData()[index];
                 document.getElementById('dataDate').value = item.date;
                 document.getElementById('dataBranch').value = item.branch;
                 document.getElementById('dataOrders').value = item.orders;
@@ -1556,11 +1905,12 @@
             const satisfaction = parseFloat(document.getElementById('dataSatisfaction').value);
             
             // Check if data for this date and branch already exists
-            const existingIndex = deliveryData.findIndex(item => item.date === date && item.branch === branch);
+            const data = currentYear === 2024 ? deliveryData2024 : deliveryData2025;
+            const existingIndex = data.findIndex(item => item.date === date && item.branch === branch);
             
             if (existingIndex >= 0) {
                 // Update existing data
-                deliveryData[existingIndex] = {
+                data[existingIndex] = {
                     date,
                     branch,
                     orders,
@@ -1572,7 +1922,7 @@
                 showNotification('Data updated successfully', 'success');
             } else {
                 // Add new data
-                deliveryData.push({
+                data.push({
                     date,
                     branch,
                     orders,
@@ -1585,7 +1935,7 @@
             }
             
             // Sort data by date
-            deliveryData.sort((a, b) => new Date(a.date) - new Date(b.date));
+            data.sort((a, b) => new Date(a.date) - new Date(b.date));
             
             closeDataModal();
             updateDashboard();
@@ -1615,7 +1965,8 @@
                     // Process imported data
                     jsonData.forEach(row => {
                         if (row.Date && row.Branch && row.Orders) {
-                            deliveryData.push({
+                            const targetData = currentYear === 2024 ? deliveryData2024 : deliveryData2025;
+                            targetData.push({
                                 date: row.Date,
                                 branch: row.Branch.toLowerCase(),
                                 orders: parseInt(row.Orders) || 0,
@@ -1628,7 +1979,11 @@
                     });
                     
                     // Sort data by date
-                    deliveryData.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    if (currentYear === 2024) {
+                        deliveryData2024.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    } else {
+                        deliveryData2025.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    }
                     
                     showNotification('Data imported successfully', 'success');
                     updateDashboard();
@@ -1647,7 +2002,7 @@
             
             // Add title
             doc.setFontSize(18);
-            doc.text('Restaurant Delivery Performance Report', 14, 16);
+            doc.text(`Restaurant Delivery Performance Report - ${currentYear}`, 14, 16);
             
             // Add date range
             doc.setFontSize(12);
@@ -1685,31 +2040,31 @@
             });
             
             // Save the PDF
-            doc.save('delivery-performance-report.pdf');
+            doc.save(`delivery-performance-report-${currentYear}.pdf`);
             showNotification('PDF exported successfully', 'success');
         }
 
         // Export to Excel
         function exportToExcel() {
-            const ws = XLSX.utils.json_to_sheet(deliveryData);
+            const data = getFilteredData();
+            const ws = XLSX.utils.json_to_sheet(data);
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Delivery Data');
+            XLSX.utils.book_append_sheet(wb, ws, `Delivery Data ${currentYear}`);
             
             // Add summary sheet
-            const filteredData = getFilteredData();
             const summary = {
-                'Total Orders': filteredData.reduce((sum, item) => sum + item.orders, 0),
-                'Total Revenue': filteredData.reduce((sum, item) => sum + item.revenue, 0).toLocaleString(),
-                'Average Delivery Time': (filteredData.reduce((sum, item) => sum + item.avgTime, 0) / filteredData.length).toFixed(1) + ' min',
-                'Success Rate': (filteredData.reduce((sum, item) => sum + item.successRate, 0) / filteredData.length).toFixed(1) + '%',
-                'Customer Satisfaction': (filteredData.reduce((sum, item) => sum + item.satisfaction, 0) / filteredData.length).toFixed(1) + '/5'
+                'Total Orders': data.reduce((sum, item) => sum + item.orders, 0),
+                'Total Revenue': data.reduce((sum, item) => sum + item.revenue, 0).toLocaleString(),
+                'Average Delivery Time': (data.reduce((sum, item) => sum + item.avgTime, 0) / data.length).toFixed(1) + ' min',
+                'Success Rate': (data.reduce((sum, item) => sum + item.successRate, 0) / data.length).toFixed(1) + '%',
+                'Customer Satisfaction': (data.reduce((sum, item) => sum + item.satisfaction, 0) / data.length).toFixed(1) + '/5'
             };
             
             const summaryWs = XLSX.utils.json_to_sheet([summary]);
             XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
             
             // Save the Excel file
-            XLSX.writeFile(wb, 'delivery-performance-report.xlsx');
+            XLSX.writeFile(wb, `delivery-performance-report-${currentYear}.xlsx`);
             showNotification('Excel exported successfully', 'success');
         }
 
