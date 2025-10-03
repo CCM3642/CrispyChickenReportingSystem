@@ -1,697 +1,1755 @@
-import pandas as pd
-import numpy as np
-from datetime import datetime, timedelta
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-class CrispyChickenReportingSystem:
-    def __init__(self):
-        # Initialize database tables
-        self.restaurants = pd.DataFrame(columns=[
-            'restaurant_id', 'name', 'location', 'manager', 'opening_date'
-        ])
-        
-        self.payment_methods = pd.DataFrame(columns=[
-            'method_id', 'method_name', 'category'
-        ])
-        
-        self.monthly_sales = pd.DataFrame(columns=[
-            'sales_id', 'restaurant_id', 'month', 'year', 
-            'total_sales', 'total_transactions', 'average_sale'
-        ])
-        
-        self.payment_method_sales = pd.DataFrame(columns=[
-            'payment_id', 'sales_id', 'payment_method_id', 
-            'amount', 'percentage_of_total', 'transaction_count', 
-            'average_transaction'
-        ])
-        
-        self.menu_items = pd.DataFrame(columns=[
-            'item_id', 'name', 'category', 'price', 'cost', 'is_active'
-        ])
-        
-        self.monthly_item_sales = pd.DataFrame(columns=[
-            'item_sales_id', 'sales_id', 'item_id', 'quantity_sold', 'revenue'
-        ])
-        
-        self.monthly_expenses = pd.DataFrame(columns=[
-            'expense_id', 'sales_id', 'category', 'amount', 'notes'
-        ])
-        
-        # Initialize with sample data
-        self._initialize_sample_data()
-        
-    def _initialize_sample_data(self):
-        """Initialize the system with sample data"""
-        # Restaurants
-        self.restaurants.loc[0] = [1, 'Downtown', 'Downtown District', 'John Smith', '2020-01-15']
-        self.restaurants.loc[1] = [2, 'Mall', 'Central Mall', 'Sarah Johnson', '2021-03-22']
-        self.restaurants.loc[2] = [3, 'Airport', 'Airport Terminal', 'Mike Brown', '2022-07-10']
-        
-        # Payment methods
-        self.payment_methods.loc[0] = [1, 'Cash', 'Traditional']
-        self.payment_methods.loc[1] = [2, 'Careem CARD', 'Digital']
-        self.payment_methods.loc[2] = [3, 'NOON CARD', 'Digital']
-        self.payment_methods.loc[3] = [4, 'Master card', 'Card']
-        self.payment_methods.loc[4] = [5, 'Visa Card', 'Card']
-        self.payment_methods.loc[5] = [6, 'TALABAT CARD', 'Digital']
-        self.payment_methods.loc[6] = [7, 'Delivery CARD', 'Digital']
-        self.payment_methods.loc[7] = [8, 'Delivery Cash', 'Traditional']
-        self.payment_methods.loc[8] = [9, 'SMILES CARD', 'Digital']
-        self.payment_methods.loc[9] = [10, 'ONLINE CASH', 'Digital']
-        self.payment_methods.loc[10] = [11, 'ONLINE CARD', 'Digital']
-        self.payment_methods.loc[11] = [12, 'DELIVERO CARD', 'Digital']
-        
-        # Menu items
-        self.menu_items.loc[0] = [1, 'Crispy Chicken Meal', 'Main', 25.99, 8.50, True]
-        self.menu_items.loc[1] = [2, 'Spicy Wings', 'Appetizer', 15.99, 5.50, True]
-        self.menu_items.loc[2] = [3, 'Combo Deal', 'Combo', 32.99, 12.50, True]
-        self.menu_items.loc[3] = [4, 'Crispy Burger', 'Main', 18.99, 7.00, True]
-        self.menu_items.loc[4] = [5, 'Garlic Fries', 'Side', 6.99, 2.50, True]
-        self.menu_items.loc[5] = [6, 'Chocolate Shake', 'Dessert', 7.99, 3.00, True]
-        
-        # Generate sample monthly sales data
-        self._generate_sample_sales_data()
-        
-    def _generate_sample_sales_data(self):
-        """Generate sample sales data for demonstration"""
-        # Generate 12 months of data for each restaurant
-        for restaurant_id in range(1, 4):
-            for month in range(1, 13):
-                # Create sales record
-                sales_id = len(self.monthly_sales) + 1
-                year = 2023
-                date = datetime(year, month, 1)
-                
-                # Generate random sales data with trends
-                base_sales = 50000 + restaurant_id * 10000
-                seasonal_factor = 1.0 + 0.1 * np.sin(2 * np.pi * month / 12)
-                growth_factor = 1.0 + (month - 1) * 0.01
-                
-                total_sales = base_sales * seasonal_factor * growth_factor
-                total_transactions = int(total_sales / 28)
-                average_sale = total_sales / total_transactions
-                
-                self.monthly_sales.loc[len(self.monthly_sales)] = [
-                    sales_id, restaurant_id, month, year, 
-                    total_sales, total_transactions, average_sale
-                ]
-                
-                # Generate payment method sales
-                payment_methods = self.payment_methods.copy()
-                for i, (_, payment) in enumerate(payment_methods.iterrows()):
-                    # Random amounts with some structure
-                    amount = total_sales * (0.2 + 0.8 * np.random.random())
-                    percentage_of_total = (amount / total_sales) * 100
-                    transaction_count = int(total_transactions * (0.1 + 0.9 * np.random.random()))
-                    average_transaction = amount / transaction_count
-                    
-                    self.payment_method_sales.loc[len(self.payment_method_sales)] = [
-                        len(self.payment_method_sales) + 1, sales_id, 
-                        payment['method_id'], amount, percentage_of_total,
-                        transaction_count, average_transaction
-                    ]
-                
-                # Generate item sales
-                menu_items = self.menu_items.copy()
-                for i, (_, item) in enumerate(menu_items.iterrows()):
-                    quantity_sold = int(total_transactions * (0.2 + 0.8 * np.random.random()))
-                    revenue = quantity_sold * item['price']
-                    
-                    self.monthly_item_sales.loc[len(self.monthly_item_sales)] = [
-                        len(self.monthly_item_sales) + 1, sales_id,
-                        item['item_id'], quantity_sold, revenue
-                    ]
-                
-                # Generate expenses
-                expense_categories = ['Rent', 'Utilities', 'Labor', 'Ingredients', 'Marketing']
-                for category in expense_categories:
-                    amount = total_sales * (0.3 + 0.2 * np.random.random())
-                    notes = f"Monthly {category} expenses"
-                    
-                    self.monthly_expenses.loc[len(self.monthly_expenses)] = [
-                        len(self.monthly_expenses) + 1, sales_id,
-                        category, amount, notes
-                    ]
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Delivery Performance Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
-    def add_restaurant(self, name, location, manager, opening_date):
-        """Add a new restaurant to the system"""
-        new_id = len(self.restaurants) + 1
-        self.restaurants.loc[len(self.restaurants)] = [
-            new_id, name, location, manager, opening_date
-        ]
-        return new_id
-    
-    def add_payment_method(self, method_name, category):
-        """Add a new payment method to the system"""
-        new_id = len(self.payment_methods) + 1
-        self.payment_methods.loc[len(self.payment_methods)] = [
-            new_id, method_name, category
-        ]
-        return new_id
-    
-    def add_menu_item(self, name, category, price, cost):
-        """Add a new menu item to the system"""
-        new_id = len(self.menu_items) + 1
-        self.menu_items.loc[len(self.menu_items)] = [
-            new_id, name, category, price, cost, True
-        ]
-        return new_id
-    
-    def enter_monthly_sales(self, restaurant_id, month, year, total_sales, total_transactions, payment_data, item_data, expense_data):
-        """Enter monthly sales data for a restaurant"""
-        # Create sales record
-        sales_id = len(self.monthly_sales) + 1
-        average_sale = total_sales / total_transactions
-        
-        self.monthly_sales.loc[len(self.monthly_sales)] = [
-            sales_id, restaurant_id, month, year, 
-            total_sales, total_transactions, average_sale
-        ]
-        
-        # Add payment method sales
-        for payment in payment_data:
-            self.payment_method_sales.loc[len(self.payment_method_sales)] = [
-                len(self.payment_method_sales) + 1, sales_id,
-                payment['method_id'], payment['amount'], payment['percentage'],
-                payment['transaction_count'], payment['average_transaction']
-            ]
-        
-        # Add item sales
-        for item in item_data:
-            self.monthly_item_sales.loc[len(self.monthly_item_sales)] = [
-                len(self.monthly_item_sales) + 1, sales_id,
-                item['item_id'], item['quantity_sold'], item['revenue']
-            ]
-        
-        # Add expenses
-        for expense in expense_data:
-            self.monthly_expenses.loc[len(self.monthly_expenses)] = [
-                len(self.monthly_expenses) + 1, sales_id,
-                expense['category'], expense['amount'], expense['notes']
-            ]
-        
-        return sales_id
-    
-    def generate_monthly_comparison_report(self, restaurant_id, month, year):
-        """Generate a monthly comparison report for a restaurant"""
-        # Get current month data
-        current_data = self.monthly_sales[
-            (self.monthly_sales['restaurant_id'] == restaurant_id) & 
-            (self.monthly_sales['month'] == month) & 
-            (self.monthly_sales['year'] == year)
-        ]
-        
-        if current_data.empty:
-            return None, "No data found for the specified month and restaurant"
-        
-        current_data = current_data.iloc[0]
-        current_sales_id = current_data['sales_id']
-        
-        # Get previous month data
-        prev_month = month - 1 if month > 1 else 12
-        prev_year = year if month > 1 else year - 1
-        
-        prev_data = self.monthly_sales[
-            (self.monthly_sales['restaurant_id'] == restaurant_id) & 
-            (self.monthly_sales['month'] == prev_month) & 
-            (self.monthly_sales['year'] == prev_year)
-        ]
-        
-        if prev_data.empty:
-            return None, "No data found for the previous month"
-        
-        prev_data = prev_data.iloc[0]
-        prev_sales_id = prev_data['sales_id']
-        
-        # Calculate key metrics
-        sales_growth = ((current_data['total_sales'] - prev_data['total_sales']) / prev_data['total_sales']) * 100
-        transaction_growth = ((current_data['total_transactions'] - prev_data['total_transactions']) / prev_data['total_transactions']) * 100
-        avg_sale_change = current_data['average_sale'] - prev_data['average_sale']
-        
-        # Get payment method data
-        current_payments = self.payment_method_sales[
-            self.payment_method_sales['sales_id'] == current_sales_id
-        ]
-        prev_payments = self.payment_method_sales[
-            self.payment_method_sales['sales_id'] == prev_sales_id
-        ]
-        
-        payment_changes = []
-        for _, payment in current_payments.iterrows():
-            prev_payment = prev_payments[
-                prev_payments['payment_method_id'] == payment['payment_method_id']
-            ]
-            
-            if not prev_payment.empty:
-                prev_payment = prev_payment.iloc[0]
-                change = ((payment['amount'] - prev_payment['amount']) / prev_payment['amount']) * 100
-            else:
-                change = 100  # New payment method
-            
-            payment_method = self.payment_methods[
-                self.payment_methods['method_id'] == payment['payment_method_id']
-            ].iloc[0]
-            
-            payment_changes.append({
-                'method_name': payment_method['method_name'],
-                'current_amount': payment['amount'],
-                'previous_amount': prev_payment['amount'] if not prev_payment.empty else 0,
-                'change': change,
-                'current_percentage': payment['percentage_of_total'],
-                'current_transactions': payment['transaction_count'],
-                'current_average': payment['average_transaction']
-            })
-        
-        # Get item sales data
-        current_items = self.monthly_item_sales[
-            self.monthly_item_sales['sales_id'] == current_sales_id
-        ]
-        prev_items = self.monthly_item_sales[
-            self.monthly_item_sales['sales_id'] == prev_sales_id
-        ]
-        
-        item_changes = []
-        for _, item in current_items.iterrows():
-            prev_item = prev_items[
-                prev_items['item_id'] == item['item_id']
-            ]
-            
-            if not prev_item.empty:
-                prev_item = prev_item.iloc[0]
-                quantity_change = ((item['quantity_sold'] - prev_item['quantity_sold']) / prev_item['quantity_sold']) * 100
-                revenue_change = ((item['revenue'] - prev_item['revenue']) / prev_item['revenue']) * 100
-            else:
-                quantity_change = 100
-                revenue_change = 100
-            
-            menu_item = self.menu_items[
-                self.menu_items['item_id'] == item['item_id']
-            ].iloc[0]
-            
-            item_changes.append({
-                'item_name': menu_item['name'],
-                'category': menu_item['category'],
-                'current_quantity': item['quantity_sold'],
-                'previous_quantity': prev_item['quantity_sold'] if not prev_item.empty else 0,
-                'quantity_change': quantity_change,
-                'current_revenue': item['revenue'],
-                'previous_revenue': prev_item['revenue'] if not prev_item.empty else 0,
-                'revenue_change': revenue_change,
-                'price': menu_item['price'],
-                'cost': menu_item['cost'],
-                'profit_margin': ((menu_item['price'] - menu_item['cost']) / menu_item['price']) * 100
-            })
-        
-        # Get expense data
-        current_expenses = self.monthly_expenses[
-            self.monthly_expenses['sales_id'] == current_sales_id
-        ]
-        prev_expenses = self.monthly_expenses[
-            self.monthly_expenses['sales_id'] == prev_sales_id
-        ]
-        
-        expense_changes = []
-        for _, expense in current_expenses.iterrows():
-            prev_expense = prev_expenses[
-                prev_expenses['category'] == expense['category']
-            ]
-            
-            if not prev_expense.empty:
-                prev_expense = prev_expense.iloc[0]
-                change = ((expense['amount'] - prev_expense['amount']) / prev_expense['amount']) * 100
-            else:
-                change = 100  # New expense category
-            
-            expense_changes.append({
-                'category': expense['category'],
-                'current_amount': expense['amount'],
-                'previous_amount': prev_expense['amount'] if not prev_expense.empty else 0,
-                'change': change,
-                'notes': expense['notes']
-            })
-        
-        # Calculate profit margin
-        total_expenses = current_expenses['amount'].sum()
-        profit_margin = ((current_data['total_sales'] - total_expenses) / current_data['total_sales']) * 100
-        
-        # Compile report
-        report = {
-            'restaurant_id': restaurant_id,
-            'restaurant_name': self.restaurants[self.restaurants['restaurant_id'] == restaurant_id]['name'].iloc[0],
-            'current_period': f"{year}-{month:02d}",
-            'previous_period': f"{prev_year}-{prev_month:02d}",
-            'sales_growth': sales_growth,
-            'transaction_growth': transaction_growth,
-            'avg_sale_change': avg_sale_change,
-            'payment_method_changes': payment_changes,
-            'item_changes': item_changes,
-            'expense_changes': expense_changes,
-            'profit_margin': profit_margin,
-            'total_sales': current_data['total_sales'],
-            'total_transactions': current_data['total_transactions'],
-            'average_sale': current_data['average_sale'],
-            'total_expenses': total_expenses
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --background-color: #f8f9fa;
+            --card-background: #ffffff;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --border-color: #e0e0e0;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
-        
-        return report, None
-    
-    def identify_strengths_weaknesses(self, report):
-        """Identify strengths and weaknesses from a comparison report"""
-        strengths = []
-        weaknesses = []
-        
-        # Sales performance
-        if report['sales_growth'] > 5:
-            strengths.append(f"Strong sales growth of {report['sales_growth']:.1f}%")
-        elif report['sales_growth'] < 0:
-            weaknesses.append(f"Sales decline of {abs(report['sales_growth']):.1f}%")
-        
-        # Transaction growth
-        if report['transaction_growth'] > 5:
-            strengths.append(f"Strong transaction growth of {report['transaction_growth']:.1f}%")
-        elif report['transaction_growth'] < 0:
-            weaknesses.append(f"Transaction decline of {abs(report['transaction_growth']):.1f}%")
-        
-        # Average sale value
-        if report['avg_sale_change'] > 2:
-            strengths.append(f"Increasing average sale value by ${report['avg_sale_change']:.2f}")
-        elif report['avg_sale_change'] < -2:
-            weaknesses.append(f"Decreasing average sale value by ${abs(report['avg_sale_change']):.2f}")
-        
-        # Payment methods
-        for payment in report['payment_method_changes']:
-            if payment['change'] > 10:
-                strengths.append(f"Strong growth in {payment['method_name']} payments ({payment['change']:.1f}%)")
-            elif payment['change'] < -10:
-                weaknesses.append(f"Decline in {payment['method_name']} payments ({abs(payment['change']):.1f}%)")
-        
-        # Menu items
-        top_items = sorted(report['item_changes'], key=lambda x: x['revenue_change'], reverse=True)[:3]
-        bottom_items = sorted(report['item_changes'], key=lambda x: x['revenue_change'])[:3]
-        
-        strengths.append(f"Top performing items: {', '.join([item['item_name'] for item in top_items])}")
-        weaknesses.append(f"Underperforming items: {', '.join([item['item_name'] for item in bottom_items])}")
-        
-        # Profit margin
-        if report['profit_margin'] > 20:
-            strengths.append(f"Healthy profit margin of {report['profit_margin']:.1f}%")
-        elif report['profit_margin'] < 10:
-            weaknesses.append(f"Low profit margin of {report['profit_margin']:.1f}%")
-        
-        # Expenses
-        for expense in report['expense_changes']:
-            if expense['change'] > 10:
-                weaknesses.append(f"Significant increase in {expense['category']} expenses ({expense['change']:.1f}%)")
-        
-        return strengths, weaknesses
-    
-    def generate_sales_growth_plan(self, report, strengths, weaknesses):
-        """Generate a sales growth plan based on the report analysis"""
-        plan = {
-            'immediate_actions': [],
-            'short_term_strategies': [],
-            'long_term_initiatives': [],
-            'monitoring_metrics': []
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        # Immediate actions (0-30 days)
-        if any("sales decline" in weakness for weakness in weaknesses):
-            plan['immediate_actions'].append("Implement promotional campaigns to boost sales")
-        
-        if any("transaction decline" in weakness for weakness in weaknesses):
-            plan['immediate_actions'].append("Launch customer loyalty program to increase repeat visits")
-        
-        if any("decline in" in weakness for weakness in weaknesses):
-            plan['immediate_actions'].append("Review pricing strategy for underperforming payment methods")
-        
-        # Short-term strategies (1-3 months)
-        if any("underperforming items" in weakness for weakness in weaknesses):
-            plan['short_term_strategies'].append("Revise menu to remove or reposition underperforming items")
-        
-        if any("low profit margin" in weakness for weakness in weaknesses):
-            plan['short_term_strategies'].append("Optimize ingredient sourcing to reduce costs")
-        
-        if any("increase in" in weakness for weakness in weaknesses):
-            plan['short_term_strategies'].append("Review expense categories with significant increases")
-        
-        # Long-term initiatives (3-12 months)
-        if any("strong growth" in strength for strength in strengths):
-            plan['long_term_initiatives'].append("Expand successful payment methods to other locations")
-        
-        if any("top performing items" in strength for strength in strengths):
-            plan['long_term_initiatives'].append("Develop new menu items based on top performers")
-        
-        # Monitoring metrics
-        plan['monitoring_metrics'] = [
-            "Monthly sales growth",
-            "Transaction count",
-            "Average sale value",
-            "Payment method adoption rates",
-            "Menu item profitability",
-            "Profit margin",
-            "Customer satisfaction scores"
-        ]
-        
-        return plan
-    
-    def visualize_report(self, report):
-        """Create visualizations for the report"""
-        # Set style
-        sns.set(style="whitegrid")
-        
-        # Create figure
-        fig = plt.figure(figsize=(16, 12))
-        
-        # Sales and Transactions comparison
-        ax1 = fig.add_subplot(2, 3, 1)
-        periods = [report['previous_period'], report['current_period']]
-        sales = [report['total_sales'] * (1 - report['sales_growth']/100), report['total_sales']]
-        ax1.bar(periods, sales, color=['#1f77b4', '#ff7f0e'])
-        ax1.set_title('Sales Comparison')
-        ax1.set_ylabel('Sales Amount')
-        
-        # Transaction comparison
-        ax2 = fig.add_subplot(2, 3, 2)
-        transactions = [report['total_transactions'] * (1 - report['transaction_growth']/100), report['total_transactions']]
-        ax2.bar(periods, transactions, color=['#1f77b4', '#ff7f0e'])
-        ax2.set_title('Transaction Comparison')
-        ax2.set_ylabel('Number of Transactions')
-        
-        # Payment method changes
-        ax3 = fig.add_subplot(2, 3, 3)
-        payment_changes = [p['change'] for p in report['payment_method_changes']]
-        payment_names = [p['method_name'] for p in report['payment_method_changes']]
-        ax3.barh(payment_names, payment_changes, color=['#2ca02c' if c > 0 else '#d62728' for c in payment_changes])
-        ax3.set_title('Payment Method Changes (%)')
-        ax3.set_xlabel('Change Percentage')
-        
-        # Menu item performance
-        ax4 = fig.add_subplot(2, 3, 4)
-        item_revenues = [i['current_revenue'] for i in report['item_changes']]
-        item_names = [i['item_name'] for i in report['item_changes']]
-        ax4.barh(item_names, item_revenues, color='#1f77b4')
-        ax4.set_title('Menu Item Revenue')
-        ax4.set_xlabel('Revenue Amount')
-        
-        # Expense changes
-        ax5 = fig.add_subplot(2, 3, 5)
-        expense_changes = [e['change'] for e in report['expense_changes']]
-        expense_names = [e['category'] for e in report['expense_changes']]
-        ax5.barh(expense_names, expense_changes, color=['#2ca02c' if c < 0 else '#d62728' for c in expense_changes])
-        ax5.set_title('Expense Changes (%)')
-        ax5.set_xlabel('Change Percentage')
-        
-        # Profit margin
-        ax6 = fig.add_subplot(2, 3, 6)
-        categories = ['Sales', 'Expenses', 'Profit']
-        values = [report['total_sales'], report['total_expenses'], 
-                 report['total_sales'] - report['total_expenses']]
-        colors = ['#1f77b4', '#d62728', '#2ca02c']
-        ax6.pie(values, labels=categories, colors=colors, autopct='%1.1f%%')
-        ax6.set_title('Profit Margin')
-        
-        plt.tight_layout()
-        plt.show()
-    
-    def save_report(self, report, filename):
-        """Save the report to a file"""
-        # Convert report to DataFrame for easy export
-        report_df = pd.DataFrame([report])
-        
-        # Save to CSV
-        report_df.to_csv(filename, index=False)
-        print(f"Report saved to {filename}")
-        
-        # Save visualizations
-        self.visualize_report(report)
-    
-    def interactive_data_entry(self):
-        """Interactive interface for entering data"""
-        print("\n=== Crispy Chicken Sales Reporting System ===")
-        print("1. Add Restaurant")
-        print("2. Add Payment Method")
-        print("3. Add Menu Item")
-        print("4. Enter Monthly Sales")
-        print("5. Generate Monthly Comparison Report")
-        print("6. Exit")
-        
-        while True:
-            choice = input("\nEnter your choice: ")
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .dashboard-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-right: 1rem;
+        }
+
+        .header-title {
+            font-size: 1.2rem;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .date-range-picker {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .date-input {
+            padding: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 4px;
+        }
+
+        .date-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .branch-selector {
+            padding: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 4px;
+        }
+
+        .header-button {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* KPI Cards */
+        .kpi-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .kpi-card {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-title {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .kpi-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-change {
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .positive {
+            color: var(--success-color);
+        }
+
+        .negative {
+            color: var(--accent-color);
+        }
+
+        /* Charts Container */
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .chart-card {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .chart-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chart-action-button {
+            background-color: rgba(0, 0, 0, 0.05);
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+
+        .chart-action-button:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Data Management Panel */
+        .data-management-panel {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .panel-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .panel-button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .panel-button:hover {
+            background-color: #2980b9;
+        }
+
+        .data-table-container {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th, .data-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            font-weight: 500;
+            color: var(--text-secondary);
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .data-table tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .edit-button {
+            background-color: transparent;
+            border: none;
+            color: var(--secondary-color);
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .edit-button:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        /* Notes & Commentary Panel */
+        .notes-panel {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notes-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .note-item {
+            padding: 1rem;
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.02);
+            border-left: 3px solid var(--secondary-color);
+        }
+
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .note-date {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .note-user {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .note-content {
+            font-size: 0.95rem;
+        }
+
+        .note-input-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .note-input {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            resize: none;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .note-input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        .note-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .form-button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-button-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .form-button-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .form-button-secondary {
+            background-color: rgba(0, 0, 0, 0.1);
+            color: var(--text-primary);
+        }
+
+        .form-button-secondary:hover {
+            background-color: rgba(0, 0, 0, 0.15);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .header-controls {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+
+            .kpi-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--secondary-color);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            color: white;
+            box-shadow: var(--shadow);
+            z-index: 1001;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background-color: var(--success-color);
+        }
+
+        .notification.error {
+            background-color: var(--accent-color);
+        }
+
+        .notification.info {
+            background-color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">🍔</div>
+                <div class="header-title">Restaurant Delivery Performance Dashboard</div>
+            </div>
+            <div class="header-controls">
+                <div class="date-range-picker">
+                    <input type="date" id="startDate" class="date-input" placeholder="Start Date">
+                    <span>to</span>
+                    <input type="date" id="endDate" class="date-input" placeholder="End Date">
+                </div>
+                <select id="branchSelector" class="branch-selector">
+                    <option value="all">All Branches</option>
+                    <option value="hamdan">Hamdan St</option>
+                    <option value="khaldia">Khaldia</option>
+                    <option value="shabiya">Shabiya 11</option>
+                    <option value="muroor">Muroor</option>
+                    <option value="electra">Al Electra</option>
+                    <option value="barsha">Al Barsha</option>
+                    <option value="satwa">Al Satwa</option>
+                </select>
+                <button class="header-button" id="refreshButton">
+                    <span class="material-icons">refresh</span>
+                    Refresh
+                </button>
+                <button class="header-button" id="exportPdfButton">
+                    <span class="material-icons">picture_as_pdf</span>
+                    Export PDF
+                </button>
+                <button class="header-button" id="exportExcelButton">
+                    <span class="material-icons">file_excel</span>
+                    Export Excel
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- KPI Cards -->
+            <div class="kpi-container">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Total Delivery Orders</div>
+                        <div class="kpi-icon" style="background-color: rgba(52, 152, 219, 0.1);">
+                            <span class="material-icons">local_shipping</span>
+                        </div>
+                    </div>
+                    <div class="kpi-value" id="totalOrders">0</div>
+                    <div class="kpi-change positive">
+                        <span class="material-icons">trending_up</span>
+                        <span id="ordersChange">0%</span> from last month
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Total Delivery Revenue</div>
+                        <div class="kpi-icon" style="background-color: rgba(46, 204, 113, 0.1);">
+                            <span class="material-icons">payments</span>
+                        </div>
+                    </div>
+                    <div class="kpi-value" id="totalRevenue">$0</div>
+                    <div class="kpi-change positive">
+                        <span class="material-icons">trending_up</span>
+                        <span id="revenueChange">0%</span> from last month
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Average Delivery Time</div>
+                        <div class="kpi-icon" style="background-color: rgba(241, 196, 15, 0.1);">
+                            <span class="material-icons">timer</span>
+                        </div>
+                    </div>
+                    <div class="kpi-value" id="avgDeliveryTime">0 min</div>
+                    <div class="kpi-change positive">
+                        <span class="material-icons">trending_down</span>
+                        <span id="deliveryTimeChange">0%</span> faster than last month
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Delivery Success Rate</div>
+                        <div class="kpi-icon" style="background-color: rgba(155, 89, 182, 0.1);">
+                            <span class="material-icons">check_circle</span>
+                        </div>
+                    </div>
+                    <div class="kpi-value" id="successRate">0%</div>
+                    <div class="kpi-change positive">
+                        <span class="material-icons">trending_up</span>
+                        <span id="successRateChange">0%</span> improvement
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Customer Satisfaction</div>
+                        <div class="kpi-icon" style="background-color: rgba(231, 76, 60, 0.1);">
+                            <span class="material-icons">star</span>
+                        </div>
+                    </div>
+                    <div class="kpi-value" id="customerSatisfaction">0/5</div>
+                    <div class="kpi-change positive">
+                        <span class="material-icons">trending_up</span>
+                        <span id="satisfactionChange">0%</span> increase
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Container -->
+            <div class="charts-container">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">Delivery Performance Trends</div>
+                        <div class="chart-actions">
+                            <button class="chart-action-button">Daily</button>
+                            <button class="chart-action-button">Weekly</button>
+                            <button class="chart-action-button">Monthly</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="performanceTrendsChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">Branch Comparison</div>
+                        <div class="chart-actions">
+                            <button class="chart-action-button">Orders</button>
+                            <button class="chart-action-button">Revenue</button>
+                            <button class="chart-action-button">Rating</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="branchComparisonChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">Revenue Trends</div>
+                        <div class="chart-actions">
+                            <button class="chart-action-button">Monthly</button>
+                            <button class="chart-action-button">Quarterly</button>
+                            <button class="chart-action-button">Yearly</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueTrendsChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">Branch Revenue Contribution</div>
+                        <div class="chart-actions">
+                            <button class="chart-action-button">Current</button>
+                            <button class="chart-action-button">Previous</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="branchRevenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Management Panel -->
+            <div class="data-management-panel">
+                <div class="panel-header">
+                    <div class="panel-title">Delivery Data Management</div>
+                    <div class="panel-actions">
+                        <button class="panel-button" id="addDataButton">
+                            <span class="material-icons">add</span>
+                            Add Data
+                        </button>
+                        <button class="panel-button" id="importDataButton">
+                            <span class="material-icons">upload_file</span>
+                            Import Data
+                        </button>
+                    </div>
+                </div>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Branch</th>
+                                <th>Orders</th>
+                                <th>Revenue</th>
+                                <th>Avg. Time (min)</th>
+                                <th>Success Rate (%)</th>
+                                <th>Satisfaction</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dataTableBody">
+                            <!-- Data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Notes & Commentary Panel -->
+            <div class="notes-panel">
+                <div class="notes-header">
+                    <div class="panel-title">Operational Insights & Notes</div>
+                    <button class="panel-button" id="addNoteButton">
+                        <span class="material-icons">add</span>
+                        Add Note
+                    </button>
+                </div>
+                <div class="notes-container" id="notesContainer">
+                    <!-- Notes will be populated here -->
+                </div>
+                <div class="note-input-container" id="noteInputContainer" style="display: none;">
+                    <textarea class="note-input" id="noteInput" placeholder="Add your operational insights or notes here..."></textarea>
+                    <div class="note-actions">
+                        <button class="form-button form-button-secondary" id="cancelNoteButton">Cancel</button>
+                        <button class="form-button form-button-primary" id="saveNoteButton">Save Note</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Data Entry Modal -->
+    <div class="modal" id="dataEntryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Add/Update Delivery Data</div>
+                <button class="close-button" id="closeDataModal">&times;</button>
+            </div>
+            <form id="dataEntryForm">
+                <div class="form-group">
+                    <label class="form-label" for="dataDate">Date</label>
+                    <input type="date" id="dataDate" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="dataBranch">Branch</label>
+                    <select id="dataBranch" class="form-input" required>
+                        <option value="hamdan">Hamdan St</option>
+                        <option value="khaldia">Khaldia</option>
+                        <option value="shabiya">Shabiya 11</option>
+                        <option value="muroor">Muroor</option>
+                        <option value="electra">Al Electra</option>
+                        <option value="barsha">Al Barsha</option>
+                        <option value="satwa">Al Satwa</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="dataOrders">Number of Orders</label>
+                    <input type="number" id="dataOrders" class="form-input" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="dataRevenue">Revenue ($)</label>
+                    <input type="number" id="dataRevenue" class="form-input" min="0" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="dataAvgTime">Average Delivery Time (minutes)</label>
+                    <input type="number" id="dataAvgTime" class="form-input" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="dataSuccessRate">Success Rate (%)</label>
+                    <input type="number" id="dataSuccessRate" class="form-input" min="0" max="100" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="dataSatisfaction">Customer Satisfaction (1-5)</label>
+                    <input type="number" id="dataSatisfaction" class="form-input" min="1" max="5" step="0.1" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="form-button form-button-secondary" id="cancelDataButton">Cancel</button>
+                    <button type="submit" class="form-button form-button-primary">Save Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Data Management
+        let deliveryData = [
+            { date: '2025-01-01', branch: 'hamdan', orders: 26775, avgTime: 25, successRate: 95, satisfaction: 4.2, revenue: 785538 },
+            { date: '2025-01-01', branch: 'khaldia', orders: 19523, avgTime: 28, successRate: 93, satisfaction: 4.0, revenue: 584685 },
+            { date: '2025-01-01', branch: 'shabiya', orders: 21470, avgTime: 22, successRate: 96, satisfaction: 4.3, revenue: 630956 },
+            { date: '2025-01-01', branch: 'muroor', orders: 17770, avgTime: 30, successRate: 92, satisfaction: 3.9, revenue: 527598 },
+            { date: '2025-01-01', branch: 'electra', orders: 30341, avgTime: 20, successRate: 97, satisfaction: 4.5, revenue: 740084 },
+            { date: '2025-01-01', branch: 'barsha', orders: 24058, avgTime: 26, successRate: 94, satisfaction: 4.1, revenue: 611174 },
+            { date: '2025-01-01', branch: 'satwa', orders: 14065, avgTime: 32, successRate: 91, satisfaction: 3.8, revenue: 385718 },
             
-            if choice == '1':
-                name = input("Restaurant name: ")
-                location = input("Location: ")
-                manager = input("Manager name: ")
-                opening_date = input("Opening date (YYYY-MM-DD): ")
-                self.add_restaurant(name, location, manager, opening_date)
-                print(f"Restaurant '{name}' added successfully!")
-                
-            elif choice == '2':
-                method_name = input("Payment method name: ")
-                category = input("Category: ")
-                self.add_payment_method(method_name, category)
-                print(f"Payment method '{method_name}' added successfully!")
-                
-            elif choice == '3':
-                name = input("Menu item name: ")
-                category = input("Category: ")
-                price = float(input("Price: "))
-                cost = float(input("Cost: "))
-                self.add_menu_item(name, category, price, cost)
-                print(f"Menu item '{name}' added successfully!")
-                
-            elif choice == '4':
-                print("\nSelect Restaurant:")
-                for i, (_, restaurant) in enumerate(self.restaurants.iterrows()):
-                    print(f"{i+1}. {restaurant['name']} (ID: {restaurant['restaurant_id']})")
-                
-                restaurant_choice = int(input("Enter restaurant number: ")) - 1
-                restaurant_id = self.restaurants.iloc[restaurant_choice]['restaurant_id']
-                
-                month = int(input("Month (1-12): "))
-                year = int(input("Year: "))
-                total_sales = float(input("Total sales: "))
-                total_transactions = int(input("Total transactions: "))
-                
-                print("\nEnter Payment Method Data:")
-                payment_data = []
-                for _, payment in self.payment_methods.iterrows():
-                    print(f"\n{payment['method_name']}:")
-                    amount = float(input("Amount: "))
-                    percentage = float(input("Percentage of total: "))
-                    transaction_count = int(input("Transaction count: "))
-                    average_transaction = float(input("Average transaction: "))
-                    
-                    payment_data.append({
-                        'method_id': payment['method_id'],
-                        'amount': amount,
-                        'percentage': percentage,
-                        'transaction_count': transaction_count,
-                        'average_transaction': average_transaction
-                    })
-                
-                print("\nEnter Menu Item Data:")
-                item_data = []
-                for _, item in self.menu_items.iterrows():
-                    print(f"\n{item['name']}:")
-                    quantity_sold = int(input("Quantity sold: "))
-                    revenue = float(input("Revenue: "))
-                    
-                    item_data.append({
-                        'item_id': item['item_id'],
-                        'quantity_sold': quantity_sold,
-                        'revenue': revenue
-                    })
-                
-                print("\nEnter Expense Data:")
-                expense_data = []
-                categories = ['Rent', 'Utilities', 'Labor', 'Ingredients', 'Marketing']
-                for category in categories:
-                    print(f"\n{category}:")
-                    amount = float(input("Amount: "))
-                    notes = input("Notes: ")
-                    
-                    expense_data.append({
-                        'category': category,
-                        'amount': amount,
-                        'notes': notes
-                    })
-                
-                self.enter_monthly_sales(
-                    restaurant_id, month, year, total_sales, total_transactions,
-                    payment_data, item_data, expense_data
-                )
-                print("Monthly sales data entered successfully!")
-                
-            elif choice == '5':
-                print("\nSelect Restaurant:")
-                for i, (_, restaurant) in enumerate(self.restaurants.iterrows()):
-                    print(f"{i+1}. {restaurant['name']} (ID: {restaurant['restaurant_id']})")
-                
-                restaurant_choice = int(input("Enter restaurant number: ")) - 1
-                restaurant_id = self.restaurants.iloc[restaurant_choice]['restaurant_id']
-                
-                month = int(input("Month (1-12): "))
-                year = int(input("Year: "))
-                
-                report, error = self.generate_monthly_comparison_report(restaurant_id, month, year)
-                
-                if error:
-                    print(f"Error: {error}")
-                else:
-                    print("\n=== Monthly Comparison Report ===")
-                    print(f"Restaurant: {report['restaurant_name']}")
-                    print(f"Period: {report['current_period']} vs {report['previous_period']}")
-                    print(f"Sales Growth: {report['sales_growth']:.2f}%")
-                    print(f"Transaction Growth: {report['transaction_growth']:.2f}%")
-                    print(f"Average Sale Change: ${report['avg_sale_change']:.2f}")
-                    print(f"Profit Margin: {report['profit_margin']:.2f}%")
-                    
-                    strengths, weaknesses = self.identify_strengths_weaknesses(report)
-                    print("\nStrengths:")
-                    for strength in strengths:
-                        print(f"- {strength}")
-                    
-                    print("\nWeaknesses:")
-                    for weakness in weaknesses:
-                        print(f"- {weakness}")
-                    
-                    plan = self.generate_sales_growth_plan(report, strengths, weaknesses)
-                    print("\nSales Growth Plan:")
-                    print("\nImmediate Actions:")
-                    for action in plan['immediate_actions']:
-                        print(f"- {action}")
-                    
-                    print("\nShort-term Strategies:")
-                    for strategy in plan['short_term_strategies']:
-                        print(f"- {strategy}")
-                    
-                    print("\nLong-term Initiatives:")
-                    for initiative in plan['long_term_initiatives']:
-                        print(f"- {initiative}")
-                    
-                    print("\nMonitoring Metrics:")
-                    for metric in plan['monitoring_metrics']:
-                        print(f"- {metric}")
-                    
-                    save = input("\nSave report? (y/n): ")
-                    if save.lower() == 'y':
-                        filename = input("Enter filename (e.g., report.csv): ")
-                        self.save_report(report, filename)
-                
-            elif choice == '6':
-                print("Exiting system...")
-                break
-                
-            else:
-                print("Invalid choice. Please try again.")
+            { date: '2025-02-01', branch: 'hamdan', orders: 25749, avgTime: 24, successRate: 96, satisfaction: 4.3, revenue: 742068 },
+            { date: '2025-02-01', branch: 'khaldia', orders: 18616, avgTime: 27, successRate: 94, satisfaction: 4.1, revenue: 566345 },
+            { date: '2025-02-01', branch: 'shabiya', orders: 21387, avgTime: 21, successRate: 97, satisfaction: 4.4, revenue: 614655 },
+            { date: '2025-02-01', branch: 'muroor', orders: 17373, avgTime: 29, successRate: 93, satisfaction: 4.0, revenue: 501652 },
+            { date: '2025-02-01', branch: 'electra', orders: 28535, avgTime: 19, successRate: 98, satisfaction: 4.6, revenue: 710820 },
+            { date: '2025-02-01', branch: 'barsha', orders: 23744, avgTime: 25, successRate: 95, satisfaction: 4.2, revenue: 610930 },
+            { date: '2025-02-01', branch: 'satwa', orders: 15427, avgTime: 31, successRate: 92, satisfaction: 3.9, revenue: 426647 },
+            
+            { date: '2025-03-01', branch: 'hamdan', orders: 24619, avgTime: 23, successRate: 97, satisfaction: 4.4, revenue: 722127 },
+            { date: '2025-03-01', branch: 'khaldia', orders: 19137, avgTime: 26, successRate: 95, satisfaction: 4.2, revenue: 571512 },
+            { date: '2025-03-01', branch: 'shabiya', orders: 21870, avgTime: 20, successRate: 98, satisfaction: 4.5, revenue: 669003 },
+            { date: '2025-03-01', branch: 'muroor', orders: 16509, avgTime: 28, successRate: 94, satisfaction: 4.1, revenue: 493891 },
+            { date: '2025-03-01', branch: 'electra', orders: 28364, avgTime: 18, successRate: 99, satisfaction: 4.7, revenue: 727587 },
+            { date: '2025-03-01', branch: 'barsha', orders: 23756, avgTime: 24, successRate: 96, satisfaction: 4.3, revenue: 629720 },
+            { date: '2025-03-01', branch: 'satwa', orders: 19546, avgTime: 30, successRate: 93, satisfaction: 4.0, revenue: 557244 },
+            
+            { date: '2025-04-01', branch: 'hamdan', orders: 23797, avgTime: 22, successRate: 98, satisfaction: 4.5, revenue: 713033 },
+            { date: '2025-04-01', branch: 'khaldia', orders: 18743, avgTime: 25, successRate: 96, satisfaction: 4.3, revenue: 568123 },
+            { date: '2025-04-01', branch: 'shabiya', orders: 20572, avgTime: 19, successRate: 99, satisfaction: 4.6, revenue: 638250 },
+            { date: '2025-04-01', branch: 'muroor', orders: 17251, avgTime: 27, successRate: 95, satisfaction: 4.2, revenue: 526701 },
+            { date: '2025-04-01', branch: 'electra', orders: 28496, avgTime: 17, successRate: 100, satisfaction: 4.8, revenue: 725004 },
+            { date: '2025-04-01', branch: 'barsha', orders: 22717, avgTime: 23, successRate: 97, satisfaction: 4.4, revenue: 587672 },
+            { date: '2025-04-01', branch: 'satwa', orders: 14139, avgTime: 29, successRate: 94, satisfaction: 4.1, revenue: 401400 },
+        ];
 
+        let notes = [
+            { date: '2025-01-15', user: 'John Manager', content: 'Implemented new delivery route optimization for Hamdan St branch, reducing average delivery time by 3 minutes.' },
+            { date: '2025-02-10', user: 'Sarah Supervisor', content: 'Khaldia branch experienced higher than usual order volume during weekend. Consider increasing delivery staff for weekends.' },
+            { date: '2025-03-05', user: 'Mike Operations', content: 'Al Electra branch achieved 100% success rate for the first time. Review their procedures for best practices.' },
+            { date: '2025-04-01', user: 'Lisa Manager', content: 'New delivery partner agreement signed with Noon platform. Expected to increase delivery capacity by 20%.' },
+        ];
 
-# Example usage
-if __name__ == "__main__":
-    # Create reporting system
-    system = CrispyChickenReportingSystem()
-    
-    # Run interactive interface
-    system.interactive_data_entry()
+        // Chart instances
+        let performanceTrendsChart;
+        let branchComparisonChart;
+        let revenueTrendsChart;
+        let branchRevenueChart;
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDateRange();
+            initializeCharts();
+            updateKPIs();
+            updateDataTable();
+            updateNotes();
+            setupEventListeners();
+        });
+
+        // Initialize date range picker with current month
+        function initializeDateRange() {
+            const today = new Date();
+            const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+            const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+            
+            document.getElementById('startDate').value = formatDate(firstDay);
+            document.getElementById('endDate').value = formatDate(lastDay);
+        }
+
+        // Format date for input field
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // Initialize charts
+        function initializeCharts() {
+            // Performance Trends Chart
+            const performanceCtx = document.getElementById('performanceTrendsChart').getContext('2d');
+            performanceTrendsChart = new Chart(performanceCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Orders',
+                            data: [],
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            yAxisID: 'y-orders',
+                        },
+                        {
+                            label: 'Avg. Delivery Time',
+                            data: [],
+                            borderColor: '#e74c3c',
+                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                            yAxisID: 'y-time',
+                        },
+                        {
+                            label: 'Success Rate',
+                            data: [],
+                            borderColor: '#2ecc71',
+                            backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                            yAxisID: 'y-rate',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        'y-orders': {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Orders'
+                            }
+                        },
+                        'y-time': {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Delivery Time (min)'
+                            },
+                            grid: {
+                                drawOnChartArea: false,
+                            }
+                        },
+                        'y-rate': {
+                            type: 'linear',
+                            display: false,
+                            min: 0,
+                            max: 100
+                        }
+                    }
+                }
+            });
+
+            // Branch Comparison Chart
+            const branchCtx = document.getElementById('branchComparisonChart').getContext('2d');
+            branchComparisonChart = new Chart(branchCtx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Orders',
+                            data: [],
+                            backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                            yAxisID: 'y-orders',
+                        },
+                        {
+                            label: 'Avg. Satisfaction',
+                            data: [],
+                            backgroundColor: 'rgba(155, 89, 182, 0.7)',
+                            yAxisID: 'y-satisfaction',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        'y-orders': {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Orders'
+                            }
+                        },
+                        'y-satisfaction': {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Satisfaction (1-5)'
+                            },
+                            min: 1,
+                            max: 5,
+                            grid: {
+                                drawOnChartArea: false,
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Revenue Trends Chart
+            const revenueCtx = document.getElementById('revenueTrendsChart').getContext('2d');
+            revenueTrendsChart = new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Revenue',
+                            data: [],
+                            borderColor: '#27ae60',
+                            backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Orders',
+                            data: [],
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            yAxisID: 'y-orders',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Revenue ($)'
+                            }
+                        },
+                        'y-orders': {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Orders'
+                            },
+                            grid: {
+                                drawOnChartArea: false,
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Branch Revenue Chart
+            const branchRevenueCtx = document.getElementById('branchRevenueChart').getContext('2d');
+            branchRevenueChart = new Chart(branchRevenueCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: [
+                            'rgba(52, 152, 219, 0.7)',
+                            'rgba(46, 204, 113, 0.7)',
+                            'rgba(155, 89, 182, 0.7)',
+                            'rgba(241, 196, 15, 0.7)',
+                            'rgba(231, 76, 60, 0.7)',
+                            'rgba(26, 188, 156, 0.7)',
+                            'rgba(230, 126, 34, 0.7)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: $${value.toLocaleString()} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            updateCharts();
+        }
+
+        // Update charts with current data
+        function updateCharts() {
+            const filteredData = getFilteredData();
+            
+            // Update Performance Trends Chart
+            const performanceData = aggregateByDate(filteredData);
+            performanceTrendsChart.data.labels = performanceData.labels;
+            performanceTrendsChart.data.datasets[0].data = performanceData.orders;
+            performanceTrendsChart.data.datasets[1].data = performanceData.avgTime;
+            performanceTrendsChart.data.datasets[2].data = performanceData.successRate;
+            performanceTrendsChart.update();
+            
+            // Update Branch Comparison Chart
+            const branchData = aggregateByBranch(filteredData);
+            branchComparisonChart.data.labels = branchData.labels;
+            branchComparisonChart.data.datasets[0].data = branchData.orders;
+            branchComparisonChart.data.datasets[1].data = branchData.satisfaction;
+            branchComparisonChart.update();
+            
+            // Update Revenue Trends Chart
+            const revenueData = aggregateByDateForRevenue(filteredData);
+            revenueTrendsChart.data.labels = revenueData.labels;
+            revenueTrendsChart.data.datasets[0].data = revenueData.revenue;
+            revenueTrendsChart.data.datasets[1].data = revenueData.orders;
+            revenueTrendsChart.update();
+            
+            // Update Branch Revenue Chart
+            const branchRevenueData = getBranchRevenueData();
+            branchRevenueChart.data.labels = branchRevenueData.labels;
+            branchRevenueChart.data.datasets[0].data = branchRevenueData.data;
+            branchRevenueChart.update();
+        }
+
+        // Aggregate data by date for performance trends
+        function aggregateByDate(data) {
+            const aggregated = {};
+            
+            data.forEach(item => {
+                if (!aggregated[item.date]) {
+                    aggregated[item.date] = {
+                        orders: 0,
+                        avgTime: 0,
+                        successRate: 0,
+                        count: 0
+                    };
+                }
+                
+                aggregated[item.date].orders += item.orders;
+                aggregated[item.date].avgTime += item.avgTime;
+                aggregated[item.date].successRate += item.successRate;
+                aggregated[item.date].count += 1;
+            });
+            
+            const labels = Object.keys(aggregated).sort();
+            const orders = labels.map(date => aggregated[date].orders);
+            const avgTime = labels.map(date => Math.round(aggregated[date].avgTime / aggregated[date].count));
+            const successRate = labels.map(date => Math.round(aggregated[date].successRate / aggregated[date].count));
+            
+            return { labels, orders, avgTime, successRate };
+        }
+
+        // Aggregate data by date for revenue trends
+        function aggregateByDateForRevenue(data) {
+            const aggregated = {};
+            
+            data.forEach(item => {
+                if (!aggregated[item.date]) {
+                    aggregated[item.date] = {
+                        revenue: 0,
+                        orders: 0,
+                        count: 0
+                    };
+                }
+                
+                aggregated[item.date].revenue += item.revenue;
+                aggregated[item.date].orders += item.orders;
+                aggregated[item.date].count += 1;
+            });
+            
+            const labels = Object.keys(aggregated).sort();
+            const revenue = labels.map(date => aggregated[date].revenue);
+            const orders = labels.map(date => aggregated[date].orders);
+            
+            return { labels, revenue, orders };
+        }
+
+        // Aggregate data by branch for comparison
+        function aggregateByBranch(data) {
+            const aggregated = {};
+            
+            data.forEach(item => {
+                if (!aggregated[item.branch]) {
+                    aggregated[item.branch] = {
+                        orders: 0,
+                        satisfaction: 0,
+                        count: 0
+                    };
+                }
+                
+                aggregated[item.branch].orders += item.orders;
+                aggregated[item.branch].satisfaction += item.satisfaction;
+                aggregated[item.branch].count += 1;
+            });
+            
+            const branchNames = {
+                'hamdan': 'Hamdan St',
+                'khaldia': 'Khaldia',
+                'shabiya': 'Shabiya 11',
+                'muroor': 'Muroor',
+                'electra': 'Al Electra',
+                'barsha': 'Al Barsha',
+                'satwa': 'Al Satwa'
+            };
+            
+            const labels = Object.keys(aggregated).map(branch => branchNames[branch]);
+            const orders = Object.values(aggregated).map(item => item.orders);
+            const satisfaction = Object.values(aggregated).map(item => parseFloat((item.satisfaction / item.count).toFixed(1)));
+            
+            return { labels, orders, satisfaction };
+        }
+
+        // Get branch revenue data
+        function getBranchRevenueData() {
+            const branchNames = {
+                'hamdan': 'Hamdan St',
+                'khaldia': 'Khaldia',
+                'shabiya': 'Shabiya 11',
+                'muroor': 'Muroor',
+                'electra': 'Al Electra',
+                'barsha': 'Al Barsha',
+                'satwa': 'Al Satwa'
+            };
+            
+            const branchData = {};
+            
+            deliveryData.forEach(item => {
+                if (!branchData[item.branch]) {
+                    branchData[item.branch] = 0;
+                }
+                branchData[item.branch] += item.revenue;
+            });
+            
+            const labels = Object.keys(branchData).map(branch => branchNames[branch]);
+            const data = Object.values(branchData);
+            
+            return { labels, data };
+        }
+
+        // Update KPI cards
+        function updateKPIs() {
+            const filteredData = getFilteredData();
+            
+            // Calculate total orders
+            const totalOrders = filteredData.reduce((sum, item) => sum + item.orders, 0);
+            document.getElementById('totalOrders').textContent = totalOrders.toLocaleString();
+            
+            // Calculate total revenue
+            const totalRevenue = filteredData.reduce((sum, item) => sum + item.revenue, 0);
+            document.getElementById('totalRevenue').textContent = '$' + totalRevenue.toLocaleString();
+            
+            // Calculate average delivery time
+            const avgDeliveryTime = filteredData.reduce((sum, item) => sum + item.avgTime, 0) / filteredData.length;
+            document.getElementById('avgDeliveryTime').textContent = Math.round(avgDeliveryTime) + ' min';
+            
+            // Calculate success rate
+            const successRate = filteredData.reduce((sum, item) => sum + item.successRate, 0) / filteredData.length;
+            document.getElementById('successRate').textContent = Math.round(successRate) + '%';
+            
+            // Calculate customer satisfaction
+            const customerSatisfaction = filteredData.reduce((sum, item) => sum + item.satisfaction, 0) / filteredData.length;
+            document.getElementById('customerSatisfaction').textContent = customerSatisfaction.toFixed(1) + '/5';
+            
+            // Calculate month-to-month changes
+            const currentMonth = document.getElementById('startDate').value.substring(0, 7);
+            const previousMonth = new Date(currentMonth);
+            previousMonth.setMonth(previousMonth.getMonth() - 1);
+            const previousMonthStr = previousMonth.toISOString().substring(0, 7);
+            
+            const currentData = deliveryData.filter(item => item.date.startsWith(currentMonth));
+            const previousData = deliveryData.filter(item => item.date.startsWith(previousMonthStr));
+            
+            const currentOrders = currentData.reduce((sum, item) => sum + item.orders, 0);
+            const previousOrders = previousData.reduce((sum, item) => sum + item.orders, 0);
+            const ordersChange = previousOrders > 0 ? ((currentOrders - previousOrders) / previousOrders * 100).toFixed(1) : 0;
+            
+            const currentRevenue = currentData.reduce((sum, item) => sum + item.revenue, 0);
+            const previousRevenue = previousData.reduce((sum, item) => sum + item.revenue, 0);
+            const revenueChange = previousRevenue > 0 ? ((currentRevenue - previousRevenue) / previousRevenue * 100).toFixed(1) : 0;
+            
+            const currentAvgTime = currentData.reduce((sum, item) => sum + item.avgTime, 0) / currentData.length;
+            const previousAvgTime = previousData.reduce((sum, item) => sum + item.avgTime, 0) / previousData.length;
+            const deliveryTimeChange = previousAvgTime > 0 ? ((previousAvgTime - currentAvgTime) / previousAvgTime * 100).toFixed(1) : 0;
+            
+            const currentSuccessRate = currentData.reduce((sum, item) => sum + item.successRate, 0) / currentData.length;
+            const previousSuccessRate = previousData.reduce((sum, item) => sum + item.successRate, 0) / previousData.length;
+            const successRateChange = previousSuccessRate > 0 ? ((currentSuccessRate - previousSuccessRate) / previousSuccessRate * 100).toFixed(1) : 0;
+            
+            const currentSatisfaction = currentData.reduce((sum, item) => sum + item.satisfaction, 0) / currentData.length;
+            const previousSatisfaction = previousData.reduce((sum, item) => sum + item.satisfaction, 0) / previousData.length;
+            const satisfactionChange = previousSatisfaction > 0 ? ((currentSatisfaction - previousSatisfaction) / previousSatisfaction * 100).toFixed(1) : 0;
+            
+            // Update change indicators
+            document.getElementById('ordersChange').textContent = (ordersChange >= 0 ? '+' : '') + ordersChange + '%';
+            document.getElementById('ordersChange').parentElement.className = 'kpi-change ' + (ordersChange >= 0 ? 'positive' : 'negative');
+            
+            document.getElementById('revenueChange').textContent = (revenueChange >= 0 ? '+' : '') + revenueChange + '%';
+            document.getElementById('revenueChange').parentElement.className = 'kpi-change ' + (revenueChange >= 0 ? 'positive' : 'negative');
+            
+            document.getElementById('deliveryTimeChange').textContent = (deliveryTimeChange >= 0 ? '+' : '') + deliveryTimeChange + '%';
+            document.getElementById('deliveryTimeChange').parentElement.className = 'kpi-change ' + (deliveryTimeChange >= 0 ? 'positive' : 'negative');
+            
+            document.getElementById('successRateChange').textContent = (successRateChange >= 0 ? '+' : '') + successRateChange + '%';
+            document.getElementById('successRateChange').parentElement.className = 'kpi-change ' + (successRateChange >= 0 ? 'positive' : 'negative');
+            
+            document.getElementById('satisfactionChange').textContent = (satisfactionChange >= 0 ? '+' : '') + satisfactionChange + '%';
+            document.getElementById('satisfactionChange').parentElement.className = 'kpi-change ' + (satisfactionChange >= 0 ? 'positive' : 'negative');
+        }
+
+        // Update data table
+        function updateDataTable() {
+            const filteredData = getFilteredData();
+            const tableBody = document.getElementById('dataTableBody');
+            tableBody.innerHTML = '';
+            
+            const branchNames = {
+                'hamdan': 'Hamdan St',
+                'khaldia': 'Khaldia',
+                'shabiya': 'Shabiya 11',
+                'muroor': 'Muroor',
+                'electra': 'Al Electra',
+                'barsha': 'Al Barsha',
+                'satwa': 'Al Satwa'
+            };
+            
+            filteredData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.date}</td>
+                    <td>${branchNames[item.branch]}</td>
+                    <td>${item.orders}</td>
+                    <td>$${item.revenue.toLocaleString()}</td>
+                    <td>${item.avgTime} min</td>
+                    <td>${item.successRate}%</td>
+                    <td>${item.satisfaction}/5</td>
+                    <td>
+                        <button class="edit-button" onclick="editData(${index})">
+                            <span class="material-icons">edit</span>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Update notes panel
+        function updateNotes() {
+            const notesContainer = document.getElementById('notesContainer');
+            notesContainer.innerHTML = '';
+            
+            notes.forEach(note => {
+                const noteElement = document.createElement('div');
+                noteElement.className = 'note-item';
+                noteElement.innerHTML = `
+                    <div class="note-header">
+                        <div class="note-date">${note.date}</div>
+                        <div class="note-user">${note.user}</div>
+                    </div>
+                    <div class="note-content">${note.content}</div>
+                `;
+                notesContainer.appendChild(noteElement);
+            });
+        }
+
+        // Get filtered data based on date range and branch selection
+        function getFilteredData() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const selectedBranch = document.getElementById('branchSelector').value;
+            
+            return deliveryData.filter(item => {
+                const dateMatch = (!startDate || item.date >= startDate) && (!endDate || item.date <= endDate);
+                const branchMatch = selectedBranch === 'all' || item.branch === selectedBranch;
+                return dateMatch && branchMatch;
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Date range and branch selector changes
+            document.getElementById('startDate').addEventListener('change', function() {
+                updateDashboard();
+            });
+            
+            document.getElementById('endDate').addEventListener('change', function() {
+                updateDashboard();
+            });
+            
+            document.getElementById('branchSelector').addEventListener('change', function() {
+                updateDashboard();
+            });
+            
+            // Refresh button
+            document.getElementById('refreshButton').addEventListener('click', function() {
+                updateDashboard();
+                showNotification('Dashboard refreshed successfully', 'success');
+            });
+            
+            // Export buttons
+            document.getElementById('exportPdfButton').addEventListener('click', exportToPDF);
+            document.getElementById('exportExcelButton').addEventListener('click', exportToExcel);
+            
+            // Data management buttons
+            document.getElementById('addDataButton').addEventListener('click', function() {
+                openDataModal();
+            });
+            
+            document.getElementById('importDataButton').addEventListener('click', function() {
+                importData();
+            });
+            
+            // Data modal buttons
+            document.getElementById('closeDataModal').addEventListener('click', function() {
+                closeDataModal();
+            });
+            
+            document.getElementById('cancelDataButton').addEventListener('click', function() {
+                closeDataModal();
+            });
+            
+            document.getElementById('dataEntryForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveData();
+            });
+            
+            // Notes panel buttons
+            document.getElementById('addNoteButton').addEventListener('click', function() {
+                document.getElementById('noteInputContainer').style.display = 'flex';
+                document.getElementById('noteInput').focus();
+            });
+            
+            document.getElementById('cancelNoteButton').addEventListener('click', function() {
+                document.getElementById('noteInputContainer').style.display = 'none';
+                document.getElementById('noteInput').value = '';
+            });
+            
+            document.getElementById('saveNoteButton').addEventListener('click', function() {
+                saveNote();
+            });
+            
+            // Chart action buttons
+            document.querySelectorAll('.chart-action-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Update chart based on clicked button
+                    updateCharts();
+                });
+            });
+        }
+
+        // Update all dashboard components
+        function updateDashboard() {
+            updateKPIs();
+            updateCharts();
+            updateDataTable();
+        }
+
+        // Open data entry modal
+        function openDataModal(index = -1) {
+            const modal = document.getElementById('dataEntryModal');
+            const form = document.getElementById('dataEntryForm');
+            
+            if (index >= 0) {
+                // Edit existing data
+                const item = deliveryData[index];
+                document.getElementById('dataDate').value = item.date;
+                document.getElementById('dataBranch').value = item.branch;
+                document.getElementById('dataOrders').value = item.orders;
+                document.getElementById('dataRevenue').value = item.revenue;
+                document.getElementById('dataAvgTime').value = item.avgTime;
+                document.getElementById('dataSuccessRate').value = item.successRate;
+                document.getElementById('dataSatisfaction').value = item.satisfaction;
+            } else {
+                // Add new data
+                form.reset();
+                const today = new Date();
+                document.getElementById('dataDate').value = formatDate(today);
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        // Close data entry modal
+        function closeDataModal() {
+            const modal = document.getElementById('dataEntryModal');
+            modal.style.display = 'none';
+        }
+
+        // Save data from modal
+        function saveData() {
+            const date = document.getElementById('dataDate').value;
+            const branch = document.getElementById('dataBranch').value;
+            const orders = parseInt(document.getElementById('dataOrders').value);
+            const revenue = parseFloat(document.getElementById('dataRevenue').value);
+            const avgTime = parseInt(document.getElementById('dataAvgTime').value);
+            const successRate = parseInt(document.getElementById('dataSuccessRate').value);
+            const satisfaction = parseFloat(document.getElementById('dataSatisfaction').value);
+            
+            // Check if data for this date and branch already exists
+            const existingIndex = deliveryData.findIndex(item => item.date === date && item.branch === branch);
+            
+            if (existingIndex >= 0) {
+                // Update existing data
+                deliveryData[existingIndex] = {
+                    date,
+                    branch,
+                    orders,
+                    revenue,
+                    avgTime,
+                    successRate,
+                    satisfaction
+                };
+                showNotification('Data updated successfully', 'success');
+            } else {
+                // Add new data
+                deliveryData.push({
+                    date,
+                    branch,
+                    orders,
+                    revenue,
+                    avgTime,
+                    successRate,
+                    satisfaction
+                });
+                showNotification('Data added successfully', 'success');
+            }
+            
+            // Sort data by date
+            deliveryData.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            closeDataModal();
+            updateDashboard();
+        }
+
+        // Edit existing data
+        function editData(index) {
+            openDataModal(index);
+        }
+
+        // Import data from Excel file
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.xlsx, .xls';
+            
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(event) {
+                    const data = new Uint8Array(event.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+                    
+                    // Process imported data
+                    jsonData.forEach(row => {
+                        if (row.Date && row.Branch && row.Orders) {
+                            deliveryData.push({
+                                date: row.Date,
+                                branch: row.Branch.toLowerCase(),
+                                orders: parseInt(row.Orders) || 0,
+                                revenue: parseFloat(row.Revenue) || 0,
+                                avgTime: parseInt(row.Avg_Time) || 0,
+                                successRate: parseInt(row.Success_Rate) || 0,
+                                satisfaction: parseFloat(row.Satisfaction) || 0
+                            });
+                        }
+                    });
+                    
+                    // Sort data by date
+                    deliveryData.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    
+                    showNotification('Data imported successfully', 'success');
+                    updateDashboard();
+                };
+                
+                reader.readAsArrayBuffer(file);
+            };
+            
+            input.click();
+        }
+
+        // Export to PDF
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Add title
+            doc.setFontSize(18);
+            doc.text('Restaurant Delivery Performance Report', 14, 16);
+            
+            // Add date range
+            doc.setFontSize(12);
+            doc.text(`Date Range: ${document.getElementById('startDate').value} to ${document.getElementById('endDate').value}`, 14, 24);
+            
+            // Add KPIs
+            doc.setFontSize(14);
+            doc.text('Key Performance Indicators', 14, 36);
+            
+            doc.setFontSize(12);
+            doc.text(`Total Delivery Orders: ${document.getElementById('totalOrders').textContent}`, 14, 46);
+            doc.text(`Total Delivery Revenue: ${document.getElementById('totalRevenue').textContent}`, 14, 52);
+            doc.text(`Average Delivery Time: ${document.getElementById('avgDeliveryTime').textContent}`, 14, 58);
+            doc.text(`Delivery Success Rate: ${document.getElementById('successRate').textContent}`, 14, 64);
+            doc.text(`Customer Satisfaction: ${document.getElementById('customerSatisfaction').textContent}`, 14, 70);
+            
+            // Add table
+            const tableData = getFilteredData().map(item => [
+                item.date,
+                item.branch,
+                item.orders,
+                `$${item.revenue.toLocaleString()}`,
+                `${item.avgTime} min`,
+                `${item.successRate}%`,
+                `${item.satisfaction}/5`
+            ]);
+            
+            doc.autoTable({
+                head: [['Date', 'Branch', 'Orders', 'Revenue', 'Avg. Time', 'Success Rate', 'Satisfaction']],
+                body: tableData,
+                startY: 78,
+                theme: 'grid',
+                styles: { fontSize: 10 },
+                headStyles: { fillColor: [52, 152, 219] }
+            });
+            
+            // Save the PDF
+            doc.save('delivery-performance-report.pdf');
+            showNotification('PDF exported successfully', 'success');
+        }
+
+        // Export to Excel
+        function exportToExcel() {
+            const ws = XLSX.utils.json_to_sheet(deliveryData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Delivery Data');
+            
+            // Add summary sheet
+            const filteredData = getFilteredData();
+            const summary = {
+                'Total Orders': filteredData.reduce((sum, item) => sum + item.orders, 0),
+                'Total Revenue': filteredData.reduce((sum, item) => sum + item.revenue, 0).toLocaleString(),
+                'Average Delivery Time': (filteredData.reduce((sum, item) => sum + item.avgTime, 0) / filteredData.length).toFixed(1) + ' min',
+                'Success Rate': (filteredData.reduce((sum, item) => sum + item.successRate, 0) / filteredData.length).toFixed(1) + '%',
+                'Customer Satisfaction': (filteredData.reduce((sum, item) => sum + item.satisfaction, 0) / filteredData.length).toFixed(1) + '/5'
+            };
+            
+            const summaryWs = XLSX.utils.json_to_sheet([summary]);
+            XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
+            
+            // Save the Excel file
+            XLSX.writeFile(wb, 'delivery-performance-report.xlsx');
+            showNotification('Excel exported successfully', 'success');
+        }
+
+        // Save note
+        function saveNote() {
+            const noteContent = document.getElementById('noteInput').value.trim();
+            
+            if (noteContent) {
+                const today = new Date();
+                const dateStr = formatDate(today);
+                const user = 'Current User'; // In a real app, this would be the logged-in user
+                
+                notes.push({
+                    date: dateStr,
+                    user: user,
+                    content: noteContent
+                });
+                
+                // Sort notes by date (newest first)
+                notes.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                document.getElementById('noteInputContainer').style.display = 'none';
+                document.getElementById('noteInput').value = '';
+                
+                updateNotes();
+                showNotification('Note added successfully', 'success');
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification ' + type;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
