@@ -535,6 +535,138 @@
         .btn-delete-action:hover {
             background-color: #c82333;
         }
+
+        .target-progress {
+            margin-top: 1rem;
+        }
+
+        .target-bar {
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .target-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .target-label {
+            font-size: 0.875rem;
+            color: #6c757d;
+            margin-bottom: 0.25rem;
+        }
+
+        .target-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .save-data-section {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, var(--success-color) 0%, #2ecc71 100%);
+            border: none;
+            border-radius: 5px;
+            padding: 0.5rem 1.5rem;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+            color: white;
+        }
+
+        .day-name {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .target-management {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            transition: background-color 0.3s;
+        }
+
+        .target-input {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .target-input input {
+            margin-left: 10px;
+            width: 100px;
+        }
+
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 0 10px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .btn-update-target {
+            background: linear-gradient(135deg, var(--info-color) 0%, #2196F3 100%);
+            border: none;
+            border-radius: 5px;
+            padding: 0.5rem 1.5rem;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-update-target:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
+            color: white;
+        }
+
+        .branch-target-info {
+            font-size: 0.875rem;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+
+        .target-allocation {
+            background-color: #f8f9fc;
+            border-radius: 5px;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
     </style>
 </head>
 <body>
@@ -717,6 +849,40 @@
                     </div>
                 </div>
 
+                <!-- Sales Target Management Section -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="target-management">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h3 class="chart-title mb-0"><span data-translate="sales-target-title">Sales Target Management</span></h3>
+                                <div class="target-input">
+                                    <label for="targetInput" class="mb-0 me-2">Target (AED):</label>
+                                    <input type="number" class="form-control" id="targetInput" value="370000" min="0" step="1000">
+                                    <button class="btn btn-update-target ms-2" id="updateTargetBtn">
+                                        <i class="bi bi-check-circle me-1"></i> Update
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <h5 class="mb-3"><span data-translate="branch-targets">Branch Targets (Distributed by Performance)</span></h5>
+                                    <div id="branchTargets" class="target-progress">
+                                        <!-- Branch targets will be populated here -->
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-4">
+                                    <h5 class="mb-3"><span data-translate="channel-targets">Channel Targets</span></h5>
+                                    <div id="channelTargets" class="target-progress">
+                                        <!-- Channel targets will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Charts Section -->
                 <div class="row mb-4">
                     <div class="col-lg-8 mb-4">
@@ -784,7 +950,7 @@
                                 <option value="" disabled selected>Select branch</option>
                                 <option value="Crispy Chicken-Hamdan St" data-translate="branch-hamdan">Crispy Chicken-Hamdan St</option>
                                 <option value="Crispy Chicken Khaldia" data-translate="branch-khaldia">Crispy Chicken Khaldia</option>
-                                <option value="Crispy Chicken Shabiya" data-translate="branch-shabiya">Crispy Chicken Shabiya</option>
+                                <option value="Crispy Chicken Shabiya11" data-translate="branch-shabiya">Crispy Chicken Shabiya11</option>
                                 <option value="Crispy Chicken Muroor" data-translate="branch-muroor">Crispy Chicken Muroor</option>
                                 <option value="Crispy Chicken Al Barsha" data-translate="branch-barsha">Crispy Chicken Al Barsha</option>
                                 <option value="Crispy Chicken Al Satwa" data-translate="branch-satwa">Crispy Chicken Al Satwa</option>
@@ -893,10 +1059,45 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Interactive Reports Section -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="data-summary-card">
+                            <h3 class="chart-title"><span data-translate="interactive-reports-title">Interactive Reports</span></h3>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <h5 class="mb-3"><span data-translate="branch-performance-report">Branch Performance Report</span></h5>
+                                    <div class="chart-container" style="height: 300px;">
+                                        <canvas id="branchPerformanceChart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <h5 class="mb-3"><span data-translate="channel-performance-report">Channel Performance Report</span></h5>
+                                    <div class="chart-container" style="height: 300px;">
+                                        <canvas id="channelPerformanceChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Data Management Tab -->
             <div class="tab-pane fade" id="data-management" role="tabpanel">
+                <!-- Save Data Section -->
+                <div class="save-data-section">
+                    <h3 class="chart-title"><span data-translate="save-data-title">Save Data</span></h3>
+                    <p class="text-muted mb-3"><span data-translate="save-data-description">Save your current data to browser storage for future sessions</span></p>
+                    <button class="btn btn-save" id="saveDataBtn">
+                        <i class="bi bi-save me-2"></i> <span data-translate="save-data-btn">Save Data</span>
+                    </button>
+                    <div class="alert alert-success-custom" id="saveSuccessAlert">
+                        <i class="bi bi-check-circle me-2"></i><span data-translate="save-success-message">Data saved successfully!</span>
+                    </div>
+                </div>
+                
                 <!-- Excel Upload Section -->
                 <div class="upload-section">
                     <h3 class="chart-title"><span data-translate="excel-upload-title">Upload Excel Data</span></h3>
@@ -1049,7 +1250,7 @@
                 "note-content": "Sales data is available for the dates shown. You can add, edit, or delete entries using the table actions.",
                 "branch-hamdan": "Crispy Chicken-Hamdan St",
                 "branch-khaldia": "Crispy Chicken Khaldia",
-                "branch-shabiya": "Crispy Chicken Shabiya",
+                "branch-shabiya": "Crispy Chicken Shabiya11",
                 "branch-muroor": "Crispy Chicken Muroor",
                 "branch-barsha": "Crispy Chicken Al Barsha",
                 "branch-satwa": "Crispy Chicken Al Satwa",
@@ -1079,7 +1280,17 @@
                 "upload-success": "Excel file uploaded successfully!",
                 "upload-error": "Error uploading file. Please check the format and try again.",
                 "invalid-format": "Invalid file format. Please upload an Excel file (.xlsx or .xls).",
-                "invalid-data": "Invalid data in the Excel file. Please check the format and try again."
+                "invalid-data": "Invalid data in the Excel file. Please check the format and try again.",
+                "sales-target-title": "Sales Target Management",
+                "branch-targets": "Branch Targets",
+                "channel-targets": "Channel Targets",
+                "save-data-title": "Save Data",
+                "save-data-description": "Save your current data to browser storage for future sessions",
+                "save-data-btn": "Save Data",
+                "save-success-message": "Data saved successfully!",
+                "interactive-reports-title": "Interactive Reports",
+                "branch-performance-report": "Branch Performance Report",
+                "channel-performance-report": "Channel Performance Report"
             },
             ar: {
                 "nav-title": "لوحة بيانات مبيعات كريسبى تشكن",
@@ -1138,7 +1349,7 @@
                 "note-content": "بيانات المبيعات متوفرة للتواريخ المعروضة. يمكنك إضافة أو تعديل أو حذف الإدخالات باستخدام إجراءات الجدول.",
                 "branch-hamdan": "كريسبى تشكن - شارع حمدان",
                 "branch-khaldia": "كريسبى تشكن - الخالدية",
-                "branch-shabiya": "كريسبى تشكن - الشبيبة",
+                "branch-shabiya": "كريسبى تشكن - الشبيبة11",
                 "branch-muroor": "كريسبى تشكن - المروة",
                 "branch-barsha": "كريسبى تشكن - البرشاء",
                 "branch-satwa": "كريسبى تشكن - السطوة",
@@ -1168,13 +1379,26 @@
                 "upload-success": "تم رفع ملف Excel بنجاح!",
                 "upload-error": "خطأ في رفع الملف. يرجى التحقق من التنسيق والمحاولة مرة أخرى.",
                 "invalid-format": "تنسيق ملف غير صالح. يرجى رفع ملف Excel (.xlsx أو .xls).",
-                "invalid-data": "بيانات غير صالحة في ملف Excel. يرجى التحقق من التنسيق والمحاولة مرة أخرى."
+                "invalid-data": "بيانات غير صالحة في ملف Excel. يرجى التحقق من التنسيق والمحاولة مرة أخرى.",
+                "sales-target-title": "إدارة هدف المبيعات",
+                "branch-targets": "أهداف الفروع",
+                "channel-targets": "أهداف القنوات",
+                "save-data-title": "حفظ البيانات",
+                "save-data-description": "احفظ بياناتك الحالية في التخزين للمستقبل",
+                "save-data-btn": "حفظ البيانات",
+                "save-success-message": "تم حفظ البيانات بنجاح!",
+                "interactive-reports-title": "تقارير تفاعلية",
+                "branch-performance-report": "تقرير أداء الفروع",
+                "channel-performance-report": "تقرير أداء القنوات"
             }
         };
 
+        // Sales target
+        let SALES_TARGET = 370000;
+        let charts = {};
+
         let currentLang = 'en';
         let allData = [];
-        let charts = {};
         let editingIndex = -1;
         let changeHistory = [];
 
@@ -1216,6 +1440,13 @@
             }
             
             return salesData;
+        }
+
+        // Get day name from date
+        function getDayName(dateString) {
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const date = new Date(dateString);
+            return days[date.getDay()];
         }
 
         // Convert Excel date number to date string
@@ -1330,6 +1561,22 @@
                 .slice(0, count);
         }
 
+        // Calculate branch target allocation based on delivery performance
+        function calculateBranchTargets() {
+            const branchData = groupByBranch(allData);
+            const totalSales = Object.values(branchData).reduce((sum, branch) => sum + branch.sales, 0);
+            
+            const targets = {};
+            
+            // Distribute the total target based on each branch's sales performance
+            Object.entries(branchData).forEach(([name, data]) => {
+                const percentage = totalSales > 0 ? (data.sales / totalSales) : 0;
+                targets[name] = Math.round(SALES_TARGET * percentage);
+            });
+            
+            return targets;
+        }
+
         // Calculate performance metrics
         function calculatePerformanceMetrics(data) {
             const branchData = groupByBranch(data);
@@ -1344,10 +1591,10 @@
             });
             
             // Find best day
-            let bestDay = { date: '-', sales: 0 };
+            let bestDay = { date: '-', dayName: '-', sales: 0 };
             Object.entries(dates).forEach(([date, data]) => {
                 if (data.sales > bestDay.sales) {
-                    bestDay = { date, sales: data.sales };
+                    bestDay = { date, dayName: getDayName(date), sales: data.sales };
                 }
             });
             
@@ -1382,7 +1629,8 @@
                 topBranch,
                 bestDay,
                 avgSaleAll,
-                branchPerformance
+                branchPerformance,
+                totals
             };
         }
 
@@ -1394,9 +1642,9 @@
             document.getElementById('topBranch').innerHTML = 
                 `${metrics.topBranch.name}<br><small>AED ${metrics.topBranch.sales.toLocaleString()}</small>`;
             
-            // Update best day
+            // Update best day with day name
             document.getElementById('bestDay').innerHTML = 
-                `${metrics.bestDay.date}<br><small>AED ${metrics.bestDay.sales.toLocaleString()}</small>`;
+                `<span class="day-name">${metrics.bestDay.dayName}</span><br><small>${metrics.bestDay.date} - AED ${metrics.bestDay.sales.toLocaleString()}</small>`;
             
             // Update overall average sale
             document.getElementById('avgSaleAll').textContent = `AED ${metrics.avgSaleAll.toFixed(2)}`;
@@ -1425,6 +1673,64 @@
                 `;
                 
                 performanceContainer.appendChild(col);
+            });
+        }
+
+        // Update sales target section
+        function updateSalesTarget() {
+            const branchData = groupByBranch(allData);
+            const channelData = groupByChannel(allData);
+            const branchTargets = calculateBranchTargets();
+            const totals = calculateTotals(allData);
+            
+            // Update branch targets with performance-based distribution
+            const branchTargetsContainer = document.getElementById('branchTargets');
+            branchTargetsContainer.innerHTML = '';
+            
+            Object.entries(branchTargets).forEach(([name, target]) => {
+                const current = branchData[name] ? branchData[name].sales : 0;
+                const percentage = Math.min(100, (current / SALES_TARGET) * 100);
+                const targetPercentage = Math.min(100, (target / SALES_TARGET) * 100);
+                
+                const targetItem = document.createElement('div');
+                targetItem.className = 'mb-3';
+                
+                targetItem.innerHTML = `
+                    <div class="target-label">${name}</div>
+                    <div class="target-bar">
+                        <div class="target-progress-bar" style="width: ${targetPercentage}%"></div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-1">
+                        <div class="target-value">Target: AED ${target.toLocaleString()}</div>
+                        <div class="branch-target-info">${current.toLocaleString()} (${percentage.toFixed(1)}%)</div>
+                    </div>
+                    <div class="target-allocation">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Based on ${branchData[name] ? (branchData[name].sales / totals.totalSales * 100).toFixed(1) : 0}% of total sales
+                    </div>
+                `;
+                
+                branchTargetsContainer.appendChild(targetItem);
+            });
+            
+            // Update channel targets
+            const channelTargetsContainer = document.getElementById('channelTargets');
+            channelTargetsContainer.innerHTML = '';
+            
+            Object.entries(channelData).forEach(([name, data]) => {
+                const percentage = Math.min(100, (data.sales / SALES_TARGET) * 100);
+                const targetItem = document.createElement('div');
+                targetItem.className = 'mb-3';
+                
+                targetItem.innerHTML = `
+                    <div class="target-label">${name}</div>
+                    <div class="target-bar">
+                        <div class="target-progress-bar" style="width: ${percentage}%"></div>
+                    </div>
+                    <div class="target-value">AED ${data.sales.toLocaleString()} (${percentage.toFixed(1)}%)</div>
+                `;
+                
+                channelTargetsContainer.appendChild(targetItem);
             });
         }
 
@@ -1479,8 +1785,7 @@
 
             // Branch Sales Chart
             const branchCtx = document.getElementById('branchSalesChart').getContext('2d');
-            const branchData = groupByBranch(allData);
-            const branchNames = Object.keys(branchData);
+            const branchNames = Object.keys(groupByBranch(allData));
             
             charts.branchSales = new Chart(branchCtx, {
                 type: 'bar',
@@ -1488,7 +1793,7 @@
                     labels: branchNames,
                     datasets: [{
                         label: 'Sales (AED)',
-                        data: branchNames.map(name => branchData[name].sales),
+                        data: branchNames.map(name => groupByBranch(allData)[name].sales),
                         backgroundColor: '#FF6B35',
                         borderColor: '#FF6B35',
                         borderWidth: 1
@@ -1764,6 +2069,121 @@
                     }
                 }
             });
+
+            // Branch Performance Chart
+            const branchPerformanceCtx = document.getElementById('branchPerformanceChart').getContext('2d');
+            const branchPerformanceData = Object.entries(groupByBranch(allData))
+                .map(([name, data]) => ({ name, sales: data.sales, transactions: data.transactions }))
+                .sort((a, b) => b.sales - a.sales);
+            
+            charts.branchPerformance = new Chart(branchPerformanceCtx, {
+                type: 'bar',
+                data: {
+                    labels: branchPerformanceData.map(b => b.name),
+                    datasets: [
+                        {
+                            label: 'Sales (AED)',
+                            data: branchPerformanceData.map(b => b.sales),
+                            backgroundColor: '#FF6B35',
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Transactions',
+                            data: branchPerformanceData.map(b => b.transactions),
+                            backgroundColor: '#2196F3',
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'AED ' + value.toLocaleString();
+                                }
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            beginAtZero: true,
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Channel Performance Chart
+            const channelPerformanceCtx = document.getElementById('channelPerformanceChart').getContext('2d');
+            const channelPerformanceData = Object.entries(groupByChannel(allData))
+                .map(([name, data]) => ({ name, sales: data.sales, transactions: data.transactions }));
+            
+            charts.channelPerformance = new Chart(channelPerformanceCtx, {
+                type: 'bar',
+                data: {
+                    labels: channelPerformanceData.map(c => c.name),
+                    datasets: [
+                        {
+                            label: 'Sales (AED)',
+                            data: channelPerformanceData.map(c => c.sales),
+                            backgroundColor: '#FF6B35',
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Transactions',
+                            data: channelPerformanceData.map(c => c.transactions),
+                            backgroundColor: '#2196F3',
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'AED ' + value.toLocaleString();
+                                }
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            beginAtZero: true,
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         // Populate sales table
@@ -1897,6 +2317,7 @@
         function updateDashboard() {
             updateKPIs();
             updatePerformanceTracking();
+            updateSalesTarget();
             initializeCharts();
             populateSalesTable();
             populateReportsTable();
@@ -2236,6 +2657,43 @@
             }, 5000);
         }
 
+        // Save data to localStorage
+        function saveData() {
+            try {
+                localStorage.setItem('crispyChickenSalesData', JSON.stringify(allData));
+                localStorage.setItem('crispyChickenSalesTarget', SALES_TARGET.toString());
+                
+                // Show success message
+                const successAlert = document.getElementById('saveSuccessAlert');
+                successAlert.style.display = 'block';
+                setTimeout(() => {
+                    successAlert.style.display = 'none';
+                }, 3000);
+            } catch (error) {
+                console.error('Error saving data:', error);
+                alert('Failed to save data. Please try again.');
+            }
+        }
+
+        // Load data from localStorage
+        function loadData() {
+            try {
+                const savedData = localStorage.getItem('crispyChickenSalesData');
+                const savedTarget = localStorage.getItem('crispyChickenSalesTarget');
+                
+                if (savedData) {
+                    allData = JSON.parse(savedData);
+                }
+                
+                if (savedTarget) {
+                    SALES_TARGET = parseInt(savedTarget);
+                    document.getElementById('targetInput').value = SALES_TARGET;
+                }
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
         // Toggle language
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'ar' : 'en';
@@ -2288,7 +2746,7 @@
             const darkModeBtn = document.getElementById('darkModeToggle');
             const icon = darkModeBtn.querySelector('i');
             
-            if (document.body.classList.contains('dark-mode')) {
+            if (document.body.classList.contains('dual-mode')) {
                 icon.classList.remove('bi-moon');
                 icon.classList.add('bi-sun');
             } else {
@@ -2313,6 +2771,26 @@
         document.getElementById('exportDaily').addEventListener('click', () => exportToPDF('Daily'));
         document.getElementById('exportWeekly').addEventListener('click', () => exportToPDF('Weekly'));
         document.getElementById('exportMonthly').addEventListener('click', () => exportToPDF('Monthly'));
+
+        // Save data button
+        document.getElementById('saveDataBtn').addEventListener('click', saveData);
+
+        // Update target button
+        document.getElementById('updateTargetBtn').addEventListener('click', function() {
+            const newTarget = parseInt(document.getElementById('targetInput').value) || 0;
+            if (newTarget > 0) {
+                SALES_TARGET = newTarget;
+                updateSalesTarget();
+                
+                // Show success message
+                const successAlert = document.getElementById('saveSuccessAlert');
+                successAlert.innerHTML = `<i class="bi bi-check-circle me-2"></i>Target updated to AED ${SALES_TARGET.toLocaleString()}!`;
+                successAlert.style.display = 'block';
+                setTimeout(() => {
+                    successAlert.style.display = 'none';
+                }, 3000);
+            }
+        });
 
         // Excel upload functionality
         const uploadArea = document.getElementById('uploadArea');
@@ -2383,20 +2861,25 @@
 
         // Initialize dashboard
         window.addEventListener('load', function() {
-            // Process the sales data string
-            const salesDataString = `datee	branch	channel	count	sales	avr
-1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery	80	3478	43.475
+            // Try to load saved data first
+            loadData();
+            
+            // If no saved data, use default data
+            if (allData.length === 0) {
+                const salesDataString = `datee	branch	channel	count	sales	avr
+1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery	80	3478	43.475
 2/10/2025	Crispy Chicken Khaldia	Delivery	65	2850	43.846
-3/10/2025	Crispy Chicken Shabiya	Delivery	92	4100	44.565
+3/10/2025	Crispy Chicken Shabiya11	Delivery	92	4100	44.565
 4/10/2025	Crispy Chicken Muroor	Delivery	78	3500	44.872
 5/10/2025	Crispy Chicken Al Barsha	Delivery	85	3800	44.706
 6/10/2025	Crispy Chicken Al Satwa	Delivery	70	3150	45.000
 7/10/2025	Crispy Chicken Al Rgga	Delivery	88	3950	44.886
 8/10/2025	Crispy Chicken-Hamdan St	Delivery	95	4200	44.211
 9/10/2025	Crispy Chicken Khaldia	Delivery	82	3650	44.512
-10/10/2025	Crispy Chicken Shabiya	Delivery	90	4050	45.000`;
+10/10/2025	Crispy Chicken Shabiya11	Delivery	90	4050	45.000`;
 
-            allData = processSalesData(salesDataString);
+                allData = processSalesData(salesDataString);
+            }
 
             // Set today's date as default for the date input
             const today = new Date().toISOString().split('T')[0];
