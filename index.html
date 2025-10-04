@@ -508,6 +508,33 @@
             font-size: 0.875rem;
             overflow-x: auto;
         }
+
+        .btn-action {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+            margin-right: 0.25rem;
+            border-radius: 4px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-edit-action {
+            background-color: #17a2b8;
+        }
+
+        .btn-edit-action:hover {
+            background-color: #138496;
+        }
+
+        .btn-delete-action {
+            background-color: #dc3545;
+        }
+
+        .btn-delete-action:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 <body>
@@ -1191,6 +1218,24 @@
             return salesData;
         }
 
+        // Convert Excel date number to date string
+        function convertExcelDate(dateNum) {
+            if (typeof dateNum === 'number') {
+                // Excel dates are stored as days since 1900-01-01
+                // Adjust for Excel leap year bug (1900 is not a leap year but Excel treats it as one)
+                const excelEpoch = new Date(1900, 0, 1);
+                const date = new Date(excelEpoch.getTime() + (dateNum - 1) * 24 * 60 * 60 * 1000);
+                
+                // Format as MM/DD/YYYY
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const year = date.getFullYear();
+                
+                return `${month}/${day}/${year}`;
+            }
+            return dateNum; // Return as is if not a number
+        }
+
         // Calculate totals
         function calculateTotals(data) {
             const totalSales = data.reduce((sum, item) => sum + item.sales, 0);
@@ -1749,15 +1794,30 @@
                     <td><strong>AED ${item.sales.toLocaleString()}</strong></td>
                     <td>AED ${item.avr.toFixed(2)}</td>
                     <td>
-                        <button class="btn btn-edit" onclick="editEntry(${index})">
-                            <i class="bi bi-pencil"></i> <span data-translate="edit-btn">${translations[currentLang]['edit-btn']}</span>
+                        <button class="btn-action btn-edit-action" data-index="${index}">
+                            <i class="bi bi-pencil"></i> ${translations[currentLang]['edit-btn']}
                         </button>
-                        <button class="btn btn-delete" onclick="deleteEntry(${index})">
-                            <i class="bi bi-trash"></i> <span data-translate="delete-btn">${translations[currentLang]['delete-btn']}</span>
+                        <button class="btn-action btn-delete-action" data-index="${index}">
+                            <i class="bi bi-trash"></i> ${translations[currentLang]['delete-btn']}
                         </button>
                     </td>
                 `;
                 tbody.appendChild(row);
+            });
+            
+            // Add event listeners to the action buttons
+            document.querySelectorAll('.btn-edit-action').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    editEntry(index);
+                });
+            });
+            
+            document.querySelectorAll('.btn-delete-action').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    deleteEntry(index);
+                });
             });
         }
 
@@ -2112,7 +2172,12 @@
                         const row = jsonData[i];
                         if (!row || row.length < 5) continue;
                         
-                        const date = row[0];
+                        // Convert date if it's a number
+                        let date = row[0];
+                        if (typeof date === 'number') {
+                            date = convertExcelDate(date);
+                        }
+                        
                         const branch = row[1];
                         const channel = row[2] || 'Delivery';
                         const count = parseInt(row[3]) || 0;
@@ -2309,11 +2374,18 @@
             }, 1000);
         }
 
+        // Tab change event listener to ensure data persistence
+        document.getElementById('mainTabs').addEventListener('shown.bs.tab', function (e) {
+            if (e.target.id === 'data-management-tab') {
+                updateDashboard();
+            }
+        });
+
         // Initialize dashboard
         window.addEventListener('load', function() {
             // Process the sales data string
             const salesDataString = `datee	branch	channel	count	sales	avr
-1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery	80	3478	43.475
+1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery	80	3478	43.475
 2/10/2025	Crispy Chicken Khaldia	Delivery	65	2850	43.846
 3/10/2025	Crispy Chicken Shabiya	Delivery	92	4100	44.565
 4/10/2025	Crispy Chicken Muroor	Delivery	78	3500	44.872
