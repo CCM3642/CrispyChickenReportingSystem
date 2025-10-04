@@ -21,45 +21,61 @@
             --danger-color: #F44336;
             --light-color: #F8F9FA;
             --dark-color: #343A40;
+            --bg-color: #f8f9fc;
+            --card-bg: #ffffff;
+            --text-color: #212529;
+            --border-color: #dee2e6;
         }
-        
+
         body {
-            background-color: #f8f9fc;
+            background-color: var(--bg-color);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
         }
-        
+
+        body.dark-mode {
+            --bg-color: #1a1a2e;
+            --card-bg: #16213e;
+            --text-color: #f8f9fa;
+            --border-color: #34495e;
+        }
+
         .navbar {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        
+
         .navbar-brand {
             font-weight: 700;
             font-size: 1.5rem;
         }
-        
+
         .dashboard-header {
-            background: linear-gradient(135deg, #f8f9fc 0%, #e9ecef 100%);
+            background: linear-gradient(135deg, var(--bg-color) 0%, #e9ecef 100%);
             padding: 2rem 0;
             margin-bottom: 2rem;
-            border-bottom: 1px solid #dee2e6;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s;
         }
-        
+
         .kpi-card {
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             border: none;
             overflow: hidden;
+            background-color: var(--card-bg);
+            transition: background-color 0.3s;
         }
-        
+
         .kpi-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
-        
+
         .kpi-header {
             font-size: 0.9rem;
             font-weight: 600;
@@ -67,43 +83,45 @@
             letter-spacing: 0.5px;
             margin-bottom: 0.5rem;
         }
-        
+
         .kpi-value {
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
         }
-        
+
         .kpi-change {
             font-size: 0.85rem;
             font-weight: 500;
         }
-        
+
         .chart-container {
-            background: white;
+            background: var(--card-bg);
             border-radius: 10px;
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             margin-bottom: 2rem;
             position: relative;
             height: 400px;
+            transition: background-color 0.3s;
         }
-        
+
         .chart-title {
             font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 1rem;
             color: var(--primary-color);
         }
-        
+
         .table-container {
-            background: white;
+            background: var(--card-bg);
             border-radius: 10px;
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             overflow-x: auto;
+            transition: background-color 0.3s;
         }
-        
+
         .btn-export {
             background: linear-gradient(135deg, var(--success-color) 0%, var(--info-color) 100%);
             border: none;
@@ -113,35 +131,37 @@
             font-weight: 500;
             transition: all 0.3s ease;
         }
-        
+
         .btn-export:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
             color: white;
         }
-        
+
         .filter-section {
-            background: white;
+            background: var(--card-bg);
             border-radius: 10px;
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             margin-bottom: 2rem;
+            transition: background-color 0.3s;
         }
-        
+
         .form-section {
-            background: white;
+            background: var(--card-bg);
             border-radius: 10px;
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             margin-bottom: 2rem;
+            transition: background-color 0.3s;
         }
-        
+
         .form-label {
             font-weight: 600;
             color: var(--primary-color);
             margin-bottom: 0.5rem;
         }
-        
+
         .btn-primary-custom {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             border: none;
@@ -151,13 +171,13 @@
             font-weight: 500;
             transition: all 0.3s ease;
         }
-        
+
         .btn-primary-custom:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
             color: white;
         }
-        
+
         .alert-success-custom {
             background-color: #d4edda;
             border-color: #c3e6cb;
@@ -167,34 +187,38 @@
             margin-top: 1rem;
             display: none;
         }
-        
-        .language-toggle {
+
+        .language-toggle, .dark-mode-toggle {
             position: absolute;
             top: 10px;
             right: 10px;
             z-index: 1000;
         }
-        
+
+        .dark-mode-toggle {
+            right: 140px;
+        }
+
         .table th {
-            background-color: #f8f9fc;
+            background-color: var(--bg-color);
             border-top: none;
             font-weight: 600;
             text-transform: uppercase;
             font-size: 0.85rem;
             letter-spacing: 0.5px;
         }
-        
+
         .export-buttons {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
         }
-        
+
         .export-buttons .btn {
             flex: 1;
             min-width: 120px;
         }
-        
+
         .loading-spinner {
             display: none;
             position: fixed;
@@ -203,14 +227,16 @@
             transform: translate(-50%, -50%);
             z-index: 9999;
         }
-        
+
         .date-picker {
             border-radius: 5px;
-            border: 1px solid #ced4da;
+            border: 1px solid var(--border-color);
             padding: 0.5rem 1rem;
             width: 100%;
+            background-color: var(--card-bg);
+            color: var(--text-color);
         }
-        
+
         .alert-info-custom {
             background-color: #d1ecf1;
             border-color: #bee5eb;
@@ -219,7 +245,7 @@
             border-radius: 5px;
             margin-top: 1rem;
         }
-        
+
         .btn-edit {
             background-color: #17a2b8;
             border: none;
@@ -229,12 +255,12 @@
             font-size: 0.875rem;
             margin-right: 0.25rem;
         }
-        
+
         .btn-edit:hover {
             background-color: #138496;
             color: white;
         }
-        
+
         .btn-delete {
             background-color: #dc3545;
             border: none;
@@ -243,37 +269,37 @@
             color: white;
             font-size: 0.875rem;
         }
-        
+
         .btn-delete:hover {
             background-color: #c82333;
             color: white;
         }
-        
+
         .edit-mode {
             border: 2px solid var(--primary-color);
             background-color: rgba(255, 107, 53, 0.1);
         }
-        
+
         .table-responsive {
             max-height: 500px;
             overflow-y: auto;
         }
-        
+
         .table thead {
             position: sticky;
             top: 0;
-            background-color: #f8f9fc;
+            background-color: var(--bg-color);
             z-index: 10;
         }
-        
+
         .branch-badge {
             display: inline-block;
             padding: 0.25rem 0.5rem;
             border-radius: 4px;
-            background-color: #f8f9fc;
+            background-color: var(--bg-color);
             font-size: 0.875rem;
         }
-        
+
         .performance-badge {
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
@@ -281,37 +307,37 @@
             font-weight: 600;
             display: inline-block;
         }
-        
+
         .performance-high {
             background-color: #d4edda;
             color: #155724;
         }
-        
+
         .performance-medium {
             background-color: #fff3cd;
             color: #856404;
         }
-        
+
         .performance-low {
             background-color: #f8d7da;
             color: #721c24;
         }
-        
+
         .tab-content {
             padding-top: 1.5rem;
         }
-        
+
         .nav-tabs .nav-link {
             color: var(--primary-color);
             font-weight: 500;
         }
-        
+
         .nav-tabs .nav-link.active {
             background-color: var(--primary-color);
             color: white;
             border-color: var(--primary-color);
         }
-        
+
         .percentage-badge {
             background-color: #e3f2fd;
             color: #1976d2;
@@ -321,36 +347,37 @@
             font-weight: 600;
             margin-left: 0.5rem;
         }
-        
+
         .data-summary-card {
-            background: linear-gradient(135deg, #f8f9fc 0%, #e9ecef 100%);
+            background: linear-gradient(135deg, var(--bg-color) 0%, #e9ecef 100%);
             border-radius: 10px;
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             margin-bottom: 1.5rem;
+            transition: background-color 0.3s;
         }
-        
+
         .summary-item {
             display: flex;
             justify-content: space-between;
             padding: 0.75rem 0;
-            border-bottom: 1px solid #dee2e6;
+            border-bottom: 1px solid var(--border-color);
         }
-        
+
         .summary-item:last-child {
             border-bottom: none;
         }
-        
+
         .summary-label {
             font-weight: 500;
             color: #495057;
         }
-        
+
         .summary-value {
             font-weight: 600;
             color: var(--primary-color);
         }
-        
+
         .channel-badge {
             display: inline-block;
             padding: 0.25rem 0.75rem;
@@ -359,41 +386,127 @@
             font-weight: 600;
             margin-right: 0.5rem;
         }
-        
+
         .channel-delivery {
             background-color: #e3f2fd;
             color: #1976d2;
         }
-        
+
         .channel-dinein {
             background-color: #e8f5e9;
             color: #388e3c;
         }
-        
+
         .channel-takeaway {
             background-color: #fff8e1;
             color: #f57c00;
         }
-        
+
         .channel-comparison {
             display: flex;
             justify-content: space-around;
             margin-top: 1rem;
         }
-        
+
         .channel-item {
             text-align: center;
         }
-        
+
         .channel-value {
             font-size: 1.5rem;
             font-weight: 700;
             margin-top: 0.5rem;
         }
-        
+
         .channel-label {
             font-size: 0.875rem;
             color: #6c757d;
+        }
+
+        .form-control, .form-select {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25);
+        }
+
+        .table {
+            color: var(--text-color);
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(255, 107, 53, 0.05);
+        }
+
+        .dark-mode-toggle .btn {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .dark-mode-toggle .btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .upload-section {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            transition: background-color 0.3s;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            background-color: var(--bg-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(255, 107, 53, 0.05);
+        }
+
+        .upload-area.drag-over {
+            border-color: var(--primary-color);
+            background-color: rgba(255, 107, 53, 0.1);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .excel-template {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: var(--bg-color);
+            border-radius: 5px;
+        }
+
+        .excel-template h5 {
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .excel-template pre {
+            background-color: #f8f9fa;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            overflow-x: auto;
         }
     </style>
 </head>
@@ -402,6 +515,13 @@
     <div class="language-toggle">
         <button class="btn btn-sm btn-outline-light" id="langToggle">
             <i class="bi bi-translate me-1"></i>EN
+        </button>
+    </div>
+
+    <!-- Dark Mode Toggle -->
+    <div class="dark-mode-toggle">
+        <button class="btn btn-sm" id="darkModeToggle">
+            <i class="bi bi-moon"></i>
         </button>
     </div>
 
@@ -750,6 +870,31 @@
 
             <!-- Data Management Tab -->
             <div class="tab-pane fade" id="data-management" role="tabpanel">
+                <!-- Excel Upload Section -->
+                <div class="upload-section">
+                    <h3 class="chart-title"><span data-translate="excel-upload-title">Upload Excel Data</span></h3>
+                    <div class="upload-area" id="uploadArea">
+                        <i class="bi bi-cloud-upload" style="font-size: 2rem; color: var(--primary-color);"></i>
+                        <h4 class="mt-2"><span data-translate="upload-instructions">Drop Excel file here or click to browse</span></h4>
+                        <p class="text-muted"><span data-translate="upload-support">Supports .xlsx, .xls files</span></p>
+                        <input type="file" id="fileInput" class="file-input" accept=".xlsx,.xls">
+                    </div>
+                    
+                    <div class="excel-template">
+                        <h5><i class="bi bi-file-earmark-excel me-2"></i><span data-translate="excel-template">Excel Template</span></h5>
+                        <p class="text-muted mb-2"><span data-translate="template-description">Your Excel file should have these columns:</span></p>
+                        <pre>Date | Branch | Channel | Transactions | Sales</pre>
+                        <p class="text-muted mt-2"><span data-translate="template-example">Example:</span></p>
+                        <pre>10/11/2025 | Crispy Chicken-Hamdan St | Delivery | 85 | 3800</pre>
+                    </div>
+                    
+                    <div class="alert alert-info-custom" id="uploadAlert" style="display: none;">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <span id="uploadAlertText"></span>
+                    </div>
+                </div>
+                
+                <!-- Data Management Section -->
                 <div class="filter-section">
                     <div class="row align-items-center">
                         <div class="col-md-6">
@@ -897,7 +1042,17 @@
                 "edit-btn": "Edit",
                 "delete-btn": "Delete",
                 "update-btn": "Update",
-                "delete-confirm": "Are you sure you want to delete this entry?"
+                "delete-confirm": "Are you sure you want to delete this entry?",
+                "excel-upload-title": "Upload Excel Data",
+                "upload-instructions": "Drop Excel file here or click to browse",
+                "upload-support": "Supports .xlsx, .xls files",
+                "excel-template": "Excel Template",
+                "template-description": "Your Excel file should have these columns:",
+                "template-example": "Example:",
+                "upload-success": "Excel file uploaded successfully!",
+                "upload-error": "Error uploading file. Please check the format and try again.",
+                "invalid-format": "Invalid file format. Please upload an Excel file (.xlsx or .xls).",
+                "invalid-data": "Invalid data in the Excel file. Please check the format and try again."
             },
             ar: {
                 "nav-title": "لوحة بيانات مبيعات كريسبى تشكن",
@@ -976,7 +1131,17 @@
                 "edit-btn": "تعديل",
                 "delete-btn": "حذف",
                 "update-btn": "تحديث",
-                "delete-confirm": "هل أنت متأكد من أنك تريد حذف هذا الإدخال؟"
+                "delete-confirm": "هل أنت متأكد من أنك تريد حذف هذا الإدخال؟",
+                "excel-upload-title": "رفع بيانات Excel",
+                "upload-instructions": "اسقط ملف Excel هنا أو انقر للتصفح",
+                "upload-support": "يدعم ملفات .xlsx, .xls",
+                "excel-template": "قالب Excel",
+                "template-description": "يجب أن يحتوي ملفك Excel على هذه الأعمدة:",
+                "template-example": "مثال:",
+                "upload-success": "تم رفع ملف Excel بنجاح!",
+                "upload-error": "خطأ في رفع الملف. يرجى التحقق من التنسيق والمحاولة مرة أخرى.",
+                "invalid-format": "تنسيق ملف غير صالح. يرجى رفع ملف Excel (.xlsx أو .xls).",
+                "invalid-data": "بيانات غير صالحة في ملف Excel. يرجى التحقق من التنسيق والمحاولة مرة أخرى."
             }
         };
 
@@ -1922,6 +2087,90 @@
             doc.save(fileName);
         }
 
+        // Process Excel file
+        function processExcelFile(file) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                    
+                    // Validate Excel structure
+                    if (jsonData.length < 2) {
+                        showUploadAlert(translations[currentLang]['invalid-data']);
+                        return;
+                    }
+                    
+                    // Process rows
+                    const newData = [];
+                    let hasErrors = false;
+                    
+                    for (let i = 1; i < jsonData.length; i++) {
+                        const row = jsonData[i];
+                        if (!row || row.length < 5) continue;
+                        
+                        const date = row[0];
+                        const branch = row[1];
+                        const channel = row[2] || 'Delivery';
+                        const count = parseInt(row[3]) || 0;
+                        const sales = parseFloat(row[4]) || 0;
+                        const avr = count > 0 ? sales / count : 0;
+                        
+                        // Validate data
+                        if (!date || !branch || !channel || isNaN(count) || isNaN(sales)) {
+                            hasErrors = true;
+                            continue;
+                        }
+                        
+                        newData.push({
+                            date,
+                            branch,
+                            channel,
+                            count,
+                            sales,
+                            avr,
+                            id: Date.now() + i
+                        });
+                    }
+                    
+                    if (hasErrors) {
+                        showUploadAlert(translations[currentLang]['invalid-data']);
+                        return;
+                    }
+                    
+                    // Add new data to existing data
+                    allData = [...allData, ...newData];
+                    
+                    // Update dashboard
+                    updateDashboard();
+                    
+                    // Show success message
+                    showUploadAlert(translations[currentLang]['upload-success']);
+                } catch (error) {
+                    console.error('Error processing Excel file:', error);
+                    showUploadAlert(translations[currentLang]['upload-error']);
+                }
+            };
+            
+            reader.readAsArrayBuffer(file);
+        }
+
+        // Show upload alert
+        function showUploadAlert(message) {
+            const alert = document.getElementById('uploadAlert');
+            const alertText = document.getElementById('uploadAlertText');
+            
+            alertText.textContent = message;
+            alert.style.display = 'block';
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+
         // Toggle language
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'ar' : 'en';
@@ -1968,8 +2217,24 @@
             updateDashboard();
         }
 
+        // Toggle dark mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const darkModeBtn = document.getElementById('darkModeToggle');
+            const icon = darkModeBtn.querySelector('i');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('bi-moon');
+                icon.classList.add('bi-sun');
+            } else {
+                icon.classList.remove('bi-sun');
+                icon.classList.add('bi-moon');
+            }
+        }
+
         // Event listeners
         document.getElementById('langToggle').addEventListener('click', toggleLanguage);
+        document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
         document.getElementById('refreshBtn').addEventListener('click', function() {
             document.querySelector('.loading-spinner').style.display = 'block';
             setTimeout(() => {
@@ -1984,19 +2249,79 @@
         document.getElementById('exportWeekly').addEventListener('click', () => exportToPDF('Weekly'));
         document.getElementById('exportMonthly').addEventListener('click', () => exportToPDF('Monthly'));
 
+        // Excel upload functionality
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+
+        // Click to upload
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('drag-over');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('drag-over');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        // Handle file upload
+        function handleFile(file) {
+            // Check file type
+            const validTypes = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
+                               'application/vnd.ms-excel', 
+                               'text/csv'];
+            
+            if (!validTypes.includes(file.type) && !file.name.endsWith('.xlsx') && !file.name.endsWith('.xls')) {
+                showUploadAlert(translations[currentLang]['invalid-format']);
+                return;
+            }
+            
+            // Show loading spinner
+            document.querySelector('.loading-spinner').style.display = 'block';
+            
+            // Process file
+            processExcelFile(file);
+            
+            // Hide loading spinner
+            setTimeout(() => {
+                document.querySelector('.loading-spinner').style.display = 'none';
+            }, 1000);
+        }
+
         // Initialize dashboard
         window.addEventListener('load', function() {
             // Process the sales data string
             const salesDataString = `datee	branch	channel	count	sales	avr
-1/10/2025	Crispy Chicken-Hamdan St	Delivery 80 3478 43.475
-2/10/2025	Crispy Chicken Khaldia	Delivery 65 2850 43.846
-3/10/2025	Crispy Chicken Shabiya	Delivery 92 4100 44.565
-4/10/2025	Crispy Chicken Muroor	Delivery 78 3500 44.872
-5/10/2025	Crispy Chicken Al Barsha	Delivery 85 3800 44.706
-6/10/2025	Crispy Chicken Al Satwa	Delivery 70 3150 45.000
-7/10/2025	Crispy Chicken Al Rgga	Delivery 88 3950 44.886
-8/10/2025	Crispy Chicken-Hamdan St	Delivery 95 4200 44.211
-9/10/2025	Crispy Chicken Khaldia	Delivery 82 3650 44.512
+1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery	80	3478	43.475
+2/10/2025	Crispy Chicken Khaldia	Delivery	65	2850	43.846
+3/10/2025	Crispy Chicken Shabiya	Delivery	92	4100	44.565
+4/10/2025	Crispy Chicken Muroor	Delivery	78	3500	44.872
+5/10/2025	Crispy Chicken Al Barsha	Delivery	85	3800	44.706
+6/10/2025	Crispy Chicken Al Satwa	Delivery	70	3150	45.000
+7/10/2025	Crispy Chicken Al Rgga	Delivery	88	3950	44.886
+8/10/2025	Crispy Chicken-Hamdan St	Delivery	95	4200	44.211
+9/10/2025	Crispy Chicken Khaldia	Delivery	82	3650	44.512
 10/10/2025	Crispy Chicken Shabiya	Delivery	90	4050	45.000`;
 
             allData = processSalesData(salesDataString);
