@@ -12,6 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
+        /* (Keep all existing CSS styles the same) */
         :root {
             --primary-color: #FF6B35;
             --secondary-color: #F7931E;
@@ -1958,26 +1959,63 @@
             }
         };
 
-        // Process sales data
+        // Process sales data - FIXED VERSION
         function processSalesData(data) {
+            // Split by new lines first
             const lines = data.trim().split('\n');
             const salesData = [];
             
-            // Skip header and process each line
-            for (let i = 1; i < lines.length; i++) {
+            // Process each line
+            for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
                 
-                const parts = line.split('\t');
+                // Split by tabs or commas
+                const separator = line.includes('\t') ? '\t' : ',';
+                const parts = line.split(separator);
+                
+                // Skip header
+                if (i === 0 && (parts[0].toLowerCase() === 'date' || parts[0].toLowerCase() === 'datee')) {
+                    continue;
+                }
+                
                 if (parts.length < 5) continue;
                 
-                const date = parts[0];
-                const branch = parts[1];
-                const channel = parts[2] || 'Delivery'; // Default to Delivery if not specified
-                const count = parseInt(parts[3]) || 0;
-                const sales = parseFloat(parts[4]) || 0;
-                let avr = 0;
+                let date = parts[0];
+                let branch = parts[1];
+                let channel = parts[2] || 'Delivery'; // Default to Delivery if not specified
+                let count = parseInt(parts[3]) || 0;
+                let sales = parseFloat(parts[4]) || 0;
                 
+                // Convert date if it's a number (Excel date format)
+                if (typeof date === 'number') {
+                    date = convertExcelDate(date);
+                }
+                
+                // Validate date format
+                if (!date || !date.includes('/')) {
+                    console.warn(`Invalid date format in line ${i + 1}: ${date}`);
+                    continue;
+                }
+                
+                // Validate branch
+                if (!branch) {
+                    console.warn(`Missing branch in line ${i + 1}`);
+                    continue;
+                }
+                
+                // Validate channel
+                if (!channel) {
+                    channel = 'Delivery';
+                }
+                
+                // Validate count and sales
+                if (isNaN(count) || isNaN(sales)) {
+                    console.warn(`Invalid numeric data in line ${i + 1}: count=${count}, sales=${sales}`);
+                    continue;
+                }
+                
+                let avr = 0;
                 if (parts.length >= 6) {
                     avr = parseFloat(parts[5]) || 0;
                 } else {
@@ -2005,7 +2043,7 @@
             return days[date.getDay()];
         }
 
-        // Convert Excel date number to date string
+        // Convert Excel date number to date string - FIXED VERSION
         function convertExcelDate(dateNum) {
             if (typeof dateNum === 'number') {
                 // Excel dates are stored as days since 1900-01-01
@@ -4022,17 +4060,17 @@
                     document.getElementById('targetInput').value = SALES_TARGET;
                 } else {
                     // If no saved data, use default data
-                    const salesDataString = `datee	branch	channel	count	sales	avr
-1/10/2025	Crispy Chicken-Hamdan St	Delivery	80	3478	43.475
-2/10/2025	Crispy Chicken Khaldia	Delivery	65	2850	43.846
-3/10/2025	Crispy Chicken Shabiya11	Delivery	92	4100	44.565
-4/10/2025	Crispy Chicken Muroor	Delivery	78	3500	44.872
-5/10/2025	Crispy Chicken Al Barsha	Delivery	85	3800	44.706
-6/10/2025	Crispy Chicken Al Satwa	Delivery	70	3150	45.000
-7/10/2025	Crispy Chicken Al Rgga	Delivery	88	3950	44.886
-8/10/2025	Crispy Chicken-Hamdan St	Delivery	95	4200	44.211
-9/10/2025	Crispy Chicken Khaldia	Delivery	82	3650	44.512
-10/10/2025	Crispy Chicken Shabiya11	Delivery	90	4050	45.000`;
+                    const salesDataString = `datee\tbranch\tchannel\tcount\tsales\tavr
+1/10/2025\tCrispy Chicken-Hamdan St\tDelivery\t80\t3478\t43.475
+2/10/2025\tCrispy Chicken Khaldia\tDelivery\t65\t2850\t43.846
+3/10/2025\tCrispy Chicken Shabiya11\tDelivery\t92\t4100\t44.565
+4/10/2025\tCrispy Chicken Muroor\tDelivery\t78\t3500\t44.872
+5/10/2025\tCrispy Chicken Al Barsha\tDelivery\t85\t3800\t44.706
+6/10/2025\tCrispy Chicken Al Satwa\tDelivery\t70\t3150\t45.000
+7/10/2025\tCrispy Chicken Al Rgga\tDelivery\t88\t3950\t44.886
+8/10/2025\tCrispy Chicken-Hamdan St\tDelivery\t95\t4200\t44.211
+9/10/2025\tCrispy Chicken Khaldia\tDelivery\t82\t3650\t44.512
+10/10/2025\tCrispy Chicken Shabiya11\tDelivery\t90\t4050\t45.000`;
 
                     allData = processSalesData(salesDataString);
                     SALES_TARGET = 370000;
