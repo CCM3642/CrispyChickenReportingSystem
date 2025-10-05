@@ -468,6 +468,11 @@
             background-color: var(--bg-color);
             transition: all 0.3s ease;
             cursor: pointer;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .upload-area:hover {
@@ -663,7 +668,6 @@
             font-size: 0.875rem;
         }
 
-        /* Daily Summary Styles */
         .daily-summary-container {
             background: var(--card-bg);
             border-radius: 10px;
@@ -760,7 +764,108 @@
             margin-right: 5px;
         }
 
-        /* Responsive adjustments */
+        .backup-section {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            transition: background-color 0.3s;
+        }
+
+        .backup-list {
+            margin-top: 1rem;
+        }
+
+        .performance-metrics {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            flex: 1;
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin: 0 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .metric-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+
+        .branch-comparison-container {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            transition: background-color 0.3s;
+        }
+
+        .export-options {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            transition: background-color 0.3s;
+        }
+
+        .user-activity-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 0.875rem;
+            z-index: 1000;
+        }
+
+        .real-time-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--success-color);
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+            }
+        }
+
         @media (max-width: 768px) {
             .channel-comparison {
                 flex-direction: column;
@@ -776,6 +881,14 @@
             
             .export-buttons .btn {
                 width: 100%;
+            }
+            
+            .performance-metrics {
+                flex-direction: column;
+            }
+            
+            .metric-card {
+                margin: 0 0 10px 0;
             }
         }
     </style>
@@ -888,6 +1001,31 @@
             </div>
         </div>
 
+        <!-- Performance Metrics -->
+        <div class="performance-metrics">
+            <div class="metric-card">
+                <div class="metric-icon text-primary">
+                    <i class="bi bi-graph-up"></i>
+                </div>
+                <div class="metric-value" id="salesGrowth">0%</div>
+                <div class="metric-label">Sales Growth</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon text-success">
+                    <i class="bi bi-percent"></i>
+                </div>
+                <div class="metric-value" id="conversionRate">0%</div>
+                <div class="metric-label">Conversion Rate</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon text-warning">
+                    <i class="bi bi-trophy-fill"></i>
+                </div>
+                <div class="metric-value" id="targetAchievement">0%</div>
+                <div class="metric-label">Target Achievement</div>
+            </div>
+        </div>
+
         <!-- Tab Navigation -->
         <ul class="nav nav-tabs mb-4" id="mainTabs" role="tablist">
             <li class="nav-item" role="presentation">
@@ -921,6 +1059,14 @@
         <div class="tab-content" id="mainTabsContent">
             <!-- Overview Tab -->
             <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                <!-- Branch Comparison Section -->
+                <div class="branch-comparison-container">
+                    <h3 class="chart-title"><span data-translate="branch-comparison-title">Branch Comparison</span></h3>
+                    <div id="branchComparison" class="table-responsive">
+                        <!-- Branch comparison table will be populated here -->
+                    </div>
+                </div>
+
                 <!-- Performance Tracking Section -->
                 <div class="row mb-4">
                     <div class="col-12">
@@ -1269,6 +1415,16 @@
                     </div>
                 </div>
 
+                <!-- Sales Forecast Section -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="chart-container">
+                            <h3 class="chart-title"><span data-translate="sales-forecast-title">Sales Forecast</span></h3>
+                            <canvas id="forecastChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Performance Metrics Section -->
                 <div class="row mb-4">
                     <div class="col-12">
@@ -1367,6 +1523,27 @@
                     </div>
                 </div>
                 
+                <!-- Backup Management Section -->
+                <div class="backup-section">
+                    <h3 class="chart-title"><span data-translate="backup-title">Backup Management</span></h3>
+                    <p class="text-muted mb-3"><span data-translate="backup-description">Manage your data backups and restore previous versions</span></p>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <button class="btn btn-primary-custom" id="createBackupBtn">
+                                <i class="bi bi-hdd me-2"></i> <span data-translate="create-backup-btn">Create Backup</span>
+                            </button>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <button class="btn btn-outline-primary" id="restoreBackupBtn">
+                                <i class="bi bi-arrow-counterclockwise me-2"></i> <span data-translate="restore-backup">Restore Backup</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="backupList" class="backup-list">
+                        <!-- Backup list will be populated here -->
+                    </div>
+                </div>
+                
                 <!-- Excel Upload Section -->
                 <div class="upload-section">
                     <h3 class="chart-title"><span data-translate="excel-upload-title">Upload Excel Data</span></h3>
@@ -1391,7 +1568,28 @@
                     </div>
                 </div>
                 
-                <!-- Data Management Section -->
+                <!-- Export Options Section -->
+                <div class="export-options">
+                    <h4 class="mb-3"><span data-translate="export-options-title">Export Options</span></h4>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><span data-translate="date-range-label">Date Range</span></label>
+                            <select class="form-select" id="exportDateRange">
+                                <option value="all">All Data</option>
+                                <option value="last7">Last 7 Days</option>
+                                <option value="last30">Last 30 Days</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><span data-translate="branch-filter-label">Branch</span></label>
+                            <select class="form-select" id="exportBranch">
+                                <option value="all">All Branches</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="filter-section">
                     <div class="row align-items-center">
                         <div class="col-md-6">
@@ -1454,6 +1652,12 @@
         </div>
     </div>
 
+    <!-- User Activity Indicator -->
+    <div class="user-activity-indicator">
+        <span class="real-time-indicator"></span>
+        <span id="sessionDuration">Session: 0m</span>
+    </div>
+
     <!-- Loading Spinner -->
     <div class="loading-spinner">
         <div class="spinner-border text-primary" role="status">
@@ -1502,6 +1706,7 @@
                 "transaction-distribution-title": "Transaction Distribution",
                 "avg-sale-branch-title": "Average Sale by Branch",
                 "channel-comparison-title": "Channel Comparison",
+                "branch-comparison-title": "Branch Comparison",
                 "sales-summary-title": "Sales Summary",
                 "location-analysis-title": "Location-wise Analysis",
                 "daily-breakdown-title": "Daily Breakdown",
@@ -1512,6 +1717,9 @@
                 "export-daily": "Daily Report",
                 "export-weekly": "Weekly Report",
                 "export-monthly": "Monthly Report",
+                "export-options-title": "Export Options",
+                "date-range-label": "Date Range",
+                "branch-filter-label": "Branch",
                 "table-date": "Date",
                 "table-branch": "Branch",
                 "table-channel": "Channel",
@@ -1584,11 +1792,11 @@
                 "backup-title": "Backup Management",
                 "backup-description": "Manage your data backups and restore previous versions",
                 "create-backup-btn": "Create Backup",
+                "restore-backup": "Restore Backup",
                 "backup-list-title": "Available Backups",
                 "backup-date": "Date",
                 "backup-size": "Size",
                 "backup-actions": "Actions",
-                "restore-backup": "Restore",
                 "delete-backup": "Delete",
                 "sales-trend-up": "Sales trend is increasing",
                 "sales-trend-down": "Sales trend is decreasing",
@@ -1602,7 +1810,8 @@
                 "growth-stable": "Stable growth pattern",
                 "forecast-high": "High sales forecast",
                 "forecast-medium": "Medium sales forecast",
-                "forecast-low": "Low sales forecast"
+                "forecast-low": "Low sales forecast",
+                "sales-forecast-title": "Sales Forecast"
             },
             ar: {
                 "nav-title": "لوحة بيانات مبيعات كريسبى تشكن",
@@ -1641,6 +1850,7 @@
                 "transaction-distribution-title": "توزيع المعاملات",
                 "avg-sale-branch-title": "متوسط البيع حسب الفرع",
                 "channel-comparison-title": "مقارنة القنوات",
+                "branch-comparison-title": "مقارنة الفروع",
                 "sales-summary-title": "ملخص المبيعات",
                 "location-analysis-title": "تحليل حسب الموقع",
                 "daily-breakdown-title": "تفصيل يومي",
@@ -1651,6 +1861,9 @@
                 "export-daily": "تقرير يومي",
                 "export-weekly": "تقرير أسبوعي",
                 "export-monthly": "تقرير شهري",
+                "export-options-title": "خيارات التصدير",
+                "date-range-label": "نطاق التاريخ",
+                "branch-filter-label": "الفرع",
                 "table-date": "التاريخ",
                 "table-branch": "الفرع",
                 "table-channel": "القناة",
@@ -1723,11 +1936,11 @@
                 "backup-title": "إدارة النسخ الاحتياطي",
                 "backup-description": "إدارة نسخ احتياطي من البيانات واستعادة الإصدارات السابقة",
                 "create-backup-btn": "إنشاء نسخة احتياطية",
+                "restore-backup": "استعادة",
                 "backup-list-title": "النسخ الاحتياطية المتاحة",
                 "backup-date": "التاريخ",
                 "backup-size": "الحجم",
                 "backup-actions": "الإجراءات",
-                "restore-backup": "استعادة",
                 "delete-backup": "حذف",
                 "sales-trend-up": "اتجاه المبيعات فيزياء",
                 "sales-trend-down": "اتجاه المبيعات ينخفض",
@@ -1741,7 +1954,8 @@
                 "growth-stable": "نمو مستقر",
                 "forecast-high": "توقعات مبيعات عالية",
                 "forecast-medium": "توقعات مبيعات متوسطة",
-                "forecast-low": "توقعات مبيعات منخفضة"
+                "forecast-low": "توقعات مبيعات منخفضة",
+                "sales-forecast-title": "توقعات المبيعات"
             }
         };
 
@@ -1754,6 +1968,35 @@
         let editingIndex = -1;
         let changeHistory = [];
         let backups = [];
+        let updateInterval;
+
+        // Memoization for calculations
+        const memoizedCalculations = new Map();
+
+        // User activity tracking
+        const userActivity = {
+            lastActivity: new Date(),
+            sessionStart: new Date(),
+            actions: []
+        };
+
+        // Validation rules
+        const validationRules = {
+            date: {
+                min: '2020-01-01',
+                max: new Date().toISOString().split('T')[0]
+            },
+            sales: {
+                min: 0,
+                max: 1000000,
+                step: 0.01
+            },
+            transactions: {
+                min: 0,
+                max: 10000,
+                step: 1
+            }
+        };
 
         // Process sales data
         function processSalesData(data) {
@@ -1808,7 +2051,12 @@
                 // Excel dates are stored as days since 1900-01-01
                 // Adjust for Excel leap year bug (1900 is not a leap year but Excel treats it as one)
                 const excelEpoch = new Date(1900, 0, 1);
-                const date = new Date(excelEpoch.getTime() + (dateNum - 1) * 24 * 60 * 60 * 1000);
+                
+                // Excel incorrectly treats 1900 as a leap year
+                const isLeapYearBug = dateNum > 59;
+                const adjustedDateNum = isLeapYearBug ? dateNum + 1 : dateNum;
+                
+                const date = new Date(excelEpoch.getTime() + (adjustedDateNum - 1) * 24 * 60 * 60 * 1000);
                 
                 // Format as MM/DD/YYYY
                 const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -1817,7 +2065,20 @@
                 
                 return `${month}/${day}/${year}`;
             }
+            
             return dateNum; // Return as is if not a number
+        }
+
+        // Calculate totals with memoization
+        function calculateTotalsMemoized(data) {
+            const key = JSON.stringify(data);
+            if (memoizedCalculations.has(key)) {
+                return memoizedCalculations.get(key);
+            }
+            
+            const result = calculateTotals(data);
+            memoizedCalculations.set(key, result);
+            return result;
         }
 
         // Calculate totals
@@ -2231,6 +2492,76 @@
             return chartData;
         }
 
+        // Update branch comparison section
+        function updateBranchComparison() {
+            const branchData = groupByBranch(allData);
+            const totals = calculateTotals(allData);
+            
+            const container = document.getElementById('branchComparison');
+            container.innerHTML = `
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Branch</th>
+                            <th>Sales (AED)</th>
+                            <th>Transactions</th>
+                            <th>Avg Sale</th>
+                            <th>Market Share</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${Object.entries(branchData).map(([name, data]) => {
+                            const marketShare = (data.sales / totals.totalSales * 100).toFixed(1);
+                            return `
+                                <tr>
+                                    <td>${name}</td>
+                                    <td>AED ${data.sales.toLocaleString()}</td>
+                                    <td>${data.transactions.toLocaleString()}</td>
+                                    <td>AED ${data.avgSale.toFixed(2)}</td>
+                                    <td>${marketShare}%</td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Update performance metrics
+        function updatePerformanceMetrics() {
+            const totals = calculateTotals(allData);
+            const branchData = groupByBranch(allData);
+            
+            // Calculate sales growth (compared to previous period)
+            const sortedData = [...allData].sort((a, b) => new Date(a.date) - new Date(b.date));
+            const midPoint = Math.floor(sortedData.length / 2);
+            const firstHalf = sortedData.slice(0, midPoint);
+            const secondHalf = sortedData.slice(midPoint);
+            
+            const firstHalfSales = firstHalf.reduce((sum, item) => sum + item.sales, 0);
+            const secondHalfSales = secondHalf.reduce((sum, item) => sum + item.sales, 0);
+            
+            const salesGrowth = firstHalfSales > 0 
+                ? ((secondHalfSales - firstHalfSales) / firstHalfSales * 100).toFixed(1)
+                : 0;
+            
+            document.getElementById('salesGrowth').textContent = `${salesGrowth}%`;
+            
+            // Calculate conversion rate (sales per transaction)
+            const conversionRate = totals.totalTransactions > 0 
+                ? (totals.totalSales / totals.totalTransactions).toFixed(2)
+                : 0;
+            
+            document.getElementById('conversionRate').textContent = `${conversionRate} AED`;
+            
+            // Calculate target achievement
+            const targetAchievement = SALES_TARGET > 0 
+                ? Math.min(100, (totals.totalSales / SALES_TARGET * 100)).toFixed(1)
+                : 0;
+            
+            document.getElementById('targetAchievement').textContent = `${targetAchievement}%`;
+        }
+
         // Update performance tracking section
         function updatePerformanceTracking() {
             const metrics = calculatePerformanceMetrics(allData);
@@ -2369,6 +2700,13 @@
                             display: false
                         },
                         tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#FF6B35',
+                            borderWidth: 1,
+                            cornerRadius: 5,
+                            displayColors: false,
                             callbacks: {
                                 title: function(tooltipItems) {
                                     return tooltipItems[0].label;
@@ -2861,6 +3199,56 @@
                 }
             });
 
+            // Sales Forecast Chart
+            const forecastCtx = document.getElementById('forecastChart').getContext('2d');
+            const forecast = calculateForecast();
+            const forecastData = calculateMovingAverage(allData, 7);
+            
+            charts.forecast = new Chart(forecastCtx, {
+                type: 'line',
+                data: {
+                    labels: forecastData.map(d => d.date),
+                    datasets: [
+                        {
+                            label: 'Actual Sales',
+                            data: forecastData.map(d => d.average),
+                            borderColor: '#FF6B35',
+                            backgroundColor: 'rgba(255, 107, 53, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Forecast',
+                            data: forecastData.map((d, i) => i === forecastData.length - 1 ? forecast : null),
+                            borderColor: '#2196F3',
+                            backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                            borderWidth: 2,
+                            borderDash: [5, 5]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'AED ' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
             // Weekday Pattern Chart
             const weekdayPatternCtx = document.getElementById('weekdayPattern');
             weekdayPatternCtx.innerHTML = `
@@ -3207,14 +3595,52 @@
 
         // Update dashboard
         function updateDashboard() {
-            updateKPIs();
-            updatePerformanceTracking();
-            updateSalesTarget();
-            initializeCharts();
-            populateSalesTable();
-            populateReportsTable();
-            populateSalesSummary();
-            updateAnalytics();
+            // Use requestAnimationFrame for smooth updates
+            requestAnimationFrame(() => {
+                // Update KPIs
+                updateKPIs();
+                
+                // Update performance metrics
+                updatePerformanceMetrics();
+                
+                // Update branch comparison
+                updateBranchComparison();
+                
+                // Update performance tracking
+                updatePerformanceTracking();
+                
+                // Update sales targets
+                updateSalesTarget();
+                
+                // Initialize charts only if needed
+                if (!Object.keys(charts).length || allData.length > 0) {
+                    initializeCharts();
+                }
+                
+                // Populate tables
+                populateSalesTable();
+                populateReportsTable();
+                populateSalesSummary();
+                
+                // Update analytics
+                updateAnalytics();
+                
+                // Update export branch options
+                updateExportBranchOptions();
+            });
+        }
+
+        // Update export branch options
+        function updateExportBranchOptions() {
+            const exportBranch = document.getElementById('exportBranch');
+            exportBranch.innerHTML = '<option value="all">All Branches</option>';
+            
+            Object.keys(groupByBranch(allData)).forEach(branch => {
+                const option = document.createElement('option');
+                option.value = branch;
+                option.textContent = branch;
+                exportBranch.appendChild(option);
+            });
         }
 
         // Track data changes
@@ -3231,6 +3657,29 @@
             if (changeHistory.length > 50) {
                 changeHistory.shift();
             }
+            
+            // Track user action
+            trackUserAction(action);
+        }
+
+        // Track user actions
+        function trackUserAction(action) {
+            userActivity.actions.push({
+                action,
+                timestamp: new Date(),
+                data: {
+                    totalEntries: allData.length,
+                    totalSales: calculateTotals(allData).totalSales
+                }
+            });
+            
+            // Keep only last 100 actions
+            if (userActivity.actions.length > 100) {
+                userActivity.actions.shift();
+            }
+            
+            // Update last activity
+            userActivity.lastActivity = new Date();
         }
 
         // Edit entry
@@ -3289,28 +3738,68 @@
             // Reset button text
             document.getElementById('addDataBtn').innerHTML = `<i class="bi bi-plus-circle me-2"></i> <span data-translate="add-data-btn">${translations[currentLang]['add-data-btn']}</span>`;
             document.getElementById('cancelBtn').style.display = 'none';
-            
-            // Update form title
             document.querySelector('.form-section h3').innerHTML = `<span data-translate="enter-data-title">${translations[currentLang]['enter-data-title']}</span>`;
             
             // Update dashboard
             updateDashboard();
         }
 
+        // Validate form
+        function validateForm() {
+            const form = document.getElementById('salesForm');
+            const date = document.getElementById('entryDate').value;
+            const branch = document.getElementById('entryBranch').value;
+            const channel = document.getElementById('entryChannel').value;
+            const count = document.getElementById('entryTransactions').value;
+            const sales = document.getElementById('entrySales').value;
+            
+            // Reset validation states
+            form.classList.remove('was-validated');
+            
+            // Check required fields
+            if (!date || !branch || !channel || !count || !sales) {
+                form.classList.add('was-validated');
+                return false;
+            }
+            
+            // Check date validation
+            const today = new Date().toISOString().split('T')[0];
+            if (date > today) {
+                showNotification('Future dates are not allowed', 'error');
+                return false;
+            }
+            
+            // Check validation rules
+            Object.keys(validationRules).forEach(field => {
+                const element = document.getElementById(`entry${field.charAt(0).toUpperCase() + field.slice(1)}`);
+                const value = parseFloat(element.value);
+                const rules = validationRules[field];
+                
+                if (value < rules.min || value > rules.max) {
+                    showNotification(`${field} must be between ${rules.min} and ${rules.max}`, 'error');
+                    return false;
+                }
+            });
+            
+            // Check sales amount is reasonable
+            if (sales > 100000) {
+                showNotification('Unusually high sales amount. Please verify', 'warning');
+            }
+            
+            return true;
+        }
+
         // Add or update data
         function addOrUpdateData() {
+            if (!validateForm()) {
+                return;
+            }
+            
             const date = document.getElementById('entryDate').value;
             const branch = document.getElementById('entryBranch').value;
             const channel = document.getElementById('entryChannel').value;
             const count = parseInt(document.getElementById('entryTransactions').value) || 0;
             const sales = parseFloat(document.getElementById('entrySales').value) || 0;
-            
-            // Validate form
-            const form = document.getElementById('salesForm');
-            if (!form.checkValidity()) {
-                form.reportValidity();
-                return;
-            }
             
             const avr = count > 0 ? sales / count : 0;
             
@@ -3352,6 +3841,7 @@
             }
             
             // Reset form
+            const form = document.getElementById('salesForm');
             form.reset();
             form.classList.remove('was-validated');
             
@@ -3362,18 +3852,18 @@
         // Show notification
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
+            notification.className = `alert alert-${type === 'success' ? 'success' : type === 'error' ? 'danger' : 'info'} alert-dismissible fade show`;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.zIndex = '9999';
+            notification.style.maxWidth = '300px';
             notification.innerHTML = `
                 ${message}
-                <button type="button" class="btn-close ms-2" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             `;
             
             document.body.appendChild(notification);
-            
-            // Add close button functionality
-            notification.querySelector('.btn-close').addEventListener('click', () => {
-                notification.remove();
-            });
             
             // Auto dismiss after 5 seconds
             setTimeout(() => {
@@ -3478,7 +3968,7 @@
             doc.save(fileName);
         }
 
-        // Process Excel file
+        // Process Excel file - FIXED VERSION
         function processExcelFile(file) {
             const reader = new FileReader();
             
@@ -3486,7 +3976,10 @@
                 try {
                     const data = new Uint8Array(e.target.result);
                     const workbook = XLSX.read(data, { type: 'array' });
-                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const firstSheetName = workbook.SheetNames[0];
+                    const firstSheet = workbook.Sheets[firstSheetName];
+                    
+                    // Convert to JSON with proper headers
                     const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
                     
                     // Validate Excel structure
@@ -3503,23 +3996,25 @@
                         const row = jsonData[i];
                         if (!row || row.length < 5) continue;
                         
-                        // Convert date if it's a number
+                        // Get values by column index
                         let date = row[0];
+                        let branch = row[1];
+                        let channel = row[2] || 'Delivery';
+                        let count = parseInt(row[3]) || 0;
+                        let sales = parseFloat(row[4]) || 0;
+                        
+                        // Convert date if it's a number (Excel date format)
                         if (typeof date === 'number') {
                             date = convertExcelDate(date);
                         }
                         
-                        const branch = row[1];
-                        const channel = row[2] || 'Delivery';
-                        const count = parseInt(row[3]) || 0;
-                        const sales = parseFloat(row[4]) || 0;
-                        const avr = count > 0 ? sales / count : 0;
-                        
                         // Validate data
-                        if (!date || !branch || !channel || isNaN(count) || isNaN(sales)) {
+                        if (!date || !branch || isNaN(count) || isNaN(sales)) {
                             hasErrors = true;
                             continue;
                         }
+                        
+                        const avr = count > 0 ? sales / count : 0;
                         
                         newData.push({
                             date,
@@ -3533,6 +4028,11 @@
                     }
                     
                     if (hasErrors) {
+                        showNotification(translations[currentLang]['invalid-data'], 'error');
+                        return;
+                    }
+                    
+                    if (newData.length === 0) {
                         showNotification(translations[currentLang]['invalid-data'], 'error');
                         return;
                     }
@@ -3557,8 +4057,13 @@
         // Save data to localStorage
         function saveData() {
             try {
-                localStorage.setItem('crispyChickenSalesData', JSON.stringify(allData));
-                localStorage.setItem('crispyChickenSalesTarget', SALES_TARGET.toString());
+                const dataToSave = {
+                    salesData: allData,
+                    salesTarget: SALES_TARGET,
+                    timestamp: new Date().toISOString()
+                };
+                
+                localStorage.setItem('crispyChickenSalesData', JSON.stringify(dataToSave));
                 
                 // Show success message
                 showNotification(translations[currentLang]['save-success-message'], 'success');
@@ -3572,14 +4077,10 @@
         function loadData() {
             try {
                 const savedData = localStorage.getItem('crispyChickenSalesData');
-                const savedTarget = localStorage.getItem('crispyChickenSalesTarget');
-                
                 if (savedData) {
-                    allData = JSON.parse(savedData);
-                }
-                
-                if (savedTarget) {
-                    SALES_TARGET = parseInt(savedTarget);
+                    const parsedData = JSON.parse(savedData);
+                    allData = parsedData.salesData || [];
+                    SALES_TARGET = parsedData.salesTarget || 370000;
                     document.getElementById('targetInput').value = SALES_TARGET;
                 }
                 
@@ -3590,6 +4091,9 @@
                 }
             } catch (error) {
                 console.error('Error loading data:', error);
+                // Use default data if loading fails
+                allData = [];
+                SALES_TARGET = 370000;
             }
         }
 
@@ -3611,6 +4115,9 @@
             
             // Show success message
             showNotification('Backup created successfully!', 'success');
+            
+            // Update backup list
+            updateBackupList();
         }
 
         // Restore backup
@@ -3637,7 +4144,51 @@
                 
                 // Show success message
                 showNotification('Backup deleted successfully!', 'success');
+                
+                // Update backup list
+                updateBackupList();
             }
+        }
+
+        // Update backup list
+        function updateBackupList() {
+            const backupList = document.getElementById('backupList');
+            if (!backups || backups.length === 0) {
+                backupList.innerHTML = '<p class="text-center text-muted">No backups available</p>';
+                return;
+            }
+            
+            backupList.innerHTML = `
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>${translations[currentLang]['backup-date']}</th>
+                            <th>${translations[currentLang]['backup-size']}</th>
+                            <th>${translations[currentLang]['backup-actions']}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${backups.map(backup => {
+                            const date = new Date(backup.timestamp).toLocaleDateString();
+                            const size = (backup.size / 1024).toFixed(2);
+                            return `
+                                <tr>
+                                    <td>${date}</td>
+                                    <td>${size} KB</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="restoreBackup(${backup.id})">
+                                            ${translations[currentLang]['restore-backup']}
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteBackup(${backup.id})">
+                                            ${translations[currentLang]['delete-backup']}
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            `;
         }
 
         // Toggle language
@@ -3656,6 +4207,15 @@
                 }
             });
             
+            // Update form options
+            updateFormOptions();
+            
+            // Update dashboard
+            updateDashboard();
+        }
+
+        // Helper function to update form options
+        function updateFormOptions() {
             // Update branch options
             const branchSelect = document.getElementById('entryBranch');
             branchSelect.innerHTML = '';
@@ -3681,9 +4241,6 @@
                     channelSelect.appendChild(option);
                 }
             });
-            
-            // Update dashboard
-            updateDashboard();
         }
 
         // Toggle dark mode
@@ -3695,10 +4252,119 @@
             if (document.body.classList.contains('dark-mode')) {
                 icon.classList.remove('bi-moon');
                 icon.classList.add('bi-sun');
+                
+                // Update chart colors for dark mode
+                updateChartColors(true);
             } else {
                 icon.classList.remove('bi-sun');
                 icon.classList.add('bi-moon');
+                
+                // Reset chart colors
+                updateChartColors(false);
             }
+        }
+
+        // Helper function to update chart colors
+        function updateChartColors(isDarkMode) {
+            const textColor = isDarkMode ? '#f8f9fa' : '#212529';
+            const gridColor = isDarkMode ? '#34495e' : '#dee2e6';
+            
+            Object.values(charts).forEach(chart => {
+                if (chart) {
+                    chart.options.scales.x.ticks.color = textColor;
+                    chart.options.scales.y.ticks.color = textColor;
+                    chart.options.scales.x.grid.color = gridColor;
+                    chart.options.scales.y.grid.color = gridColor;
+                    chart.update();
+                }
+            });
+        }
+
+        // Check file type
+        function isValidFileType(file) {
+            const validTypes = [
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+                'application/vnd.ms-excel', // .xls
+                'text/csv', // .csv
+                'application/csv' // .csv
+            ];
+            
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+            
+            return validTypes.includes(file.type) || ['xlsx', 'xls', 'csv'].includes(fileExtension);
+        }
+
+        // Handle file upload
+        function handleFile(file) {
+            if (!isValidFileType(file)) {
+                showNotification(translations[currentLang]['invalid-format'], 'error');
+                return;
+            }
+            
+            // Show loading spinner
+            document.querySelector('.loading-spinner').style.display = 'block';
+            
+            // Process file
+            processExcelFile(file);
+            
+            // Hide loading spinner after a delay
+            setTimeout(() => {
+                document.querySelector('.loading-spinner').style.display = 'none';
+            }, 1000);
+        }
+
+        // Export filtered data
+        function exportFilteredData() {
+            const dateRange = document.getElementById('exportDateRange').value;
+            const branch = document.getElementById('exportBranch').value;
+            
+            let filteredData = [...allData];
+            
+            // Filter by date range
+            if (dateRange !== 'all') {
+                const today = new Date();
+                const days = dateRange === 'last7' ? 7 : dateRange === 'last30' ? 30 : 0;
+                
+                if (days > 0) {
+                    const cutoffDate = new Date(today);
+                    cutoffDate.setDate(today.getDate() - days);
+                    
+                    filteredData = filteredData.filter(item => 
+                        new Date(item.date) >= cutoffDate
+                    );
+                }
+            }
+            
+            // Filter by branch
+            if (branch !== 'all') {
+                filteredData = filteredData.filter(item => item.branch === branch);
+            }
+            
+            // Export to CSV
+            exportToCSV(filteredData);
+        }
+
+        // Start real-time updates
+        function startRealTimeUpdates() {
+            // Update dashboard every 5 minutes
+            updateInterval = setInterval(() => {
+                updateDashboard();
+                showNotification('Data refreshed automatically', 'info');
+            }, 300000); // 5 minutes
+        }
+
+        // Stop real-time updates
+        function stopRealTimeUpdates() {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+            }
+        }
+
+        // Update session duration
+        function updateSessionDuration() {
+            const now = new Date();
+            const duration = Math.floor((now - userActivity.sessionStart) / 60000);
+            document.getElementById('sessionDuration').textContent = `Session: ${duration}m`;
         }
 
         // Event listeners
@@ -3740,7 +4406,7 @@
             }
         });
 
-        // Excel upload functionality
+        // Excel upload functionality - FIXED VERSION
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
 
@@ -3776,29 +4442,8 @@
             }
         });
 
-        // Handle file upload
-        function handleFile(file) {
-            // Check file type
-            const validTypes = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
-                               'application/vnd.ms-excel', 
-                               'text/csv'];
-            
-            if (!validTypes.includes(file.type) && !file.name.endsWith('.xlsx') && !file.name.endsWith('.xls')) {
-                showNotification(translations[currentLang]['invalid-format'], 'error');
-                return;
-            }
-            
-            // Show loading spinner
-            document.querySelector('.loading-spinner').style.display = 'block';
-            
-            // Process file
-            processExcelFile(file);
-            
-            // Hide loading spinner
-            setTimeout(() => {
-                document.querySelector('.loading-spinner').style.display = 'none';
-            }, 1000);
-        }
+        // Export filtered data
+        document.getElementById('exportCSV').addEventListener('click', exportFilteredData);
 
         // Tab change event listener to ensure data persistence
         document.getElementById('mainTabs').addEventListener('shown.bs.tab', function (e) {
@@ -3815,7 +4460,7 @@
             // If no saved data, use default data
             if (allData.length === 0) {
                 const salesDataString = `datee	branch	channel	count	sales	avr
-1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery	80	3478	43.475
+1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery	80	3478	43.475
 2/10/2025	Crispy Chicken Khaldia	Delivery	65	2850	43.846
 3/10/2025	Crispy Chicken Shabiya11	Delivery	92	4100	44.565
 4/10/2025	Crispy Chicken Muroor	Delivery	78	3500	44.872
@@ -3836,6 +4481,21 @@
 
             // Update the dashboard
             updateDashboard();
+            
+            // Start real-time updates
+            startRealTimeUpdates();
+            
+            // Update session duration every minute
+            setInterval(updateSessionDuration, 60000);
+        });
+
+        // Handle visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                stopRealTimeUpdates();
+            } else {
+                startRealTimeUpdates();
+            }
         });
     </script>
 </body>
