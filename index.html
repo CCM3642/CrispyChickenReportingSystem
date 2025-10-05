@@ -593,6 +593,23 @@
             color: white;
         }
 
+        .btn-clear {
+            background: linear-gradient(135deg, var(--danger-color) 0%, #e74c3c 100%);
+            border: none;
+            border-radius: 5px;
+            padding: 0.5rem 1.5rem;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .btn-clear:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+            color: white;
+        }
+
         .day-name {
             font-weight: 600;
             color: var(--primary-color);
@@ -1515,6 +1532,18 @@
                     </div>
                 </div>
                 
+                <!-- Clear Data Section -->
+                <div class="save-data-section">
+                    <h3 class="chart-title"><span data-translate="clear-data-title">Clear Data</span></h3>
+                    <p class="text-muted mb-3"><span data-translate="clear-data-description">Remove all sales data from the dashboard</span></p>
+                    <button class="btn btn-clear" id="clearDataBtn">
+                        <i class="bi bi-trash me-2"></i> <span data-translate="clear-data-btn">Clear All Data</span>
+                    </button>
+                    <div class="alert alert-danger-custom" id="clearSuccessAlert" style="display: none;">
+                        <i class="bi bi-check-circle me-2"></i><span data-translate="clear-success-message">All data has been cleared!</span>
+                    </div>
+                </div>
+                
                 <!-- Backup Management Section -->
                 <div class="backup-section">
                     <h3 class="chart-title"><span data-translate="backup-title">Backup Management</span></h3>
@@ -1736,6 +1765,10 @@
                 "save-data-description": "Save your current data to browser storage for future sessions",
                 "save-data-btn": "Save Data",
                 "save-success-message": "Data saved successfully!",
+                "clear-data-title": "Clear Data",
+                "clear-data-description": "Remove all sales data from the dashboard",
+                "clear-data-btn": "Clear All Data",
+                "clear-success-message": "All data has been cleared!",
                 "interactive-reports-title": "Interactive Reports",
                 "branch-performance-report": "Branch Performance Report",
                 "channel-performance-report": "Channel Performance Report",
@@ -1877,6 +1910,10 @@
                 "save-data-description": "احفظ بياناتك الحالية في التخزين للمستقبل",
                 "save-data-btn": "حفظ البيانات",
                 "save-success-message": "تم حفظ البيانات بنجاح!",
+                "clear-data-title": "مسح البيانات",
+                "clear-data-description": "إزالة جميع بيانات المبيعات من لوحة التحكم",
+                "clear-data-btn": "مسح جميع البيانات",
+                "clear-success-message": "تم مسح جميع البيانات!",
                 "interactive-reports-title": "تقارير تفاعلية",
                 "branch-performance-report": "تقرير أداء الفروع",
                 "channel-performance-report": "تقرير أداء القنوات",
@@ -3791,7 +3828,7 @@
                 document.getElementById('cancelBtn').style.display = 'none';
                 document.querySelector('.form-section h3').innerHTML = `<span data-translate="enter-data-title">${translations[currentLang]['enter-data-title']}</span>`;
             } else {
-                // Add new entry
+                // Add new entry - APPEND to existing data
                 allData.push(newData);
                 
                 // Track the change
@@ -4017,7 +4054,7 @@
                         return;
                     }
                     
-                    // Add new data to existing data
+                    // Add new data to existing data - APPEND to existing data
                     allData = [...allData, ...newData];
                     
                     // Update dashboard
@@ -4187,6 +4224,28 @@
             `;
         }
 
+        // Clear all data
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+                allData = [];
+                SALES_TARGET = 370000;
+                document.getElementById('targetInput').value = SALES_TARGET;
+                
+                // Update dashboard
+                updateDashboard();
+                
+                // Show success message
+                const clearAlert = document.getElementById('clearSuccessAlert');
+                clearAlert.style.display = 'block';
+                setTimeout(() => {
+                    clearAlert.style.display = 'none';
+                }, 5000);
+                
+                // Save to localStorage
+                saveDataToLocalStorage();
+            }
+        }
+
         // Toggle language
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'ar' : 'en';
@@ -4348,6 +4407,9 @@
 
         // Save data button
         document.getElementById('saveDataBtn').addEventListener('click', saveDataToLocalStorage);
+
+        // Clear data button
+        document.getElementById('clearDataBtn').addEventListener('click', clearAllData);
 
         // Create backup button
         document.getElementById('createBackupBtn').addEventListener('click', createBackup);
