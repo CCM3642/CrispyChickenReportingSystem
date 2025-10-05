@@ -823,15 +823,6 @@
             transition: background-color 0.3s;
         }
 
-        .export-options {
-            background: var(--card-bg);
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 2rem;
-            transition: background-color 0.3s;
-        }
-
         .user-activity-indicator {
             position: fixed;
             bottom: 20px;
@@ -953,6 +944,31 @@
 
     <!-- Main Content -->
     <div class="container">
+        <!-- Performance Metrics -->
+        <div class="performance-metrics">
+            <div class="metric-card">
+                <div class="metric-icon text-primary">
+                    <i class="bi bi-graph-up"></i>
+                </div>
+                <div class="metric-value" id="salesGrowth">0%</div>
+                <div class="metric-label">Sales Growth</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon text-success">
+                    <i class="bi bi-percent"></i>
+                </div>
+                <div class="metric-value" id="conversionRate">0%</div>
+                <div class="metric-label">Conversion Rate</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon text-warning">
+                    <i class="bi bi-trophy-fill"></i>
+                </div>
+                <div class="metric-value" id="targetAchievement">0%</div>
+                <div class="metric-label">Target Achievement</div>
+            </div>
+        </div>
+
         <!-- Key Performance Indicators -->
         <div class="row mb-4">
             <div class="col-lg-3 col-md-6 mb-3">
@@ -998,31 +1014,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Performance Metrics -->
-        <div class="performance-metrics">
-            <div class="metric-card">
-                <div class="metric-icon text-primary">
-                    <i class="bi bi-graph-up"></i>
-                </div>
-                <div class="metric-value" id="salesGrowth">0%</div>
-                <div class="metric-label">Sales Growth</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-icon text-success">
-                    <i class="bi bi-percent"></i>
-                </div>
-                <div class="metric-value" id="conversionRate">0%</div>
-                <div class="metric-label">Conversion Rate</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-icon text-warning">
-                    <i class="bi bi-trophy-fill"></i>
-                </div>
-                <div class="metric-value" id="targetAchievement">0%</div>
-                <div class="metric-label">Target Achievement</div>
             </div>
         </div>
 
@@ -1568,28 +1559,6 @@
                     </div>
                 </div>
                 
-                <!-- Export Options Section -->
-                <div class="export-options">
-                    <h4 class="mb-3"><span data-translate="export-options-title">Export Options</span></h4>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label"><span data-translate="date-range-label">Date Range</span></label>
-                            <select class="form-select" id="exportDateRange">
-                                <option value="all">All Data</option>
-                                <option value="last7">Last 7 Days</option>
-                                <option value="last30">Last 30 Days</option>
-                                <option value="custom">Custom Range</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label"><span data-translate="branch-filter-label">Branch</span></label>
-                            <select class="form-select" id="exportBranch">
-                                <option value="all">All Branches</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                
                 <div class="filter-section">
                     <div class="row align-items-center">
                         <div class="col-md-6">
@@ -1717,9 +1686,6 @@
                 "export-daily": "Daily Report",
                 "export-weekly": "Weekly Report",
                 "export-monthly": "Monthly Report",
-                "export-options-title": "Export Options",
-                "date-range-label": "Date Range",
-                "branch-filter-label": "Branch",
                 "table-date": "Date",
                 "table-branch": "Branch",
                 "table-channel": "Channel",
@@ -1861,9 +1827,6 @@
                 "export-daily": "تقرير يومي",
                 "export-weekly": "تقرير أسبوعي",
                 "export-monthly": "تقرير شهري",
-                "export-options-title": "خيارات التصدير",
-                "date-range-label": "نطاق التاريخ",
-                "branch-filter-label": "الفرع",
                 "table-date": "التاريخ",
                 "table-branch": "الفرع",
                 "table-channel": "القناة",
@@ -1970,9 +1933,6 @@
         let backups = [];
         let updateInterval;
 
-        // Memoization for calculations
-        const memoizedCalculations = new Map();
-
         // User activity tracking
         const userActivity = {
             lastActivity: new Date(),
@@ -2067,18 +2027,6 @@
             }
             
             return dateNum; // Return as is if not a number
-        }
-
-        // Calculate totals with memoization
-        function calculateTotalsMemoized(data) {
-            const key = JSON.stringify(data);
-            if (memoizedCalculations.has(key)) {
-                return memoizedCalculations.get(key);
-            }
-            
-            const result = calculateTotals(data);
-            memoizedCalculations.set(key, result);
-            return result;
         }
 
         // Calculate totals
@@ -3625,41 +3573,16 @@
                 // Update analytics
                 updateAnalytics();
                 
-                // Update export branch options
-                updateExportBranchOptions();
+                // Update session duration
+                updateSessionDuration();
             });
         }
 
-        // Update export branch options
-        function updateExportBranchOptions() {
-            const exportBranch = document.getElementById('exportBranch');
-            exportBranch.innerHTML = '<option value="all">All Branches</option>';
-            
-            Object.keys(groupByBranch(allData)).forEach(branch => {
-                const option = document.createElement('option');
-                option.value = branch;
-                option.textContent = branch;
-                exportBranch.appendChild(option);
-            });
-        }
-
-        // Track data changes
-        function trackChange(id, action, oldData, newData) {
-            changeHistory.push({
-                id,
-                action,
-                timestamp: new Date(),
-                oldData,
-                newData
-            });
-            
-            // Keep only the last 50 changes
-            if (changeHistory.length > 50) {
-                changeHistory.shift();
-            }
-            
-            // Track user action
-            trackUserAction(action);
+        // Update session duration
+        function updateSessionDuration() {
+            const now = new Date();
+            const duration = Math.floor((now - userActivity.sessionStart) / 60000);
+            document.getElementById('sessionDuration').textContent = `Session: ${duration}m`;
         }
 
         // Track user actions
@@ -3847,6 +3770,25 @@
             
             // Update dashboard
             updateDashboard();
+        }
+
+        // Track data changes
+        function trackChange(id, action, oldData, newData) {
+            changeHistory.push({
+                id,
+                action,
+                timestamp: new Date(),
+                oldData,
+                newData
+            });
+            
+            // Keep only the last 50 changes
+            if (changeHistory.length > 50) {
+                changeHistory.shift();
+            }
+            
+            // Track user action
+            trackUserAction(action);
         }
 
         // Show notification
@@ -4055,7 +3997,7 @@
         }
 
         // Save data to localStorage
-        function saveData() {
+        function saveDataToLocalStorage() {
             try {
                 const dataToSave = {
                     salesData: allData,
@@ -4064,12 +4006,8 @@
                 };
                 
                 localStorage.setItem('crispyChickenSalesData', JSON.stringify(dataToSave));
-                
-                // Show success message
-                showNotification(translations[currentLang]['save-success-message'], 'success');
             } catch (error) {
-                console.error('Error saving data:', error);
-                showNotification('Failed to save data. Please try again.', 'error');
+                console.error('Error saving data to localStorage:', error);
             }
         }
 
@@ -4082,6 +4020,26 @@
                     allData = parsedData.salesData || [];
                     SALES_TARGET = parsedData.salesTarget || 370000;
                     document.getElementById('targetInput').value = SALES_TARGET;
+                } else {
+                    // If no saved data, use default data
+                    const salesDataString = `datee	branch	channel	count	sales	avr
+1/10/2025	Crispy Chicken-Hamdan St	Delivery	80	3478	43.475
+2/10/2025	Crispy Chicken Khaldia	Delivery	65	2850	43.846
+3/10/2025	Crispy Chicken Shabiya11	Delivery	92	4100	44.565
+4/10/2025	Crispy Chicken Muroor	Delivery	78	3500	44.872
+5/10/2025	Crispy Chicken Al Barsha	Delivery	85	3800	44.706
+6/10/2025	Crispy Chicken Al Satwa	Delivery	70	3150	45.000
+7/10/2025	Crispy Chicken Al Rgga	Delivery	88	3950	44.886
+8/10/2025	Crispy Chicken-Hamdan St	Delivery	95	4200	44.211
+9/10/2025	Crispy Chicken Khaldia	Delivery	82	3650	44.512
+10/10/2025	Crispy Chicken Shabiya11	Delivery	90	4050	45.000`;
+
+                    allData = processSalesData(salesDataString);
+                    SALES_TARGET = 370000;
+                    document.getElementById('targetInput').value = SALES_TARGET;
+                    
+                    // Save default data to localStorage
+                    saveDataToLocalStorage();
                 }
                 
                 // Load backups
@@ -4313,37 +4271,6 @@
             }, 1000);
         }
 
-        // Export filtered data
-        function exportFilteredData() {
-            const dateRange = document.getElementById('exportDateRange').value;
-            const branch = document.getElementById('exportBranch').value;
-            
-            let filteredData = [...allData];
-            
-            // Filter by date range
-            if (dateRange !== 'all') {
-                const today = new Date();
-                const days = dateRange === 'last7' ? 7 : dateRange === 'last30' ? 30 : 0;
-                
-                if (days > 0) {
-                    const cutoffDate = new Date(today);
-                    cutoffDate.setDate(today.getDate() - days);
-                    
-                    filteredData = filteredData.filter(item => 
-                        new Date(item.date) >= cutoffDate
-                    );
-                }
-            }
-            
-            // Filter by branch
-            if (branch !== 'all') {
-                filteredData = filteredData.filter(item => item.branch === branch);
-            }
-            
-            // Export to CSV
-            exportToCSV(filteredData);
-        }
-
         // Start real-time updates
         function startRealTimeUpdates() {
             // Update dashboard every 5 minutes
@@ -4358,13 +4285,6 @@
             if (updateInterval) {
                 clearInterval(updateInterval);
             }
-        }
-
-        // Update session duration
-        function updateSessionDuration() {
-            const now = new Date();
-            const duration = Math.floor((now - userActivity.sessionStart) / 60000);
-            document.getElementById('sessionDuration').textContent = `Session: ${duration}m`;
         }
 
         // Event listeners
@@ -4389,7 +4309,7 @@
         document.getElementById('exportMonthly').addEventListener('click', () => exportToPDF('Monthly'));
 
         // Save data button
-        document.getElementById('saveDataBtn').addEventListener('click', saveData);
+        document.getElementById('saveDataBtn').addEventListener('click', saveDataToLocalStorage);
 
         // Create backup button
         document.getElementById('createBackupBtn').addEventListener('click', createBackup);
@@ -4399,6 +4319,10 @@
             const newTarget = parseInt(document.getElementById('targetInput').value) || 0;
             if (newTarget > 0) {
                 SALES_TARGET = newTarget;
+                
+                // Save data to localStorage
+                saveDataToLocalStorage();
+                
                 updateSalesTarget();
                 
                 // Show success message
@@ -4442,9 +4366,6 @@
             }
         });
 
-        // Export filtered data
-        document.getElementById('exportCSV').addEventListener('click', exportFilteredData);
-
         // Tab change event listener to ensure data persistence
         document.getElementById('mainTabs').addEventListener('shown.bs.tab', function (e) {
             if (e.target.id === 'data-management-tab' || e.target.id === 'analytics-tab') {
@@ -4457,28 +4378,11 @@
             // Try to load saved data first
             loadData();
             
-            // If no saved data, use default data
-            if (allData.length === 0) {
-                const salesDataString = `datee	branch	channel	count	sales	avr
-1/10/2025	Crispy Chicken-Hamdan St	Delivery1/10/2025	Crispy Chicken-Hamdan St	Delivery	80	3478	43.475
-2/10/2025	Crispy Chicken Khaldia	Delivery	65	2850	43.846
-3/10/2025	Crispy Chicken Shabiya11	Delivery	92	4100	44.565
-4/10/2025	Crispy Chicken Muroor	Delivery	78	3500	44.872
-5/10/2025	Crispy Chicken Al Barsha	Delivery	85	3800	44.706
-6/10/2025	Crispy Chicken Al Satwa	Delivery	70	3150	45.000
-7/10/2025	Crispy Chicken Al Rgga	Delivery	88	3950	44.886
-8/10/2025	Crispy Chicken-Hamdan St	Delivery	95	4200	44.211
-9/10/2025	Crispy Chicken Khaldia	Delivery	82	3650	44.512
-10/10/2025	Crispy Chicken Shabiya11	Delivery	90	4050	45.000`;
-
-                allData = processSalesData(salesDataString);
-            }
-
             // Set today's date as default for the date input
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('entryDate').value = today;
             document.getElementById('entryChannel').value = 'Delivery';
-
+            
             // Update the dashboard
             updateDashboard();
             
@@ -4496,6 +4400,11 @@
             } else {
                 startRealTimeUpdates();
             }
+        });
+
+        // Handle window unload
+        window.addEventListener('beforeunload', function() {
+            saveDataToLocalStorage();
         });
     </script>
 </body>
