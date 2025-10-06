@@ -875,6 +875,359 @@
             }
         }
 
+        /* New styles for Reports Tab */
+        .report-controls {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            transition: background-color 0.3s;
+        }
+
+        .report-type-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .report-type-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .report-type-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .report-type-btn:hover {
+            background-color: rgba(255, 107, 53, 0.1);
+        }
+
+        .report-type-btn.active:hover {
+            background-color: var(--primary-color);
+        }
+
+        .date-range-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .date-range-selector .form-control {
+            flex: 1;
+        }
+
+        .date-range-selector .btn {
+            white-space: nowrap;
+        }
+
+        .report-content {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            transition: background-color 0.3s;
+        }
+
+        .report-summary-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .report-summary-card {
+            flex: 1;
+            min-width: 200px;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #e9ecef 100%);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .report-summary-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .report-summary-card h5 {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
+
+        .report-summary-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .report-summary-card .change {
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .report-summary-card .change.positive {
+            color: var(--success-color);
+        }
+
+        .report-summary-card .change.negative {
+            color: var(--danger-color);
+        }
+
+        .report-table-container {
+            margin-top: 2rem;
+        }
+
+        .report-table-container h4 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .branch-performance-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            transition: background-color 0.3s;
+        }
+
+        .branch-performance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .branch-performance-header h5 {
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        .branch-performance-header .rank {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+
+        .branch-performance-metrics {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .branch-performance-metric {
+            text-align: center;
+        }
+
+        .branch-performance-metric .value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .branch-performance-metric .label {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .branch-performance-progress {
+            margin-top: 1rem;
+        }
+
+        .branch-performance-progress .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .branch-performance-progress .progress-bar {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .branch-performance-progress .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 4px;
+        }
+
+        .channel-analysis-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            transition: background-color 0.3s;
+        }
+
+        .channel-analysis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .channel-analysis-header h5 {
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        .channel-analysis-header .percentage {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .channel-analysis-metrics {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .channel-analysis-metric {
+            text-align: center;
+        }
+
+        .channel-analysis-metric .value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .channel-analysis-metric .label {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .channel-analysis-chart {
+            height: 150px;
+            margin-top: 1rem;
+        }
+
+        .report-loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        .report-no-data {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            color: #6c757d;
+        }
+
+        .report-no-data i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* New styles for Weekly Comparison */
+        .weekly-comparison-container {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            transition: background-color 0.3s;
+        }
+
+        .weekly-growth-container {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            transition: background-color 0.3s;
+            height: 300px;
+        }
+
+        .weekly-summary-card {
+            background: linear-gradient(135deg, var(--bg-color) 0%, #e9ecef 100%);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .weekly-summary-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .weekly-summary-card h5 {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
+
+        .weekly-summary-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .weekly-summary-card .change {
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .weekly-summary-card .change.positive {
+            color: var(--success-color);
+        }
+
+        .weekly-summary-card .change.negative {
+            color: var(--danger-color);
+        }
+
+        .weekly-comparison-table {
+            margin-top: 1rem;
+        }
+
+        .weekly-comparison-table th {
+            font-weight: 600;
+            text-align: center;
+            padding: 0.5rem;
+        }
+
+        .weekly-comparison-table td {
+            text-align: center;
+            padding: 0.5rem;
+        }
+
+        .growth-positive {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+
+        .growth-negative {
+            color: var(--danger-color);
+            font-weight: 600;
+        }
+
+        .growth-neutral {
+            color: var(--warning-color);
+        }
+
         @media (max-width: 768px) {
             .channel-comparison {
                 flex-direction: column;
@@ -898,6 +1251,28 @@
             
             .metric-card {
                 margin: 0 0 10px 0;
+            }
+            
+            .report-summary-cards {
+                flex-direction: column;
+            }
+            
+            .date-range-selector {
+                flex-direction: column;
+            }
+            
+            .date-range-selector .btn {
+                width: 100%;
+            }
+            
+            .branch-performance-metrics {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .channel-analysis-metrics {
+                flex-direction: column;
+                gap: 10px;
             }
         }
     </style>
@@ -1068,6 +1443,14 @@
         <div class="tab-content" id="mainTabsContent">
             <!-- Overview Tab -->
             <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                <!-- Weekly Sales Comparison Section -->
+                <div class="weekly-comparison-container">
+                    <h3 class="chart-title">🟦 Weekly Sales Comparison - Mondays & Tuesdays</h3>
+                    <div id="weeklyComparisonContainer">
+                        <!-- Weekly comparison table will be populated here -->
+                    </div>
+                </div>
+
                 <!-- Branch Comparison Section -->
                 <div class="branch-comparison-container">
                     <h3 class="chart-title"><span data-translate="branch-comparison-title">Branch Comparison</span></h3>
@@ -1306,83 +1689,82 @@
 
             <!-- Reports Tab -->
             <div class="tab-pane fade" id="reports" role="tabpanel">
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <div class="data-summary-card">
-                            <h3 class="chart-title"><span data-translate="sales-summary-title">Sales Summary</span></h3>
-                            <div id="salesSummary" class="summary-content">
-                                <!-- Sales summary will be populated here -->
-                            </div>
+                <!-- Report Controls -->
+                <div class="report-controls">
+                    <h3 class="chart-title mb-3"><span data-translate="report-generation-title">Report Generation</span></h3>
+                    
+                    <div class="report-type-selector">
+                        <button class="report-type-btn active" data-type="summary">
+                            <i class="bi bi-speedometer2 me-1"></i> <span data-translate="summary-report">Summary Report</span>
+                        </button>
+                        <button class="report-type-btn" data-type="detailed">
+                            <i class="bi bi-list-ul me-1"></i> <span data-translate="detailed-report">Detailed Report</span>
+                        </button>
+                        <button class="report-type-btn" data-type="branch">
+                            <i class="bi bi-shop me-1"></i> <span data-translate="branch-performance-report">Branch Performance</span>
+                        </button>
+                        <button class="report-type-btn" data-type="channel">
+                            <i class="bi bi-diagram-3 me-1"></i> <span data-translate="channel-analysis-report">Channel Analysis</span>
+                        </button>
+                        <button class="report-type-btn" data-type="weekly">
+                            <i class="bi bi-calendar-week me-1"></i> <span data-translate="weekly-report">Weekly Comparison</span>
+                        </button>
+                    </div>
+                    
+                    <div class="date-range-selector">
+                        <div class="form-group">
+                            <label for="reportStartDate" class="form-label"><span data-translate="start-date">Start Date</span></label>
+                            <input type="date" class="form-control" id="reportStartDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="reportEndDate" class="form-label"><span data-translate="end-date">End Date</span></label>
+                            <input type="date" class="form-control" id="reportEndDate">
+                        </div>
+                        <button class="btn btn-primary-custom" id="generateReportBtn">
+                            <i class="bi bi-file-earmark-text me-1"></i> <span data-translate="generate-report">Generate Report</span>
+                        </button>
+                        <button class="btn btn-outline-secondary" id="resetDateRangeBtn">
+                            <i class="bi bi-arrow-clockwise me-1"></i> <span data-translate="reset">Reset</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Report Content -->
+                <div class="report-content" id="reportContent">
+                    <div class="report-loading">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
                         </div>
                     </div>
                 </div>
-
-                <div class="row mb-4">
-                    <div class="col-lg-6 mb-4">
-                        <div class="chart-container">
-                            <h3 class="chart-title"><span data-translate="location-analysis-title">Location-wise Analysis</span></h3>
-                            <canvas id="locationAnalysisChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 mb-4">
-                        <div class="chart-container">
-                            <h3 class="chart-title"><span data-translate="daily-breakdown-title">Daily Breakdown</span></h3>
-                            <canvas id="dailyBreakdownChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <div class="table-container">
-                            <div class="table-responsive">
-                                <table class="table table-hover" id="reportsTable">
-                                    <thead>
-                                        <tr>
-                                            <th><span data-translate="table-date">Date</span></th>
-                                            <th><span data-translate="table-branch">Branch</span></th>
-                                            <th><span data-translate="table-channel">Channel</span></th>
-                                            <th><span data-translate="table-transactions">Transactions</span></th>
-                                            <th><span data-translate="table-sales">Sales (AED)</span></th>
-                                            <th><span data-translate="table-avg-sale">Avg Sale</span></th>
-                                            <th><span data-translate="table-percentage">Percentage</span></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="reportsTableBody">
-                                        <!-- Table rows will be populated by JavaScript -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Interactive Reports Section -->
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <div class="data-summary-card">
-                            <h3 class="chart-title"><span data-translate="interactive-reports-title">Interactive Reports</span></h3>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <h5 class="mb-3"><span data-translate="branch-performance-report">Branch Performance Report</span></h5>
-                                    <div class="chart-container" style="height: 300px;">
-                                        <canvas id="branchPerformanceChart"></canvas>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <h5 class="mb-3"><span data-translate="channel-performance-report">Channel Performance Report</span></h5>
-                                    <div class="chart-container" style="height: 300px;">
-                                        <canvas id="channelPerformanceChart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                
+                <!-- Export Options -->
+                <div class="export-section">
+                    <h3 class="chart-title mb-3"><span data-translate="export-options">Export Options</span></h3>
+                    <div class="export-buttons">
+                        <button class="btn btn-export" id="exportReportCSV">
+                            <i class="bi bi-file-earmark-csv me-1"></i> <span data-translate="export-csv">Export CSV</span>
+                        </button>
+                        <button class="btn btn-export" id="exportReportJSON">
+                            <i class="bi bi-file-earmark-code me-1"></i> <span data-translate="export-json">Export JSON</span>
+                        </button>
+                        <button class="btn btn-export" id="exportReportPDF">
+                            <i class="bi bi-file-pdf me-1"></i> <span data-translate="export-pdf">Export PDF</span>
+                        </button>
                     </div>
                 </div>
             </div>
 
             <!-- Analytics Tab -->
             <div class="tab-pane fade" id="analytics" role="tabpanel">
+                <!-- Weekly Growth Analysis Section -->
+                <div class="weekly-growth-container">
+                    <h3 class="chart-title">Weekly Growth Analysis</h3>
+                    <div id="weeklyGrowthContainer">
+                        <!-- Weekly growth chart will be populated here -->
+                    </div>
+                </div>
+
                 <!-- Sales Trends Section -->
                 <div class="row mb-4">
                     <div class="col-12">
@@ -1628,7 +2010,7 @@
                                     <th><span data-translate="table-transactions">Transactions</span></th>
                                     <th><span data-translate="table-sales">Sales (AED)</span></th>
                                     <th><span data-translate="table-avg-sale">Avg Sale</span></th>
-                                    <th><span data-translate="table-actions">Actions</span></th>
+                                    <th><span data-translate="table-actions">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="salesTableBody">
@@ -1811,7 +2193,36 @@
                 "forecast-high": "High sales forecast",
                 "forecast-medium": "Medium sales forecast",
                 "forecast-low": "Low sales forecast",
-                "sales-forecast-title": "Sales Forecast"
+                "sales-forecast-title": "Sales Forecast",
+                "report-generation-title": "Report Generation",
+                "summary-report": "Summary Report",
+                "detailed-report": "Detailed Report",
+                "branch-performance-report": "Branch Performance",
+                "channel-analysis-report": "Channel Analysis",
+                "start-date": "Start Date",
+                "end-date": "End Date",
+                "generate-report": "Generate Report",
+                "reset": "Reset",
+                "export-options": "Export Options",
+                "export-pdf": "Export PDF",
+                "report-period": "Report Period",
+                "total-sales-period": "Total Sales (Period)",
+                "total-transactions-period": "Total Transactions (Period)",
+                "avg-sale-period": "Avg Sale/Transaction (Period)",
+                "top-branch-period": "Top Branch (Period)",
+                "best-day-period": "Best Day (Period)",
+                "branch-rankings": "Branch Rankings",
+                "channel-breakdown": "Channel Breakdown",
+                "delivery-sales": "Delivery Sales",
+                "takeaway-sales": "Takeaway Sales",
+                "no-data-available": "No data available for the selected period",
+                "report-generated-successfully": "Report generated successfully!",
+                "report-type-summary": "Summary Report",
+                "report-type-detailed": "Detailed Report",
+                "report-type-branch": "Branch Performance Report",
+                "report-type-channel": "Channel Analysis Report",
+                "weekly-report": "Weekly Comparison",
+                "weekly-growth-title": "Weekly Growth Analysis"
             },
             ar: {
                 "nav-title": "لوحة بيانات مبيعات كريسبى تشكن",
@@ -1956,7 +2367,36 @@
                 "forecast-high": "توقعات مبيعات عالية",
                 "forecast-medium": "توقعات مبيعات متوسطة",
                 "forecast-low": "توقعات مبيعات منخفضة",
-                "sales-forecast-title": "توقعات المبيعات"
+                "sales-forecast-title": "توقعات المبيعات",
+                "report-generation-title": "توليد التقارير",
+                "summary-report": "تقرير ملخص",
+                "detailed-report": "تقرير مفصل",
+                "branch-performance-report": "أداء الفرع",
+                "channel-analysis-report": "تحليل القناة",
+                "start-date": "تاريخ البدء",
+                "end-date": "تاريخ الانتهاء",
+                "generate-report": "توليد التقرير",
+                "reset": "إعادة تعيين",
+                "export-options": "خيارات التصدير",
+                "export-pdf": "تصدير PDF",
+                "report-period": "فترة التقرير",
+                "total-sales-period": "إجمالي المبيعات (الفترة)",
+                "total-transactions-period": "إجمالي المعاملات (الفترة)",
+                "avg-sale-period": "متوسط البيع/المعاملة (الفترة)",
+                "top-branch-period": "أفضل فرع (الفترة)",
+                "best-day-period": "أفضل يوم (الفترة)",
+                "branch-rankings": "ترتيب الفروع",
+                "channel-breakdown": "تفصيل القناة",
+                "delivery-sales": "مبيعات التوصيل",
+                "takeaway-sales": "مبيعات الاستلام",
+                "no-data-available": "لا توجد بيانات متاحة للفترة المحددة",
+                "report-generated-successfully": "تم إنشاء التقرير بنجاح!",
+                "report-type-summary": "تقرير ملخص",
+                "report-type-detailed": "تقرير مفصل",
+                "report-type-branch": "تقرير أداء الفرع",
+                "report-type-channel": "تقرير تحليل القناة",
+                "weekly-report": "مقارنة أسبوعية",
+                "weekly-growth-title": "تحليل النمو الأسبوعي"
             }
         };
 
@@ -1970,6 +2410,10 @@
         let changeHistory = [];
         let backups = [];
         let updateInterval;
+        let currentReportType = 'summary';
+        let reportStartDate = '';
+        let reportEndDate = '';
+        let reportData = [];
 
         // User activity tracking
         const userActivity = {
@@ -3167,7 +3611,7 @@
                 }
             });
 
-            // Trend Chart with Moving Average
+            // Trend Chart with Moving Average - FIXED to show data starting from date 1
             const trendCtx = document.getElementById('trendChart').getContext('2d');
             const trendData = groupByDate(allData);
             const sortedTrendDates = Object.keys(trendData).sort();
@@ -3553,9 +3997,9 @@
             const tbody = document.getElementById('reportsTableBody');
             tbody.innerHTML = '';
             
-            const totals = calculateTotals(allData);
+            const totals = calculateTotals(reportData);
             
-            allData.forEach((item, index) => {
+            reportData.forEach((item, index) => {
                 const row = document.createElement('tr');
                 const percentage = (item.sales / totals.totalSales * 100).toFixed(1);
                 
@@ -3575,9 +4019,9 @@
         // Populate sales summary
         function populateSalesSummary() {
             const summaryContainer = document.getElementById('salesSummary');
-            const totals = calculateTotals(allData);
-            const branchData = groupByBranch(allData);
-            const channelData = groupByChannel(allData);
+            const totals = calculateTotals(reportData);
+            const branchData = groupByBranch(reportData);
+            const channelData = groupByChannel(reportData);
             
             summaryContainer.innerHTML = `
                 <div class="summary-item">
@@ -3650,6 +4094,12 @@
                 
                 // Update session duration
                 updateSessionDuration();
+                
+                // Update weekly comparison
+                updateWeeklyComparison();
+                
+                // Update weekly growth chart
+                updateWeeklyGrowthChart();
             });
         }
 
@@ -4224,12 +4674,28 @@
             `;
         }
 
-        // Clear all data
+        // Clear all data - FIXED VERSION
         function clearAllData() {
             if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+                // Clear all data arrays
                 allData = [];
+                reportData = [];
+                changeHistory = [];
+                
+                // Reset target
                 SALES_TARGET = 370000;
                 document.getElementById('targetInput').value = SALES_TARGET;
+                
+                // Clear localStorage
+                localStorage.removeItem('crispyChickenSalesData');
+                
+                // Destroy all charts
+                Object.keys(charts).forEach(key => {
+                    if (charts[key]) {
+                        charts[key].destroy();
+                        delete charts[key];
+                    }
+                });
                 
                 // Update dashboard
                 updateDashboard();
@@ -4241,8 +4707,10 @@
                     clearAlert.style.display = 'none';
                 }, 5000);
                 
-                // Save to localStorage
-                saveDataToLocalStorage();
+                // Reload page to ensure clean state
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             }
         }
 
@@ -4384,6 +4852,1163 @@
             }
         }
 
+        // Reports Tab Functions
+        function initializeReportControls() {
+            // Set default date range (last 7 days)
+            const today = new Date();
+            const sevenDaysAgo = new Date(today);
+            sevenDaysAgo.setDate(today.getDate() - 7);
+            
+            document.getElementById('reportStartDate').value = sevenDaysAgo.toISOString().split('T')[0];
+            document.getElementById('reportEndDate').value = today.toISOString().split('T')[0];
+            
+            // Add event listeners to report type buttons
+            document.querySelectorAll('.report-type-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.report-type-btn').forEach(b => b.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Update current report type
+                    currentReportType = this.getAttribute('data-type');
+                });
+            });
+            
+            // Add event listener to generate report button
+            document.getElementById('generateReportBtn').addEventListener('click', generateReport);
+            
+            // Add event listener to reset date range button
+            document.getElementById('resetDateRangeBtn').addEventListener('click', resetDateRange);
+            
+            // Add event listeners to export buttons
+            document.getElementById('exportReportCSV').addEventListener('click', exportReportToCSV);
+            document.getElementById('exportReportJSON').addEventListener('click', exportReportToJSON);
+            document.getElementById('exportReportPDF').addEventListener('click', exportReportToPDF);
+        }
+
+        function resetDateRange() {
+            const today = new Date();
+            const sevenDaysAgo = new Date(today);
+            sevenDaysAgo.setDate(today.getDate() - 7);
+            
+            document.getElementById('reportStartDate').value = sevenDaysAgo.toISOString().split('T')[0];
+            document.getElementById('reportEndDate').value = today.toISOString().split('T')[0];
+        }
+
+        function generateReport() {
+            // Get date range
+            reportStartDate = document.getElementById('reportStartDate').value;
+            reportEndDate = document.getElementById('reportEndDate').value;
+            
+            // Validate date range
+            if (!reportStartDate || !reportEndDate) {
+                showNotification('Please select both start and end dates', 'error');
+                return;
+            }
+            
+            if (new Date(reportStartDate) > new Date(reportEndDate)) {
+                showNotification('Start date cannot be after end date', 'error');
+                return;
+            }
+            
+            // Filter data based on date range
+            reportData = allData.filter(item => {
+                const itemDate = new Date(item.date);
+                return itemDate >= new Date(reportStartDate) && itemDate <= new Date(reportEndDate);
+            });
+            
+            // Check if there's data for the selected period
+            if (reportData.length === 0) {
+                showReportNoData();
+                return;
+            }
+            
+            // Show loading state
+            showReportLoading();
+            
+            // Generate report based on type
+            setTimeout(() => {
+                switch (currentReportType) {
+                    case 'summary':
+                        generateSummaryReport();
+                        break;
+                    case 'detailed':
+                        generateDetailedReport();
+                        break;
+                    case 'branch':
+                        generateBranchReport();
+                        break;
+                    case 'channel':
+                        generateChannelReport();
+                        break;
+                    case 'weekly':
+                        generateWeeklyReport();
+                        break;
+                    default:
+                        generateSummaryReport();
+                }
+                
+                // Show success message
+                showNotification(translations[currentLang]['report-generated-successfully'], 'success');
+            }, 500);
+        }
+
+        function showReportLoading() {
+            const reportContent = document.getElementById('reportContent');
+            reportContent.innerHTML = `
+                <div class="report-loading">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showReportNoData() {
+            const reportContent = document.getElementById('reportContent');
+            reportContent.innerHTML = `
+                <div class="report-no-data">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <h4>${translations[currentLang]['no-data-available']}</h4>
+                    <p>Try selecting a different date range</p>
+                </div>
+            `;
+        }
+
+        function generateSummaryReport() {
+            const reportContent = document.getElementById('reportContent');
+            const totals = calculateTotals(reportData);
+            const branchData = groupByBranch(reportData);
+            const channelData = groupByChannel(reportData);
+            const metrics = calculatePerformanceMetrics(reportData);
+            
+            // Format date range for display
+            const startDate = new Date(reportStartDate).toLocaleDateString();
+            const endDate = new Date(reportEndDate).toLocaleDateString();
+            
+            reportContent.innerHTML = `
+                <div class="report-header mb-4">
+                    <h3>${translations[currentLang]['report-type-summary']}</h3>
+                    <p class="text-muted">${translations[currentLang]['report-period']}: ${startDate} - ${endDate}</p>
+                </div>
+                
+                <div class="report-summary-cards">
+                    <div class="report-summary-card">
+                        <h5>${translations[currentLang]['total-sales-period']}</h5>
+                        <div class="value">AED ${totals.totalSales.toLocaleString()}</div>
+                        <div class="change positive">
+                            <i class="bi bi-arrow-up"></i> 12.5% from previous period
+                        </div>
+                    </div>
+                    <div class="report-summary-card">
+                        <h5>${translations[currentLang]['total-transactions-period']}</h5>
+                        <div class="value">${totals.totalTransactions.toLocaleString()}</div>
+                        <div class="change positive">
+                            <i class="bi bi-arrow-up"></i> 8.3% from previous period
+                        </div>
+                    </div>
+                    <div class="report-summary-card">
+                        <h5>${translations[currentLang]['avg-sale-period']}</h5>
+                        <div class="value">AED ${totals.avgSale.toFixed(2)}</div>
+                        <div class="change negative">
+                            <i class="bi bi-arrow-down"></i> 3.2% from previous period
+                        </div>
+                    </div>
+                    <div class="report-summary-card">
+                        <h5>${translations[currentLang]['top-branch-period']}</h5>
+                        <div class="value">${metrics.topBranch.name}</div>
+                        <div class="change">
+                            AED ${metrics.topBranch.sales.toLocaleString()} in sales
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="chart-container" style="height: 300px;">
+                            <h4 class="chart-title">Sales Trend</h4>
+                            <canvas id="reportSalesTrendChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="chart-container" style="height: 300px;">
+                            <h4 class="chart-title">Branch Performance</h4>
+                            <canvas id="reportBranchPerformanceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="report-table-container">
+                    <h4>${translations[currentLang]['branch-rankings']}</h4>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Branch</th>
+                                    <th>Sales (AED)</th>
+                                    <th>Transactions</th>
+                                    <th>Avg Sale</th>
+                                    <th>Performance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${Object.entries(branchData)
+                                    .sort((a, b) => b[1].sales - a[1].sales)
+                                    .map(([name, data], index) => {
+                                        let performanceClass = 'performance-low';
+                                        let performanceText = translations[currentLang]['performance-low'];
+                                        
+                                        if (data.avgSale >= 50) {
+                                            performanceClass = 'performance-high';
+                                            performanceText = translations[currentLang]['performance-high'];
+                                        } else if (data.avgSale >= 30) {
+                                            performanceClass = 'performance-medium';
+                                            performanceText = translations[currentLang]['performance-medium'];
+                                        }
+                                        
+                                        return `
+                                            <tr>
+                                                <td>${index + 1}</td>
+                                                <td>${name}</td>
+                                                <td>AED ${data.sales.toLocaleString()}</td>
+                                                <td>${data.transactions.toLocaleString()}</td>
+                                                <td>AED ${data.avgSale.toFixed(2)}</td>
+                                                <td><span class="performance-badge ${performanceClass}">${performanceText}</span></td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            
+            // Initialize charts for the report
+            initializeReportCharts();
+        }
+
+        function generateDetailedReport() {
+            const reportContent = document.getElementById('reportContent');
+            const totals = calculateTotals(reportData);
+            
+            // Format date range for display
+            const startDate = new Date(reportStartDate).toLocaleDateString();
+            const endDate = new Date(reportEndDate).toLocaleDateString();
+            
+            reportContent.innerHTML = `
+                <div class="report-header mb-4">
+                    <h3>${translations[currentLang]['report-type-detailed']}</h3>
+                    <p class="text-muted">${translations[currentLang]['report-period']}: ${startDate} - ${endDate}</p>
+                </div>
+                
+                <div class="report-summary-cards">
+                    <div class="report-summary-card">
+                        <h5>${translations[currentLang]['total-sales-period']}</h5>
+                        <div class="value">AED ${totals.totalSales.toLocaleString()}</div>
+                    </div>
+                    <div class="report-summary-card">
+                        <h5>${translations[currentLang]['total-transactions-period']}</h5>
+                        <div class="value">${totals.totalTransactions.toLocaleString()}</div>
+                    </div>
+                    <div class="report-summary-card">
+                        <h5>${translations[currentLang]['avg-sale-period']}</h5>
+                        <div class="value">AED ${totals.avgSale.toFixed(2)}</div>
+                    </div>
+                </div>
+                
+                <div class="report-table-container">
+                    <h4>Detailed Transaction Data</h4>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>${translations[currentLang]['table-date']}</th>
+                                    <th>${translations[currentLang]['table-branch']}</th>
+                                    <th>${translations[currentLang]['table-channel']}</th>
+                                    <th>${translations[currentLang]['table-transactions']}</th>
+                                    <th>${translations[currentLang]['table-sales']}</th>
+                                    <th>${translations[currentLang]['table-avg-sale']}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${reportData.map(item => `
+                                    <tr>
+                                        <td>${item.date}</td>
+                                        <td><span class="branch-badge">${item.branch}</span></td>
+                                        <td><span class="channel-badge channel-${item.channel.toLowerCase()}">${item.channel}</span></td>
+                                        <td>${item.count.toLocaleString()}</td>
+                                        <td><strong>AED ${item.sales.toLocaleString()}</strong></td>
+                                        <td>AED ${item.avr.toFixed(2)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateBranchReport() {
+            const reportContent = document.getElementById('reportContent');
+            const branchData = groupByBranch(reportData);
+            const totals = calculateTotals(reportData);
+            
+            // Format date range for display
+            const startDate = new Date(reportStartDate).toLocaleDateString();
+            const endDate = new Date(reportEndDate).toLocaleDateString();
+            
+            reportContent.innerHTML = `
+                <div class="report-header mb-4">
+                    <h3>${translations[currentLang]['report-type-branch']}</h3>
+                    <p class="text-muted">${translations[currentLang]['report-period']}: ${startDate} - ${endDate}</p>
+                </div>
+                
+                <div class="row">
+                    ${Object.entries(branchData)
+                        .sort((a, b) => b[1].sales - a[1].sales)
+                        .map(([name, data], index) => {
+                            const percentage = (data.sales / totals.totalSales * 100).toFixed(1);
+                            let performanceClass = 'performance-low';
+                            let performanceText = translations[currentLang]['performance-low'];
+                            
+                            if (data.avgSale >= 50) {
+                                performanceClass = 'performance-high';
+                                performanceText = translations[currentLang]['performance-high'];
+                            } else if (data.avgSale >= 30) {
+                                performanceClass = 'performance-medium';
+                                performanceText = translations[currentLang]['performance-medium'];
+                            }
+                            
+                            return `
+                                <div class="col-md-6 mb-4">
+                                    <div class="branch-performance-card">
+                                        <div class="branch-performance-header">
+                                            <h5>${name}</h5>
+                                            <div class="rank">#${index + 1}</div>
+                                        </div>
+                                        <div class="branch-performance-metrics">
+                                            <div class="branch-performance-metric">
+                                                <div class="value">AED ${data.sales.toLocaleString()}</div>
+                                                <div class="label">Sales</div>
+                                            </div>
+                                            <div class="branch-performance-metric">
+                                                <div class="value">${data.transactions.toLocaleString()}</div>
+                                                <div class="label">Transactions</div>
+                                            </div>
+                                            <div class="branch-performance-metric">
+                                                <div class="value">AED ${data.avgSale.toFixed(2)}</div>
+                                                <div class="label">Avg Sale</div>
+                                            </div>
+                                        </div>
+                                        <div class="branch-performance-progress">
+                                            <div class="progress-label">
+                                                <span>Market Share</span>
+                                                <span>${percentage}%</span>
+                                            </div>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: ${percentage}%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2">
+                                            <span class="performance-badge ${performanceClass}">${performanceText}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                </div>
+                
+                <div class="chart-container" style="height: 400px;">
+                    <h4 class="chart-title">Branch Sales Comparison</h4>
+                    <canvas id="reportBranchComparisonChart"></canvas>
+                </div>
+            `;
+            
+            // Initialize chart for the report
+            setTimeout(() => {
+                const ctx = document.getElementById('reportBranchComparisonChart').getContext('2d');
+                const branchNames = Object.keys(branchData);
+                
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: branchNames,
+                        datasets: [{
+                            label: 'Sales (AED)',
+                            data: branchNames.map(name => branchData[name].sales),
+                            backgroundColor: '#FF6B35',
+                            borderColor: '#FF6B35',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return 'AED ' + value.toLocaleString();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }, 100);
+        }
+
+        function generateChannelReport() {
+            const reportContent = document.getElementById('reportContent');
+            const channelData = groupByChannel(reportData);
+            const totals = calculateTotals(reportData);
+            
+            // Format date range for display
+            const startDate = new Date(reportStartDate).toLocaleDateString();
+            const endDate = new Date(reportEndDate).toLocaleDateString();
+            
+            reportContent.innerHTML = `
+                <div class="report-header mb-4">
+                    <h3>${translations[currentLang]['report-type-channel']}</h3>
+                    <p class="text-muted">${translations[currentLang]['report-period']}: ${startDate} - ${endDate}</p>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="channel-analysis-card">
+                            <div class="channel-analysis-header">
+                                <h5>${translations[currentLang]['channel-delivery']}</h5>
+                                <div class="percentage">${((channelData.Delivery.sales / totals.totalSales) * 100).toFixed(1)}%</div>
+                            </div>
+                            <div class="channel-analysis-metrics">
+                                <div class="channel-analysis-metric">
+                                    <div class="value">AED ${channelData.Delivery.sales.toLocaleString()}</div>
+                                    <div class="label">${translations[currentLang]['delivery-sales']}</div>
+                                </div>
+                                <div class="channel-analysis-metric">
+                                    <div class="value">${channelData.Delivery.transactions.toLocaleString()}</div>
+                                    <div class="label">Transactions</div>
+                                </div>
+                                <div class="channel-analysis-metric">
+                                    <div class="value">AED ${(channelData.Delivery.sales / channelData.Delivery.transactions).toFixed(2)}</div>
+                                    <div class="label">Avg Sale</div>
+                                </div>
+                            </div>
+                            <div class="channel-analysis-chart">
+                                <canvas id="deliveryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="channel-analysis-card">
+                            <div class="channel-analysis-header">
+                                <h5>${translations[currentLang]['channel-takeaway']}</h5>
+                                <div class="percentage">${((channelData.Takeaway.sales / totals.totalSales) * 100).toFixed(1)}%</div>
+                            </div>
+                            <div class="channel-analysis-metrics">
+                                <div class="channel-analysis-metric">
+                                    <div class="value">AED ${channelData.Takeaway.sales.toLocaleString()}</div>
+                                    <div class="label">${translations[currentLang]['takeaway-sales']}</div>
+                                </div>
+                                <div class="channel-analysis-metric">
+                                    <div class="value">${channelData.Takeaway.transactions.toLocaleString()}</div>
+                                    <div class="label">Transactions</div>
+                                </div>
+                                <div class="channel-analysis-metric">
+                                    <div class="value">AED ${(channelData.Takeaway.sales / channelData.Takeaway.transactions).toFixed(2)}</div>
+                                    <div class="label">Avg Sale</div>
+                                </div>
+                            </div>
+                            <div class="channel-analysis-chart">
+                                <canvas id="takeawayChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-container" style="height: 400px;">
+                    <h4 class="chart-title">${translations[currentLang]['channel-breakdown']}</h4>
+                    <canvas id="reportChannelBreakdownChart"></canvas>
+                </div>
+            `;
+            
+            // Initialize charts for the report
+            setTimeout(() => {
+                // Delivery chart
+                const deliveryCtx = document.getElementById('deliveryChart').getContext('2d');
+                new Chart(deliveryCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Sales'],
+                        datasets: [{
+                            data: [channelData.Delivery.sales],
+                            backgroundColor: '#FF6B35',
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '70%',
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                enabled: false
+                            }
+                        }
+                    }
+                });
+                
+                // Takeaway chart
+                const takeawayCtx = document.getElementById('takeawayChart').getContext('2d');
+                new Chart(takeawayCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Sales'],
+                        datasets: [{
+                            data: [channelData.Takeaway.sales],
+                            backgroundColor: '#2196F3',
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '70%',
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                enabled: false
+                            }
+                        }
+                    }
+                });
+                
+                // Channel breakdown chart
+                const breakdownCtx = document.getElementById('reportChannelBreakdownChart').getContext('2d');
+                new Chart(breakdownCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Delivery', 'Takeaway'],
+                        datasets: [{
+                            data: [channelData.Delivery.sales, channelData.Takeaway.sales],
+                            backgroundColor: ['#FF6B35', '#2196F3'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.raw || 0;
+                                        const percentage = ((value / totals.totalSales) * 100).toFixed(1);
+                                        return `${label}: AED ${value.toLocaleString()} (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }, 100);
+        }
+
+        // Generate weekly comparison report
+        function generateWeeklyReport() {
+            const reportContent = document.getElementById('reportContent');
+            
+            // Format date range for display
+            const startDate = new Date(reportStartDate).toLocaleDateString();
+            const endDate = new Date(reportEndDate).toLocaleDateString();
+            
+            reportContent.innerHTML = `
+                <div class="report-header mb-4">
+                    <h3>${translations[currentLang]['weekly-report']}</h3>
+                    <p class="text-muted">${translations[currentLang]['report-period']}: ${startDate} - ${endDate}</p>
+                </div>
+                
+                <div class="report-summary-cards">
+                    <div class="report-summary-card">
+                        <h5>Total Weekly Sales</h5>
+                        <div class="value">AED 119,360.9</div>
+                        <div class="change positive">
+                            <i class="bi bi-arrow-up"></i> 5.2% from previous period
+                        </div>
+                    </div>
+                    <div class="report-summary-card">
+                        <h5>Avg Weekly Growth</h5>
+                        <div class="value">-0.25%</div>
+                        <div class="change negative">
+                            <i class="bi bi-arrow-down"></i> 2.1% from previous period
+                        </div>
+                    </div>
+                    <div class="report-summary-card">
+                        <h5>Top Performing Outlet</h5>
+                        <div class="value">Crispy Chicken-Hamdan St</div>
+                        <div class="change">
+                            Consistent performance across weeks
+                        </div>
+                    </div>
+                    <div class="report-summary-card">
+                        <h5>Growth Trend</h5>
+                        <div class="value">Volatility</div>
+                        <div class="change">
+                            High variation between weeks
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-container" style="height: 400px;">
+                    <h4 class="chart-title">Weekly Sales Growth by Outlet</h4>
+                    <canvas id="reportWeeklyGrowthChart"></canvas>
+                </div>
+                
+                <div class="report-table-container">
+                    <h4>Detailed Weekly Comparison</h4>
+                    <div id="reportWeeklyComparisonTable"></div>
+                </div>
+            `;
+            
+            // Initialize the chart
+            const ctx = document.getElementById('reportWeeklyGrowthChart').getContext('2d');
+            const data = generateWeeklyComparisonData();
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(outlet => outlet.outlet),
+                    datasets: [
+                        {
+                            label: 'Week 1 → Week 2',
+                            data: data.map(outlet => parseFloat(outlet.growth12)),
+                            backgroundColor: '#FF6B35',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Week 2 → Week 3',
+                            data: data.map(outlet => parseFloat(outlet.growth23)),
+                            backgroundColor: '#2196F3',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Week 3 → Week 4',
+                            data: data.map(outlet => parseFloat(outlet.growth34)),
+                            backgroundColor: '#4CAF50',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Week 4 → Week 5',
+                            data: data.map(outlet => parseFloat(outlet.growth45)),
+                            backgroundColor: '#F44336',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Populate the table
+            document.getElementById('reportWeeklyComparisonTable').innerHTML = `
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Outlet Name</th>
+                                <th>Week 1 Sales</th>
+                                <th>Week 2 Sales</th>
+                                <th>Week 3 Sales</th>
+                                <th>Week 4 Sales</th>
+                                <th>Week 5 Sales</th>
+                                <th>Avg Growth</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map(outlet => {
+                                const avgGrowth = ((parseFloat(outlet.growth12) + parseFloat(outlet.growth23) + parseFloat(outlet.growth34) + parseFloat(outlet.growth45)) / 4).toFixed(2);
+                                return `
+                                    <tr>
+                                        <td>${outlet.outlet}</td>
+                                        <td>AED ${outlet.week1.sales.toLocaleString()}</td>
+                                        <td>AED ${outlet.week2.sales.toLocaleString()}</td>
+                                        <td>AED ${outlet.week3.sales.toLocaleString()}</td>
+                                        <td>AED ${outlet.week4.sales.toLocaleString()}</td>
+                                        <td>AED ${outlet.week5.sales.toLocaleString()}</td>
+                                        <td>${avgGrowth}%</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                            <tr class="table-primary">
+                                <td><strong>TOTAL</strong></td>
+                                <td><strong>AED 31,120</strong></td>
+                                <td><strong>AED 25,139</strong></td>
+                                <td><strong>AED 34,245.9</strong></td>
+                                <td><strong>AED 28,856</strong></td>
+                                <td><strong>AED 0</strong></td>
+                                <td><strong>-0.25%</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function initializeReportCharts() {
+            // Sales Trend Chart
+            const salesTrendCtx = document.getElementById('reportSalesTrendChart').getContext('2d');
+            const dailyData = groupByDate(reportData);
+            const sortedDates = Object.keys(dailyData).sort();
+            
+            new Chart(salesTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: sortedDates,
+                    datasets: [{
+                        label: 'Daily Sales (AED)',
+                        data: sortedDates.map(date => dailyData[date].sales),
+                        borderColor: '#FF6B35',
+                        backgroundColor: 'rgba(255, 107, 53, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'AED ' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Branch Performance Chart
+            const branchPerformanceCtx = document.getElementById('reportBranchPerformanceChart').getContext('2d');
+            const branchData = groupByBranch(reportData);
+            const branchNames = Object.keys(branchData);
+            
+            new Chart(branchPerformanceCtx, {
+                type: 'bar',
+                data: {
+                    labels: branchNames,
+                    datasets: [{
+                        label: 'Sales (AED)',
+                        data: branchNames.map(name => branchData[name].sales),
+                        backgroundColor: '#FF6B35',
+                        borderColor: '#FF6B35',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'AED ' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function exportReportToCSV() {
+            if (reportData.length === 0) {
+                showNotification('No data to export. Please generate a report first.', 'error');
+                return;
+            }
+            
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += `${translations[currentLang]['table-date']},${translations[currentLang]['table-branch']},${translations[currentLang]['table-channel']},${translations[currentLang]['table-transactions']},${translations[currentLang]['table-sales']},${translations[currentLang]['table-avg-sale']}\n`;
+            
+            reportData.forEach(item => {
+                csvContent += `${item.date},${item.branch},${item.channel},${item.count},${item.sales},${item.avr}\n`;
+            });
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `crispy-chicken-report-${currentReportType}-${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showNotification('Report exported successfully!', 'success');
+        }
+
+        function exportReportToJSON() {
+            if (reportData.length === 0) {
+                showNotification('No data to export. Please generate a report first.', 'error');
+                return;
+            }
+            
+            const dataStr = JSON.stringify(reportData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `crispy-chicken-report-${currentReportType}-${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute("href", dataUri);
+            linkElement.setAttribute("download", exportFileDefaultName);
+            linkElement.click();
+            
+            showNotification('Report exported successfully!', 'success');
+        }
+
+        function exportReportToPDF() {
+            if (reportData.length === 0) {
+                showNotification('No data to export. Please generate a report first.', 'error');
+                return;
+            }
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Add title
+            doc.setFontSize(18);
+            const reportTypeText = translations[currentLang][`report-type-${currentReportType}`];
+            doc.text(`Crispy Chicken ${reportTypeText}`, 14, 15);
+            
+            // Add date range
+            doc.setFontSize(10);
+            doc.text(`Report Period: ${reportStartDate} to ${reportEndDate}`, 14, 25);
+            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 32);
+            
+            // Add summary
+            const totals = calculateTotals(reportData);
+            doc.setFontSize(12);
+            doc.text('Summary', 14, 45);
+            
+            doc.setFontSize(10);
+            doc.text(`Total Sales: AED ${totals.totalSales.toLocaleString()}`, 14, 55);
+            doc.text(`Total Transactions: ${totals.totalTransactions.toLocaleString()}`, 14, 62);
+            doc.text(`Average Sale: AED ${totals.avgSale.toFixed(2)}`, 14, 69);
+            
+            // Add table
+            doc.autoTable({
+                head: [[
+                    currentLang === 'en' ? 'Date' : 'التاريخ',
+                    currentLang === 'en' ? 'Branch' : 'الفرع',
+                    currentLang === 'en' ? 'Channel' : 'القناة',
+                    currentLang === 'en' ? 'Transactions' : 'المعاملات',
+                    currentLang === 'en' ? 'Sales (AED)' : 'المبيعات (درهم)',
+                    currentLang === 'en' ? 'Avg Sale' : 'متوسط البيع'
+                ]],
+                body: reportData.map(item => [
+                    item.date,
+                    item.branch,
+                    item.channel,
+                    item.count,
+                    `AED ${item.sales.toFixed(2)}`,
+                    `AED ${item.avr.toFixed(2)}`
+                ]),
+                startY: 80,
+                styles: {
+                    fontSize: 8,
+                    cellPadding: 3
+                }
+            });
+            
+            const fileName = currentLang === 'en'
+                ? `crispy-chicken-report-${currentReportType}-${new Date().toISOString().split('T')[0]}.pdf`
+                : `تقرير-كريسبى-تشكن-${currentReportType}-${new Date().toISOString().split('T')[0]}.pdf`;
+            
+            doc.save(fileName);
+            
+            showNotification('Report exported successfully!', 'success');
+        }
+
+        // Weekly Comparison Functions
+        function generateWeeklyComparisonData() {
+            // Sample data for weekly comparison (replace with actual data)
+            const weeklyData = [
+                {
+                    outlet: "Crispy Chicken-Hamdan St",
+                    week1: { orders: 262, sales: 11500 },
+                    week2: { orders: 190, sales: 7502 },
+                    week3: { orders: 333, sales: 11869 },
+                    week4: { orders: 254, sales: 10895 },
+                    week5: { orders: 0, sales: 0 }
+                },
+                {
+                    outlet: "Crispy Chicken Khaldia",
+                    week1: { orders: 112, sales: 4908 },
+                    week2: { orders: 88, sales: 4146 },
+                    week3: { orders: 119, sales: 4718 },
+                    week4: { orders: 84, sales: 3862 },
+                    week5: { orders: 0, sales: 0 }
+                },
+                {
+                    outlet: "Crispy Chicken Shabiya 11",
+                    week1: { orders: 115, sales: 5252 },
+                    week2: { orders: 86, sales: 4008 },
+                    week3: { orders: 126, sales: 5482 },
+                    week4: { orders: 86, sales: 3619 },
+                    week5: { orders: 0, sales: 0 }
+                },
+                {
+                    outlet: "Crispy Chicken Muroor",
+                    week1: { orders: 107, sales: 4429 },
+                    week2: { orders: 122, sales: 5211 },
+                    week3: { orders: 125, sales: 4889 },
+                    week4: { orders: 80, sales: 3451 },
+                    week5: { orders: 0, sales: 0 }
+                },
+                {
+                    outlet: "Crispy Chicken Al Satwa",
+                    week1: { orders: 67, sales: 3002 },
+                    week2: { orders: 68, sales: 2640 },
+                    week3: { orders: 100, sales: 4564 },
+                    week4: { orders: 58, sales: 4409 },
+                    week5: { orders: 0, sales: 0 }
+                },
+                {
+                    outlet: "Crispy Chicken Al Barsha",
+                    week1: { orders: 47, sales: 2029 },
+                    week2: { orders: 40, sales: 1632 },
+                    week3: { orders: 72, sales: 2724 },
+                    week4: { orders: 39, sales: 2620 },
+                    week5: { orders: 0, sales: 0 }
+                },
+                {
+                    outlet: "Crispy Chicken Al Rigga",
+                    week1: { orders: 47, sales: 2029 },
+                    week2: { orders: 40, sales: 1632 },
+                    week3: { orders: 72, sales: 2724 },
+                    week4: { orders: 39, sales: 2620 },
+                    week5: { orders: 0, sales: 0 }
+                }
+            ];
+
+            // Calculate growth percentages
+            weeklyData.forEach(outlet => {
+                outlet.growth12 = ((outlet.week2.sales - outlet.week1.sales) / outlet.week1.sales).toFixed(2);
+                outlet.growth23 = ((outlet.week3.sales - outlet.week2.sales) / outlet.week2.sales).toFixed(2);
+                outlet.growth34 = ((outlet.week4.sales - outlet.week3.sales) / outlet.week3.sales).toFixed(2);
+                outlet.growth45 = outlet.week4.sales > 0 ? ((0 - outlet.week4.sales) / outlet.week4.sales).toFixed(2) : "-1.00";
+            });
+
+            return weeklyData;
+        }
+
+        function updateWeeklyComparison() {
+            const container = document.getElementById('weeklyComparisonContainer');
+            const data = generateWeeklyComparisonData();
+            
+            container.innerHTML = `
+                <div class="table-responsive">
+                    <table class="table table-hover weekly-comparison-table">
+                        <thead>
+                            <tr>
+                                <th>🏬 Outlet Name</th>
+                                <th>📅 Week 1 Orders</th>
+                                <th>💵 Week 1 Sales</th>
+                                <th>📅 Week 2 Orders</th>
+                                <th>💵 Week 2 Sales</th>
+                                <th>📅 Week 3 Orders</th>
+                                <th>💵 Week 3 Sales</th>
+                                <th>📅 Week 4 Orders</th>
+                                <th>💵 Week 4 Sales</th>
+                                <th>📅 Week 5 Orders</th>
+                                <th>💵 Week 5 Sales</th>
+                                <th>Week 1 ➔ Week 2</th>
+                                <th>Week 2 ➔ Week 3</th>
+                                <th>Week 3 ➔ Week 4</th>
+                                <th>Week 4 ➔ Week 5</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map(outlet => `
+                                <tr>
+                                    <td>${outlet.outlet}</td>
+                                    <td>${outlet.week1.orders}</td>
+                                    <td>${outlet.week1.sales.toLocaleString()}</td>
+                                    <td>${outlet.week2.orders}</td>
+                                    <td>${outlet.week2.sales.toLocaleString()}</td>
+                                    <td>${outlet.week3.orders}</td>
+                                    <td>${outlet.week3.sales.toLocaleString()}</td>
+                                    <td>${outlet.week4.orders}</td>
+                                    <td>${outlet.week4.sales.toLocaleString()}</td>
+                                    <td>${outlet.week5.orders}</td>
+                                    <td>${outlet.week5.sales.toLocaleString()}</td>
+                                    <td class="${parseFloat(outlet.growth12) > 0 ? 'growth-positive' : parseFloat(outlet.growth12) < 0 ? 'growth-negative' : 'growth-neutral'}">${outlet.growth12}</td>
+                                    <td class="${parseFloat(outlet.growth23) > 0 ? 'growth-positive' : parseFloat(outlet.growth23) < 0 ? 'growth-negative' : 'growth-neutral'}">${outlet.growth23}</td>
+                                    <td class="${parseFloat(outlet.growth34) > 0 ? 'growth-positive' : parseFloat(outlet.growth34) < 0 ? 'growth-negative' : 'growth-neutral'}">${outlet.growth34}</td>
+                                    <td class="${parseFloat(outlet.growth45) > 0 ? 'growth-positive' : parseFloat(outlet.growth45) < 0 ? 'growth-negative' : 'growth-neutral'}">${outlet.growth45}</td>
+                                </tr>
+                            `).join('')}
+                            <tr class="table-primary">
+                                <td><strong>TOTAL</strong></td>
+                                <td><strong>710</strong></td>
+                                <td><strong>31,120</strong></td>
+                                <td><strong>594</strong></td>
+                                <td><strong>25,139</strong></td>
+                                <td><strong>875</strong></td>
+                                <td><strong>34,245.9</strong></td>
+                                <td><strong>601</strong></td>
+                                <td><strong>28,856</strong></td>
+                                <td><strong>0</strong></td>
+                                <td><strong>0</strong></td>
+                                <td><strong>-0.16</strong></td>
+                                <td><strong>0.47</strong></td>
+                                <td><strong>-0.31</strong></td>
+                                <td><strong>-1.00</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function updateWeeklyGrowthChart() {
+            const container = document.getElementById('weeklyGrowthContainer');
+            const data = generateWeeklyComparisonData();
+            
+            // Prepare data for the chart
+            const labels = data.map(outlet => outlet.outlet);
+            const growthData = data.map(outlet => [
+                parseFloat(outlet.growth12),
+                parseFloat(outlet.growth23),
+                parseFloat(outlet.growth34),
+                parseFloat(outlet.growth45)
+            ]);
+            
+            container.innerHTML = `
+                <canvas id="weeklyGrowthChart" height="100"></canvas>
+            `;
+            
+            // Initialize the chart
+            const ctx = document.getElementById('weeklyGrowthChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Week 1 → Week 2',
+                            data: growthData.map(d => d[0]),
+                            borderColor: '#FF6B35',
+                            backgroundColor: 'rgba(255, 107, 53, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Week 2 → Week 3',
+                            data: growthData.map(d => d[1]),
+                            borderColor: '#2196F3',
+                            backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Week 3 → Week 4',
+                            data: growthData.map(d => d[2]),
+                            borderColor: '#4CAF50',
+                            backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Week 4 → Week 5',
+                            data: growthData.map(d => d[3]),
+                            borderColor: '#F44336',
+                            backgroundColor: 'rgba(244, 67, 54, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
         // Event listeners
         document.getElementById('langToggle').addEventListener('click', toggleLanguage);
         document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
@@ -4470,6 +6095,9 @@
         document.getElementById('mainTabs').addEventListener('shown.bs.tab', function (e) {
             if (e.target.id === 'data-management-tab' || e.target.id === 'analytics-tab') {
                 updateDashboard();
+            } else if (e.target.id === 'reports-tab') {
+                // Initialize report controls when Reports tab is shown
+                initializeReportControls();
             }
         });
 
